@@ -30,61 +30,64 @@
 
 #include "types.h"
 
-typedef struct {
+struct Plane_FF : public Readable, public Writable {
 	U32 normalIndex;
 	F32 planeDistance;
-} Plane_FF;
 
-typedef struct {
-	U16 planeIndex;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
+};
+
+struct BSPNode_FF : public Readable, public Writable {	U16 planeIndex;
 	U16 frontIndex;
 	U16 backIndex;
-} BSPNode_FF;
 
-typedef struct {
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
+};
+
+struct BSPSolidLeaf_FF : public Readable, public Writable {
 	U32 surfaceIndex;
 	U16 surfaceCount;
-} BSPSolidLeaf_FF;
 
-typedef struct {
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
+};
+
+struct Surface_FF : public Readable, public Writable {
 	U32 windingStart;
 	U8 windingCount;
 	U16 planeIndex;
 	U8 surfaceFlags;
 	U32 fanMask;
-} Surface_FF;
 
-class ForceField{
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
+};
+
+class ForceField {
 public:
 	U32 forceFieldFileVersion;
 	String name;
 
-	U32 numTriggers;
-	String *trigger;
+	Vector<String>trigger;
 
 	BoxF boundingBox;
 	SphereF boundingSphere;
 
-	U32 numNormals;
-	Point3F *normal;
+	Vector<Point3F>normal;
 
-	U32 numPlanes;
-	Plane_FF *plane;
+	Vector<Plane_FF>plane;
 
-	U32 numBSPNodes;
-	BSPNode_FF *BSPNode;
+	Vector<BSPNode_FF>BSPNode;
 
-	U32 numBSPSolidLeaves;
-	BSPSolidLeaf_FF *BSPSolidLeaf;
+	Vector<BSPSolidLeaf_FF>BSPSolidLeaf;
 
-	U32 numWindings;
-	U32 *index;
+	Vector<U32>index;
 
-	U32 numSurfaces;
-	Surface_FF *surface;
+	Vector<Surface_FF>surface;
 
-	U32 numSolidLeafSurfaces;
-	U32 *solidLeafSurface;
+	Vector<U32>solidLeafSurface;
 
 	ColorI color;
 
@@ -95,11 +98,6 @@ public:
 	ForceField(std::istream &stream);
 
 	bool write(std::ostream &stream) const;
-
-	/**
-	 Frees the ForceField and all memory contained within it
-	 */
-	~ForceField();
 };
 
 #endif

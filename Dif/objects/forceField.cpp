@@ -33,86 +33,95 @@
 ForceField::ForceField(std::istream &stream) {
 	READTOVAR(forceFieldFileVersion, U32); //forceFieldFileVersion
 	READTOVAR(name, String); //name
-	READLOOPVAR(numTriggers, trigger, String) {
-		READTOVAR(trigger[i], String); //trigger
-	}
+	READTOVAR(trigger, Vector<String>); //trigger
 	READTOVAR(boundingBox, BoxF); //boundingBox
 	READTOVAR(boundingSphere, SphereF); //boundingSphere
-	READLOOPVAR(numNormals, normal, Point3F) {
-		READTOVAR(normal[i], Point3F); //normal
-	}
-	READLOOPVAR(numPlanes, plane, Plane_FF) {
-		READTOVAR(plane[i].normalIndex, U32); //normalIndex
-		READTOVAR(plane[i].planeDistance, F32); //planeDistance
-	}
-	READLOOPVAR(numBSPNodes, BSPNode, BSPNode_FF) {
-		READTOVAR(BSPNode[i].planeIndex, U16); //planeIndex
-		READTOVAR(BSPNode[i].frontIndex, U16); //frontIndex
-		READTOVAR(BSPNode[i].backIndex, U16); //backIndex
-	}
-	READLOOPVAR(numBSPSolidLeaves, BSPSolidLeaf, BSPSolidLeaf_FF) {
-		READTOVAR(BSPSolidLeaf[i].surfaceIndex, U32); //surfaceIndex
-		READTOVAR(BSPSolidLeaf[i].surfaceCount, U16); //surfaceCount
-	}
-	READLOOPVAR(numWindings, index, U32) {
-		READTOVAR(index[i], U32); //index
-	}
-	READLOOPVAR(numSurfaces, surface, Surface_FF) {
-		READTOVAR(surface[i].windingStart, U32); //windingStart
-		READTOVAR(surface[i].windingCount, U8); //windingCount
-		READTOVAR(surface[i].planeIndex, U16); //planeIndex
-		READTOVAR(surface[i].surfaceFlags, U8); //surfaceFlags
-		READTOVAR(surface[i].fanMask, U32); //fanMask
-	}
-	READLOOPVAR(numSolidLeafSurfaces, solidLeafSurface, U32) {
-		READTOVAR(solidLeafSurface[i], U32); //solidLeafSurface
-	}
+	READTOVAR(normal, Vector<Point3F>); //normal
+	READTOVAR(plane, Vector<Plane_FF>); //plane
+	READTOVAR(BSPNode, Vector<BSPNode_FF>); //BSPNode
+	READTOVAR(BSPSolidLeaf, Vector<BSPSolidLeaf_FF>); //BSPSolidLeaf
+	READTOVAR(index, Vector<U32>); //index
+	READTOVAR(surface, Vector<Surface_FF>); //surface
+	READTOVAR(solidLeafSurface, Vector<U32>); //solidLeafSurface
 	READTOVAR(color, ColorI); //color
 }
 
 bool ForceField::write(std::ostream &stream) const {
 	WRITECHECK(forceFieldFileVersion, U32); //forceFieldFileVersion
 	WRITE(name, String); //name
-	WRITELOOP(numTriggers) { //trigger
-		WRITECHECK(trigger[i], String);
-	}
+	WRITE(trigger, Vector<String>); //trigger
 	WRITECHECK(boundingBox, BoxF); //boundingBox
 	WRITECHECK(boundingSphere, SphereF); //boundingSphere
-	WRITELIST(numNormals, normal, Point3F); //normal
-	WRITELOOP(numPlanes) { //numPlanes
-		WRITECHECK(plane[i].normalIndex, U32); //normalIndex
-		WRITECHECK(plane[i].planeDistance, F32); //planeDistance
-	}
-	WRITELOOP(numBSPNodes) { //numBSPNodes
-		WRITECHECK(BSPNode[i].planeIndex, U16); //planeIndex
-		WRITECHECK(BSPNode[i].frontIndex, U16); //frontIndex
-		WRITECHECK(BSPNode[i].backIndex, U16); //backIndex
-	}
-	WRITELOOP(numBSPSolidLeaves) { //numBSPSolidLeaves
-		WRITECHECK(BSPSolidLeaf[i].surfaceIndex, U32); //surfaceIndex
-		WRITECHECK(BSPSolidLeaf[i].surfaceCount, U16); //surfaceCount
-	}
-	WRITELIST(numWindings, index, U32); //index
-	WRITELOOP(numSurfaces) { //numSurfaces
-		WRITECHECK(surface[i].windingStart, U32); //windingStart
-		WRITECHECK(surface[i].windingCount, U8); //windingCount
-		WRITECHECK(surface[i].planeIndex, U16); //planeIndex
-		WRITECHECK(surface[i].surfaceFlags, U8); //surfaceFlags
-		WRITECHECK(surface[i].fanMask, U32); //fanMask
-	}
-	WRITELIST(numSolidLeafSurfaces, solidLeafSurface, U32); //solidLeafSurface
+	WRITE(normal, Vector<Point3F>); //normal
+	WRITE(plane, Vector<Plane_FF>); //plane
+	WRITE(BSPNode, Vector<BSPNode_FF>); //BSPNode
+	WRITE(BSPSolidLeaf, Vector<BSPSolidLeaf_FF>); //BSPSolidLeaf
+	WRITE(index, Vector<U32>); //index
+	WRITE(surface, Vector<Surface_FF>); //surface
+	WRITE(solidLeafSurface, Vector<U32>); //solidLeafSurface
 	WRITECHECK(color, ColorI); //color
 
 	return true;
 }
 
-ForceField::~ForceField() {
-	delete [] trigger;
-	delete [] normal;
-	delete [] plane;
-	delete [] BSPNode;
-	delete [] BSPSolidLeaf;
-	delete [] index;
-	delete [] surface;
-	delete [] solidLeafSurface;
+bool Plane_FF::read(std::istream &stream) {
+	READTOVAR(normalIndex, U32); //normalIndex
+	READTOVAR(planeDistance, F32); //planeDistance
+
+	return true;
+}
+
+bool Plane_FF::write(std::ostream &stream) const {
+	WRITE(normalIndex, U32); //normalIndex
+	WRITE(planeDistance, F32); //planeDistance
+
+	return true;
+}
+
+bool BSPNode_FF::read(std::istream &stream) {
+	READTOVAR(frontIndex, U16); //frontIndex
+	READTOVAR(backIndex, U16); //backIndex
+
+	return true;
+}
+
+bool BSPNode_FF::write(std::ostream &stream) const {
+	WRITE(frontIndex, U16); //frontIndex
+	WRITE(backIndex, U16); //backIndex
+
+	return true;
+}
+
+bool BSPSolidLeaf_FF::read(std::istream &stream) {
+	READTOVAR(surfaceIndex, U32); //surfaceIndex
+	READTOVAR(surfaceCount, U16); //surfaceCount
+
+	return true;
+}
+
+bool BSPSolidLeaf_FF::write(std::ostream &stream) const {
+	WRITE(surfaceIndex, U32); //surfaceIndex
+	WRITE(surfaceCount, U16); //surfaceCount
+
+	return true;
+}
+
+bool Surface_FF::read(std::istream &stream) {
+	READTOVAR(windingStart, U32); //windingStart
+	READTOVAR(windingCount, U8); //windingCount
+	READTOVAR(planeIndex, U16); //planeIndex
+	READTOVAR(surfaceFlags, U8); //surfaceFlags
+	READTOVAR(fanMask, U32); //fanMask
+
+	return true;
+}
+
+bool Surface_FF::write(std::ostream &stream) const {
+	WRITE(windingStart, U32); //windingStart
+	WRITE(windingCount, U8); //windingCount
+	WRITE(planeIndex, U16); //planeIndex
+	WRITE(surfaceFlags, U8); //surfaceFlags
+	WRITE(fanMask, U32); //fanMask
+
+	return true;
 }
