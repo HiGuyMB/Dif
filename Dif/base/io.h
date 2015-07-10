@@ -48,7 +48,7 @@ public:
 			if (stream.eof())
 				return false;
 			stream.read((char *)value, sizeof(*value));
-			return true;
+			return stream.good();
 		}
 	};
 	//Read structures from a std::istream
@@ -78,7 +78,7 @@ public:
 	struct write_impl {
 		static inline bool write(std::ostream &stream, const T &value, const String &name) {
 			stream.write((char *)&value, sizeof(value));
-			return true;
+			return stream.good();
 		}
 	};
 	//Write structures from a std::istream
