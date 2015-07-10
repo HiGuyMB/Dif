@@ -166,6 +166,9 @@ public:
 	void push_back(T value) {
 		vector.push_back(value);
 	}
+	typename VectorType::size_type size() {
+		return vector.size();
+	}
 
 	virtual bool read(std::istream &stream);
 	virtual bool write(std::ostream &stream) const;
