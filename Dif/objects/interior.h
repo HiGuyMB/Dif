@@ -31,18 +31,6 @@
 #include "types.h"
 #include "staticMesh.h"
 
-struct Vertex {
-	Point3F point;
-	Point2F uv;
-	Point3F normal;
-	Point3F tangent;
-	Point3F bitangent;
-};
-
-struct Triangle {
-	Vertex verts[3];
-};
-
 static U32 gNumCoordBins = 16;
 
 struct Plane : public Readable, Writable {
@@ -61,12 +49,11 @@ struct TexGenEq : public Readable, Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-struct BSPNode : public Readable, Writable {
+struct BSPNode : public Writable {
 	U16 planeIndex;
 	U16 frontIndex;
 	U16 backIndex;
 
-	virtual bool read(std::istream &stream);
 	virtual bool write(std::ostream &stream) const;
 };
 
@@ -96,7 +83,7 @@ struct Edge : public Readable, Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-struct Zone : public Readable, Writable {
+struct Zone : public Writable {
 	U16 portalStart;
 	U16 portalCount;
 	U32 surfaceStart;
@@ -105,7 +92,6 @@ struct Zone : public Readable, Writable {
 	U32 staticMeshCount;
 	U16 flags;
 
-	virtual bool read(std::istream &stream);
 	virtual bool write(std::ostream &stream) const;
 };
 
@@ -120,25 +106,21 @@ struct Portal : public Readable, Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-struct LightMapF : public Readable, Writable {
+struct LightMapF {
 	U16 finalWord;
 	F32 texGenXDistance;
 	F32 texGenYDistance;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
 };
 
-struct LightMap : public Readable, Writable {
+struct LightMap : public Writable {
 	PNG lightMap;
 	PNG lightDirMap;
 	U8 keepLightMap;
 
-	virtual bool read(std::istream &stream);
 	virtual bool write(std::ostream &stream) const;
 };
 
-struct Surface : public Readable, Writable {
+struct Surface : public Writable {
 	U32 windingStart;
 	U8 windingCount;
 	U16 planeIndex;
@@ -155,17 +137,15 @@ struct Surface : public Readable, Writable {
 	U8 mapSizeX;
 	U8 mapSizeY;
 
-	virtual bool read(std::istream &stream);
 	virtual bool write(std::ostream &stream) const;
 };
 
-struct NullSurface : public Readable, Writable {
+struct NullSurface : public Writable {
 	U32 windingStart;
 	U16 planeIndex;
 	U8 surfaceFlags;
 	U8 windingCount;
 
-	virtual bool read(std::istream &stream);
 	virtual bool write(std::ostream &stream) const;
 };
 
@@ -201,7 +181,7 @@ struct StateData : public Readable, Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-struct ConvexHull : public Readable, Writable {
+struct ConvexHull : public Writable {
 	U32 hullStart;
 	U16 hullCount;
 	F32 minX;
@@ -218,16 +198,12 @@ struct ConvexHull : public Readable, Writable {
 	U32 polyListStringStart;
 	U8 staticMesh;
 
-	virtual bool read(std::istream &stream);
 	virtual bool write(std::ostream &stream) const;
 };
 
-struct CoordBin : public Readable, Writable {
+struct CoordBin {
 	U32 binStart;
 	U32 binCount;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
 };
 
 struct TexMatrix : public Readable, Writable {
