@@ -149,6 +149,7 @@ bool Vector<T>::read(std::istream &stream) {
 	U32 size;
 	if (!IO::read(stream, &size, "size"))
 		return false;
+	vector.reserve(size);
 	for (int i = 0; i < size; i ++) {
 		T value;
 		if (IO::read(stream, &value, "value"))
