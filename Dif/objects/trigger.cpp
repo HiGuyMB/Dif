@@ -36,15 +36,8 @@ Trigger::Trigger(std::istream &stream) {
 	READTOVAR(datablock, String); //datablock
 	READTOVAR(properties, Dictionary); //properties
 	READTOVAR(polyHedronPoint, Vector<Point3F>); //point
-	READLOOPVAR(numPolyHedronPlanes, polyHedronPlane, PlaneF) {
-		READTOVAR(polyHedronPlane[i], PlaneF); //plane
-	}
-	READLOOPVAR(numPolyHedronEdges, polyHedronEdge, PolyHedronEdge) {
-		READTOVAR(polyHedronEdge[i].face0, U32); //face0
-		READTOVAR(polyHedronEdge[i].face1, U32); //face1
-		READTOVAR(polyHedronEdge[i].vertex0, U32); //vertex0
-		READTOVAR(polyHedronEdge[i].vertex1, U32); //vertex1
-	}
+	READTOVAR(polyHedronPlane, Vector<PlaneF>); //plane
+	READTOVAR(polyHedronEdge, Vector<PolyHedronEdge>); //polyHedronEdge
 	READTOVAR(offset, Point3F); //offset
 }
 
@@ -53,19 +46,27 @@ bool Trigger::write(std::ostream &stream) const {
 	WRITE(datablock, String); //datablock
 	WRITE(properties, Dictionary); //properties
 	WRITE(polyHedronPoint, Vector<Point3F>); //polyHedronPoint
-	WRITELIST(numPolyHedronPlanes, polyHedronPlane, PlaneF); //polyHedronPlane
-	WRITELOOP(numPolyHedronEdges) { //numPolyHedronEdges
-		WRITECHECK(polyHedronEdge[i].face0, U32); //face0
-		WRITECHECK(polyHedronEdge[i].face1, U32); //face1
-		WRITECHECK(polyHedronEdge[i].vertex0, U32); //vertex0
-		WRITECHECK(polyHedronEdge[i].vertex1, U32); //vertex1
-	}
+	WRITE(polyHedronPlane, Vector<PlaneF>); //polyHedronPlane
+	WRITE(polyHedronEdge, Vector<PolyHedronEdge>); //numPolyHedronEdges
 	WRITECHECK(offset, Point3F); //offset
 
 	return true;
 }
 
-Trigger::~Trigger() {
-	delete [] polyHedronPlane;
-	delete [] polyHedronEdge;
+bool PolyHedronEdge::read(std::istream &stream) {
+	READTOVAR(face0, U32); //face0
+	READTOVAR(face1, U32); //face1
+	READTOVAR(vertex0, U32); //vertex0
+	READTOVAR(vertex1, U32); //vertex1
+
+	return true;
+}
+
+bool PolyHedronEdge::write(std::ostream &stream) const {
+	WRITECHECK(face0, U32); //face0
+	WRITECHECK(face1, U32); //face1
+	WRITECHECK(vertex0, U32); //vertex0
+	WRITECHECK(vertex1, U32); //vertex1
+
+	return true;
 }

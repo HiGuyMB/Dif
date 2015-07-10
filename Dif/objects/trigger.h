@@ -30,12 +30,15 @@
 
 #include "types.h"
 
-typedef struct {
+struct PolyHedronEdge : public Readable, public Writable {
 	U32 face0;
 	U32 face1;
 	U32 vertex0;
 	U32 vertex1;
-} PolyHedronEdge;
+
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
+};
 
 class Trigger {
 public:
@@ -43,13 +46,11 @@ public:
 	String datablock;
 	Dictionary properties;
 
-	Vector<Point3F> polyHedronPoint;
+	Vector<Point3F>polyHedronPoint;
 
-	U32 numPolyHedronPlanes;
-	PlaneF *polyHedronPlane;
+	Vector<PlaneF>polyHedronPlane;
 
-	U32 numPolyHedronEdges;
-	PolyHedronEdge *polyHedronEdge;
+	Vector<PolyHedronEdge>polyHedronEdge;
 
 	Point3F offset;
 
@@ -60,11 +61,6 @@ public:
 	Trigger(std::istream &stream);
 
 	bool write(std::ostream &stream) const;
-
-	/**
-	 Frees the Trigger and all memory contained within it
-	 */
-	~Trigger();
 };
 
 #endif
