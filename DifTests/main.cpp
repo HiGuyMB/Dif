@@ -12,7 +12,7 @@ int main(int argc, const char * argv[]) {
 		for (int i = 0; i < dif->numDetailLevels; i ++) {
 			Interior *interior = dif->interior[i];
 
-			for (int j = 0; j < interior->numMaterials; j ++) {
+			for (int j = 0; j < interior->materialName.size(); j ++) {
 				String name = interior->materialName[j];
 
 				std::cout << (const char *)name << std::endl;
