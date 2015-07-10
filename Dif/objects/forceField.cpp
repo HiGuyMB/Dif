@@ -30,7 +30,7 @@
 #include "io.h"
 #include "forceField.h"
 
-ForceField::ForceField(FILE *file) {
+ForceField::ForceField(std::istream &stream) {
 	READTOVAR(forceFieldFileVersion, U32); //forceFieldFileVersion
 	READTOVAR(name, String); //name
 	READLOOPVAR(numTriggers, trigger, String) {
@@ -70,7 +70,7 @@ ForceField::ForceField(FILE *file) {
 	READTOVAR(color, ColorI); //color
 }
 
-bool ForceField::write(FILE *file) const {
+bool ForceField::write(std::ostream &stream) const {
 	WRITECHECK(forceFieldFileVersion, U32); //forceFieldFileVersion
 	WRITE(name, String); //name
 	WRITELOOP(numTriggers) { //trigger

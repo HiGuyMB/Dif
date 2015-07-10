@@ -77,9 +77,9 @@ public:
 	 @arg file - The FILE to read from (updates position)
 	 @return A DIF
 	 */
-	DIF(FILE *file, String directory);
+	DIF(std::istream &stream, String directory);
 
-	bool write(FILE *file, String directory) const;
+	bool write(std::ostream &stream, String directory) const;
 
 	/**
 	 Frees the DIF and all memory contained within it

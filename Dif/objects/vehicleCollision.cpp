@@ -30,7 +30,7 @@
 #include "io.h"
 #include "vehicleCollision.h"
 
-VehicleCollision::VehicleCollision(FILE *file) {
+VehicleCollision::VehicleCollision(std::istream &stream) {
 	READTOVAR(vehicleCollisionFileVersion, U32); //vehicleCollisionFileVersion
 	READLOOPVAR(numVehicleConvexHulls, vehicleConvexHull, VehicleConvexHull) {
 		READTOVAR(vehicleConvexHull[i].hullStart, U32); //hullStart
@@ -80,7 +80,7 @@ VehicleCollision::VehicleCollision(FILE *file) {
 	}
 }
 
-bool VehicleCollision::write(FILE *file) const {
+bool VehicleCollision::write(std::ostream &stream) const {
 	WRITECHECK(vehicleCollisionFileVersion, U32);
 	WRITELOOP(numVehicleConvexHulls) {
 		WRITECHECK(vehicleConvexHull[i].hullStart, U32); //hullStart

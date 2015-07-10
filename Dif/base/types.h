@@ -32,6 +32,8 @@
 #include <cstring>
 #include <cstdlib>
 
+#include <fstream>
+
 //Base types (names stolen from TGE because lazy)
 typedef unsigned char      U8;
 typedef unsigned short     U16;
@@ -48,12 +50,12 @@ typedef double F64;
 
 struct Readable {
 public:
-	bool read(FILE *file) { return false; };
+	virtual bool read(std::istream &stream) = 0;
 };
 
 struct Writable {
 public:
-	bool write(FILE *file) const { return false; };
+	virtual bool write(std::ostream &stream) const = 0;
 };
 
 struct String : public Readable, Writable {
@@ -142,8 +144,8 @@ struct String : public Readable, Writable {
 		}
 	}
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 #include "point2.h"
@@ -184,8 +186,8 @@ public:
 	QuatF() : x(0), y(0), z(0), w(0) {};
 	QuatF(const F32 &x, const F32 &y, const F32 &z, const F32 &w) : x(x), y(y), z(z), w(w) {};
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 class PlaneF : public Readable, Writable {
@@ -195,8 +197,8 @@ public:
 	F32 z;
 	F32 d;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 class BoxF : public Readable, Writable {
@@ -218,8 +220,8 @@ public:
 		return (getMax() + getMin()) / 2;
 	}
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 class SphereF : public Readable, Writable {
@@ -229,8 +231,8 @@ public:
 	F32 z;
 	F32 radius;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 class Dictionary : public Readable, Writable {
@@ -239,8 +241,8 @@ public:
 	String *names;
 	String *values;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 
 	String get(const String &key) const {
 		for (U32 i = 0; i < size; i ++) {
@@ -261,8 +263,8 @@ public:
 	U32 size;
 	U8 *data;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 
 	~PNG() {
 		delete [] data;
@@ -288,8 +290,8 @@ class MatrixF : public Readable, Writable {
 public:
 	F32 m[16];
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 #include "ray.h"

@@ -30,7 +30,7 @@
 #include "io.h"
 #include "dif.h"
 
-DIF::DIF(FILE *file, String directory) {
+DIF::DIF(std::istream &stream, String directory) {
 	//http://rustycode.com/tutorials/DIF_File_Format_44_14.html
 	// Someone give that guy all the cookies.
 
@@ -41,26 +41,26 @@ DIF::DIF(FILE *file, String directory) {
 
 	READLOOPVAR(numDetailLevels, interior, Interior *) {
 		interior[i] = new Interior();
-		interior[i]->read(file);
+		interior[i]->read(stream);
 	}
 	READLOOPVAR(numSubObjects, subObject, Interior *) {
 		subObject[i] = new Interior();
-		subObject[i]->read(file);
+		subObject[i]->read(stream);
 	}
 	READLOOPVAR(numTriggers, trigger, Trigger *) {
-		trigger[i] = new Trigger(file);
+		trigger[i] = new Trigger(stream);
 	}
 	READLOOPVAR(numInteriorPathFollowers, interiorPathFollower, InteriorPathFollower *) {
-		interiorPathFollower[i] = new InteriorPathFollower(file);
+		interiorPathFollower[i] = new InteriorPathFollower(stream);
 	}
 	READLOOPVAR(numForceFields, forceField, ForceField *) {
-		forceField[i] = new ForceField(file);
+		forceField[i] = new ForceField(stream);
 	}
 	READLOOPVAR(numAISpecialNodes, aiSpecialNode, AISpecialNode *) {
-		aiSpecialNode[i] = new AISpecialNode(file);
+		aiSpecialNode[i] = new AISpecialNode(stream);
 	}
 	if (READ(U32) == 1) { //readVehicleCollision
-		vehicleCollision = new VehicleCollision(file);
+		vehicleCollision = new VehicleCollision(stream);
 	}
 	READ(U32); //unknown
 	READ(U32); //unknown
@@ -68,7 +68,7 @@ DIF::DIF(FILE *file, String directory) {
 	READ(U32); //unknown
 	if (READ(U32) == 2) { //readGameEntities
 		READLOOPVAR(numGameEntities, gameEntity, GameEntity *) {
-			gameEntity[i] = new GameEntity(file);
+			gameEntity[i] = new GameEntity(stream);
 		}
 	} else {
 		numGameEntities = 0;
@@ -77,30 +77,30 @@ DIF::DIF(FILE *file, String directory) {
 	READ(U32); //dummy
 }
 
-bool DIF::write(FILE *file, String directory) const {
+bool DIF::write(std::ostream &stream, String directory) const {
 	WRITECHECK(44, U32); //interiorResourceFileVersion
 	WRITECHECK(0, U8); //previewIncluded
 
 	WRITELOOP(numDetailLevels) {
-		if (!interior[i]->write(file)) return false;
+		if (!interior[i]->write(stream)) return false;
 	}
 	WRITELOOP(numSubObjects) {
-		if (!subObject[i]->write(file)) return false;
+		if (!subObject[i]->write(stream)) return false;
 	}
 	WRITELOOP(numTriggers) {
-		if (!trigger[i]->write(file)) return false;
+		if (!trigger[i]->write(stream)) return false;
 	}
 	WRITELOOP(numInteriorPathFollowers) {
-		if (!interiorPathFollower[i]->write(file)) return false;
+		if (!interiorPathFollower[i]->write(stream)) return false;
 	}
 	WRITELOOP(numForceFields) {
-		if (!forceField[i]->write(file)) return false;
+		if (!forceField[i]->write(stream)) return false;
 	}
 	WRITELOOP(numAISpecialNodes) {
-		if (!aiSpecialNode[i]->write(file)) return false;
+		if (!aiSpecialNode[i]->write(stream)) return false;
 	}
 	WRITECHECK(1, U32);
-	vehicleCollision->write(file);
+	vehicleCollision->write(stream);
 
 	WRITECHECK(0, U32);
 	WRITECHECK(0, U32);
@@ -109,7 +109,7 @@ bool DIF::write(FILE *file, String directory) const {
 	if (gameEntity){
 		WRITECHECK(2, U32);
 		WRITELOOP(numGameEntities) {
-			gameEntity[i]->write(file);
+			gameEntity[i]->write(stream);
 		}
 	} else {
 		WRITECHECK(0, U32);

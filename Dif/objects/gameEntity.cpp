@@ -30,14 +30,14 @@
 #include "io.h"
 #include "gameEntity.h"
 
-GameEntity::GameEntity(FILE *file) {
+GameEntity::GameEntity(std::istream &stream) {
 	READTOVAR(datablock, String); //datablock
 	READTOVAR(gameClass, String); //gameClass
 	READTOVAR(position, Point3F); //position
 	READTOVAR(properties, Dictionary); //properties
 }
 
-bool GameEntity::write(FILE *file) const {
+bool GameEntity::write(std::ostream &stream) const {
 	WRITE(datablock, String); //datablock
 	WRITE(gameClass, String); //gameClass
 	WRITECHECK(position, Point3F); //position

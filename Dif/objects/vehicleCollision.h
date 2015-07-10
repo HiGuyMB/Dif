@@ -92,9 +92,9 @@ public:
 	 Reads a VehicleCollision from a FILE
 	 @arg file - The FILE to read from (updates position)
 	 */
-	VehicleCollision(FILE *file);
+	VehicleCollision(std::istream &stream);
 
-	bool write(FILE *file) const;
+	bool write(std::ostream &stream) const;
 
 	/**
 	 Frees the VehicleCollision and all memory contained within it

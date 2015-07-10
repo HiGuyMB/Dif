@@ -30,6 +30,7 @@
 
 #include "types.h"
 #include "math.h"
+#include <type_traits>
 
 #define LIGHT_MAP_SIZE 0x400
 #define io IO::getIO()
@@ -48,52 +49,44 @@ public:
 
 	void reverse(FILE **file, const U32 &bytes);
 
-	//Unsigned ints
-	bool read(FILE *file, U64 *value, const String &name);
-	bool read(FILE *file, U32 *value, const String &name);
-	bool read(FILE *file, U16 *value, const String &name);
-	bool read(FILE *file,  U8 *value, const String &name);
-	
-	//Signed ints
-	bool read(FILE *file, S64 *value, const String &name);
-	bool read(FILE *file, S32 *value, const String &name);
-	bool read(FILE *file, S16 *value, const String &name);
-	bool read(FILE *file,  S8 *value, const String &name);
-
-	//Floats
-	bool read(FILE *file, F32 *value, const String &name);
-
-	//Anything else that is a class can be templated
+	template <typename T, bool=true>
+	struct read_impl {
+		static inline bool read(std::istream &stream, T *value, const String &name) {
+			if (stream.eof())
+				return false;
+			stream.read((char *)value, sizeof(*value));
+			return true;
+		}
+	};
 	template <typename T>
-	inline bool read(FILE *file, T *value, const String &name) {
-		return value->read(file);
+	struct read_impl<T, false> {
+		static inline bool read(std::istream &stream, T *value, const String &name) {
+			return value->read(stream);
+		}
+	};
+
+	template <typename T>
+	inline bool read(std::istream &stream, T *value, const String &name) {
+		return read_impl<T, std::is_fundamental<T>::value>::read(stream, value, name);
 	}
 
-	/*
-	 Write number types to a file
-	 @var file - The FILE to read from (updates position)
-	 @return The number data at that position in the FILE
-	 */
-
-	//Unsigned ints
-	bool write(FILE *file, const U64 &value, const String &name);
-	bool write(FILE *file, const U32 &value, const String &name);
-	bool write(FILE *file, const U16 &value, const String &name);
-	bool write(FILE *file, const U8  &value, const String &name);
-
-	//Signed ints
-	bool write(FILE *file, const S64 &value, const String &name);
-	bool write(FILE *file, const S32 &value, const String &name);
-	bool write(FILE *file, const S16 &value, const String &name);
-	bool write(FILE *file, const S8  &value, const String &name);
-
-	//Floats
-	bool write(FILE *file, const F32 &value, const String &name);
-
-	//Anything else that is a class can be templated
+	template <typename T, bool=true>
+	struct write_impl {
+		static inline bool write(std::ostream &stream, const T &value, const String &name) {
+			stream.write((char *)&value, sizeof(value));
+			return true;
+		}
+	};
 	template <typename T>
-	inline bool write(FILE *file, const T &value, const String &name) {
-		return value.write(file);
+	struct write_impl<T, false> {
+		static inline bool write(std::ostream &stream, const T &value, const String &name) {
+			return value.write(stream);
+		}
+	};
+
+	template <typename T>
+	inline bool write(std::ostream &stream, const T &value, const String &name) {
+		return write_impl<T, std::is_fundamental<T>::value>::write(stream, value, name);
 	}
 
 	String getPath(const String &file);
@@ -105,69 +98,69 @@ public:
 };
 
 template <typename T>
-bool Point2<T>::read(FILE *file) {
+bool Point2<T>::read(std::istream &stream) {
 	return
-	io->read(file, &x, "x") &&
-	io->read(file, &y, "y");
+	io->read(stream, &x, "x") &&
+	io->read(stream, &y, "y");
 }
 
 template <typename T>
-bool Point3<T>::read(FILE *file) {
+bool Point3<T>::read(std::istream &stream) {
 	return
-	io->read(file, &x, "x") &&
-	io->read(file, &y, "y") &&
-	io->read(file, &z, "z");
+	io->read(stream, &x, "x") &&
+	io->read(stream, &y, "y") &&
+	io->read(stream, &z, "z");
 }
 
 template <typename T>
-bool Point4<T>::read(FILE *file) {
+bool Point4<T>::read(std::istream &stream) {
 	return
-	io->read(file, &w, "w") &&
-	io->read(file, &x, "x") &&
-	io->read(file, &y, "y") &&
-	io->read(file, &z, "z");
+	io->read(stream, &w, "w") &&
+	io->read(stream, &x, "x") &&
+	io->read(stream, &y, "y") &&
+	io->read(stream, &z, "z");
 }
 
 template <typename T>
-bool Color<T>::read(FILE *file) {
+bool Color<T>::read(std::istream &stream) {
 	return
-	io->read(file, &red, "red") &&
-	io->read(file, &green, "green") &&
-	io->read(file, &blue, "blue") &&
-	io->read(file, &alpha, "alpha");
+	io->read(stream, &red, "red") &&
+	io->read(stream, &green, "green") &&
+	io->read(stream, &blue, "blue") &&
+	io->read(stream, &alpha, "alpha");
 }
 
 template <typename T>
-bool Point2<T>::write(FILE *file) const {
+bool Point2<T>::write(std::ostream &stream) const {
 	return
-	io->write(file, x, "x") &&
-	io->write(file, y, "y");
+	io->write(stream, x, "x") &&
+	io->write(stream, y, "y");
 }
 
 template <typename T>
-bool Point3<T>::write(FILE *file) const {
+bool Point3<T>::write(std::ostream &stream) const {
 	return
-	io->write(file, x, "x") &&
-	io->write(file, y, "y") &&
-	io->write(file, z, "z");
+	io->write(stream, x, "x") &&
+	io->write(stream, y, "y") &&
+	io->write(stream, z, "z");
 }
 
 template <typename T>
-bool Point4<T>::write(FILE *file) const {
+bool Point4<T>::write(std::ostream &stream) const {
 	return
-	io->write(file, w, "w") &&
-	io->write(file, x, "x") &&
-	io->write(file, y, "y") &&
-	io->write(file, z, "z");
+	io->write(stream, w, "w") &&
+	io->write(stream, x, "x") &&
+	io->write(stream, y, "y") &&
+	io->write(stream, z, "z");
 }
 
 template <typename T>
-bool Color<T>::write(FILE *file) const {
+bool Color<T>::write(std::ostream &stream) const {
 	return
-	io->write(file, red, "red") &&
-	io->write(file, green, "green") &&
-	io->write(file, blue, "blue") &&
-	io->write(file, alpha, "alpha");
+	io->write(stream, red, "red") &&
+	io->write(stream, green, "green") &&
+	io->write(stream, blue, "blue") &&
+	io->write(stream, alpha, "alpha");
 }
 
 //Macros to speed up file reading
@@ -175,24 +168,24 @@ bool Color<T>::write(FILE *file) const {
 
 //Hack to get the read() macro to return a value from a function that uses a ref
 template <typename T>
-inline T __read(FILE *file, T *thing) {
+inline T __read(std::istream &stream, T *thing) {
 	T __garbage;
 #ifdef DEBUG
-	io->read(file, &__garbage, "garbage");
+	io->read(stream, &__garbage, "garbage");
 #else
-	io->read(file, &__garbage, "");
+	io->read(stream, &__garbage, "");
 #endif
 	return __garbage;
 }
 //I'm so sorry about (type *)NULL, but that's the only way to get C++ to interpret
 // the type and let the template work
-#define READ(type) __read(file, (type *)NULL)
+#define READ(type) __read(stream, (type *)NULL)
 
 #ifdef DEBUG
 	#define READVAR(name, type) \
 		type name; \
-		io->read(file, (type *)&name, String(#name))
-	#define READTOVAR(name, type) io->read(file, (type *)&name, String(#name))
+		io->read(stream, (type *)&name, String(#name))
+	#define READTOVAR(name, type) io->read(stream, (type *)&name, String(#name))
 	#define READCHECK(type, value) { \
 		if (READ(type) != value)\
 			return;\
@@ -200,8 +193,8 @@ inline T __read(FILE *file, T *thing) {
 #else
 	#define READVAR(name, type) \
 		type name; \
-		io->read(file, (type *)&name, "")
-	#define READTOVAR(name, type) io->read(file, (type *)&name, "")
+		io->read(stream, (type *)&name, "")
+	#define READTOVAR(name, type) io->read(stream, (type *)&name, "")
 	#define READCHECK(type, value) { \
 	READVAR(check, type); \
 	if (check != value)\
@@ -291,9 +284,9 @@ for (U32 i = 0; i < name##_length; i ++) { \
 
 //Macros to speed up file reading
 #ifdef DEBUG
-#define WRITE(value, type) io->write(file, (type) value, String(#value))
+#define WRITE(value, type) io->write(stream, (type) value, String(#value))
 #else
-#define WRITE(value, type) io->write(file, (type) value, "")
+#define WRITE(value, type) io->write(stream, (type) value, "")
 #endif
 
 #define WRITECHECK(value, type) { if (!WRITE(value, type)) return false; }

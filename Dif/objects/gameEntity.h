@@ -42,9 +42,9 @@ public:
 	 @arg file - The FILE to read from (updates position)
 	 @return A GameEntity
 	 */
-	GameEntity(FILE *file);
+	GameEntity(std::istream &stream);
 
-	bool write(FILE *file) const;
+	bool write(std::ostream &stream) const;
 
 	/**
 	 Frees the GameEntity and all memory contained within it

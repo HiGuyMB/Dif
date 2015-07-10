@@ -30,12 +30,12 @@
 #include "io.h"
 #include "aiSpecialNode.h"
 
-AISpecialNode::AISpecialNode(FILE *file) {
+AISpecialNode::AISpecialNode(std::istream &stream) {
 	READTOVAR(name, String); //name
 	READTOVAR(position, Point3F); //position
 }
 
-bool AISpecialNode::write(FILE *file) const {
+bool AISpecialNode::write(std::ostream &stream) const {
 	WRITE(name, String); //name
 	WRITECHECK(position, Point3F); //position
 

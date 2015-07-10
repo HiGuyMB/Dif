@@ -30,6 +30,9 @@
 
 #include "types.h"
 
+template<typename T>
+T swapEndianess(const T &num);
+
 inline U16 swapEndianness(const U16 &num) {
 	return U16(num >> 8) |
 	       U16(num << 8);

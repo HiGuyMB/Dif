@@ -35,7 +35,7 @@
 #include "interior.h"
 #include "math.h"
 
-bool Interior::read(FILE *file) {
+bool Interior::read(std::istream &stream) {
 	READTOVAR(interiorFileVersion, U32); //interiorFileVersion
 	READTOVAR(detailLevel, U32); //detailLevel
 	READTOVAR(minPixels, U32); //minPixels
@@ -123,13 +123,12 @@ bool Interior::read(FILE *file) {
 	// old format. So guess what I get to do? Yep! That!
 
 	//Save the file position as we'll need to rewind if any reads fail
-	fpos_t pos;
-	fgetpos(file, &pos);
+	std::istream::pos_type pos = stream.tellg();
 
 	bool isTGEInterior = false;
 
 	READLOOPVAR(numSurfaces, surface, Surface) {
-		if (!readSurface(file, &surface[i], false)) {
+		if (!readSurface(stream, &surface[i], false)) {
 			isTGEInterior = true;
 			break;
 		}
@@ -146,7 +145,7 @@ bool Interior::read(FILE *file) {
 		// to read it as a TGE interior.
 
 		//First, rewind
-		fsetpos(file, &pos);
+		stream.seekg(pos);
 
 		//Second, clean up
 		numSurfaces = 0;
@@ -154,7 +153,7 @@ bool Interior::read(FILE *file) {
 
 		//Third, re-read
 		READLOOPVAR(numSurfaces, surface, Surface) {
-			if (!readSurface(file, &surface[i], true)) {
+			if (!readSurface(stream, &surface[i], true)) {
 				//Ok this surface failed too. Bail.
 				//TODO: Blow up here
 				return false;
@@ -315,7 +314,7 @@ bool Interior::read(FILE *file) {
 
 		if (this->interiorFileVersion >= 10) {
 			READLOOPVAR(numStaticMeshes, staticMesh, StaticMesh *) {
-				staticMesh[i] = new StaticMesh(file);
+				staticMesh[i] = new StaticMesh(stream);
 			}
 		}
 		if (this->interiorFileVersion >= 11) {
@@ -339,7 +338,7 @@ bool Interior::read(FILE *file) {
 	return true;
 }
 
-bool Interior::write(FILE *file) const {
+bool Interior::write(std::ostream &stream) const {
 	//We can only write version 0 maps at the moment.
 	WRITECHECK(0, U32); //interiorFileVersion
 	WRITECHECK(detailLevel, U32); //detailLevel
@@ -453,7 +452,7 @@ Interior::~Interior() {
 
 //----------------------------------------------------------------------------
 
-bool Interior::readSurface(FILE *file, Surface *surface, bool isTGEInterior) {
+bool Interior::readSurface(std::istream &stream, Surface *surface, bool isTGEInterior) {
 	READTOVAR(surface->windingStart, U32); //windingStart
 	if (this->interiorFileVersion >= 13) {
 		READTOVAR(surface->windingCount, U32); //windingCount
@@ -513,62 +512,62 @@ bool Interior::readSurface(FILE *file, Surface *surface, bool isTGEInterior) {
 
 //----------------------------------------------------------------------------
 
-bool Plane::read(FILE *file) {
+bool Plane::read(std::istream &stream) {
 	READTOVAR(normalIndex, U16); //normalIndex
 	READTOVAR(planeDistance, F32); //planeDistance
 	return true;
 }
 
-bool Plane::write(FILE *file) const {
+bool Plane::write(std::ostream &stream) const {
 	WRITECHECK(normalIndex, U16); //normalIndex
 	WRITECHECK(planeDistance, F32); //planeDistance
 	return true;
 }
 
-bool TexGenEq::read(FILE *file) {
+bool TexGenEq::read(std::istream &stream) {
 	READTOVAR(planeX, PlaneF); //planeX
 	READTOVAR(planeY, PlaneF); //planeY
 	return true;
 }
 
-bool TexGenEq::write(FILE *file) const {
+bool TexGenEq::write(std::ostream &stream) const {
 	WRITECHECK(planeX, PlaneF); //planeX
 	WRITECHECK(planeY, PlaneF); //planeY
 	return true;
 }
 
-bool BSPNode::write(FILE *file) const {
+bool BSPNode::write(std::ostream &stream) const {
 	WRITECHECK(planeIndex, U16); //planeIndex
 	WRITECHECK(frontIndex, U16); //frontIndex
 	WRITECHECK(backIndex, U16); //backIndex
 	return true;
 }
 
-bool BSPSolidLeaf::read(FILE *file) {
+bool BSPSolidLeaf::read(std::istream &stream) {
 	READTOVAR(surfaceIndex, U32); //surfaceIndex
 	READTOVAR(surfaceCount, U16); //surfaceCount
 	return true;
 }
 
-bool BSPSolidLeaf::write(FILE *file) const {
+bool BSPSolidLeaf::write(std::ostream &stream) const {
 	WRITECHECK(surfaceIndex, U32); //surfaceIndex
 	WRITECHECK(surfaceCount, U16); //surfaceCount
 	return true;
 }
 
-bool WindingIndex::read(FILE *file) {
+bool WindingIndex::read(std::istream &stream) {
 	READTOVAR(windingStart, U32); //windingStart
 	READTOVAR(windingCount, U32); //windingCount
 	return true;
 }
 
-bool WindingIndex::write(FILE *file) const {
+bool WindingIndex::write(std::ostream &stream) const {
 	WRITECHECK(windingStart, U32); //windingStart
 	WRITECHECK(windingCount, U32); //windingCount
 	return true;
 }
 
-bool Zone::write(FILE *file) const {
+bool Zone::write(std::ostream &stream) const {
 	WRITECHECK(portalStart, U16); //portalStart
 	WRITECHECK(portalCount, U16); //portalCount
 	WRITECHECK(surfaceStart, U32); //surfaceStart
@@ -576,7 +575,7 @@ bool Zone::write(FILE *file) const {
 	return true;
 }
 
-bool Edge::read(FILE *file) {
+bool Edge::read(std::istream &stream) {
 	READTOVAR(pointIndex0, S32); //pointIndex0
 	READTOVAR(pointIndex1, S32); //pointIndex1
 	READTOVAR(surfaceIndex0, S32); //surfaceIndex0
@@ -584,7 +583,7 @@ bool Edge::read(FILE *file) {
 	return true;
 }
 
-bool Edge::write(FILE *file) const {
+bool Edge::write(std::ostream &stream) const {
 	WRITECHECK(pointIndex0, S32); //pointIndex0
 	WRITECHECK(pointIndex1, S32); //pointIndex1
 	WRITECHECK(surfaceIndex0, S32); //surfaceIndex0
@@ -592,7 +591,7 @@ bool Edge::write(FILE *file) const {
 	return true;
 }
 
-bool Portal::read(FILE *file) {
+bool Portal::read(std::istream &stream) {
 	READTOVAR(planeIndex, U16); //planeIndex
 	READTOVAR(triFanCount, U16); //triFanCount
 	READTOVAR(triFanStart, U32); //triFanStart
@@ -601,7 +600,7 @@ bool Portal::read(FILE *file) {
 	return true;
 }
 
-bool Portal::write(FILE *file) const {
+bool Portal::write(std::ostream &stream) const {
 	WRITECHECK(planeIndex, U16); //planeIndex
 	WRITECHECK(triFanCount, U16); //triFanCount
 	WRITECHECK(triFanStart, U32); //triFanStart
@@ -610,7 +609,7 @@ bool Portal::write(FILE *file) const {
 	return true;
 }
 
-bool Surface::write(FILE *file) const {
+bool Surface::write(std::ostream &stream) const {
 	WRITECHECK(windingStart, U32); //windingStart
 	WRITECHECK(windingCount, U8); //windingCount
 	U16 index = planeIndex;
@@ -633,7 +632,7 @@ bool Surface::write(FILE *file) const {
 	return true;
 }
 
-bool NullSurface::write(FILE *file) const {
+bool NullSurface::write(std::ostream &stream) const {
 	WRITECHECK(windingStart, U32); //windingStart
 	WRITECHECK(planeIndex, U16); //planeIndex
 	WRITECHECK(surfaceFlags, U8); //surfaceFlags
@@ -641,13 +640,13 @@ bool NullSurface::write(FILE *file) const {
 	return true;
 }
 
-bool LightMap::write(FILE *file) const {
+bool LightMap::write(std::ostream &stream) const {
 	WRITE(lightMap, PNG); //lightMap
 	WRITECHECK(keepLightMap, U8); //keepLightMap
 	return true;
 }
 
-bool AnimatedLight::read(FILE *file) {
+bool AnimatedLight::read(std::istream &stream) {
 	READTOVAR(nameIndex, U32); //nameIndex
 	READTOVAR(stateIndex, U32); //stateIndex
 	READTOVAR(stateCount, U16); //stateCount
@@ -656,7 +655,7 @@ bool AnimatedLight::read(FILE *file) {
 	return true;
 }
 
-bool AnimatedLight::write(FILE *file) const {
+bool AnimatedLight::write(std::ostream &stream) const {
 	WRITECHECK(nameIndex, U32); //nameIndex
 	WRITECHECK(stateIndex, U32); //stateIndex
 	WRITECHECK(stateCount, U16); //stateCount
@@ -665,7 +664,7 @@ bool AnimatedLight::write(FILE *file) const {
 	return true;
 }
 
-bool LightState::read(FILE *file) {
+bool LightState::read(std::istream &stream) {
 	READTOVAR(red, U8); //red
 	READTOVAR(green, U8); //green
 	READTOVAR(blue, U8); //blue
@@ -675,7 +674,7 @@ bool LightState::read(FILE *file) {
 	return true;
 }
 
-bool LightState::write(FILE *file) const {
+bool LightState::write(std::ostream &stream) const {
 	WRITECHECK(red, U8); //red
 	WRITECHECK(green, U8); //green
 	WRITECHECK(blue, U8); //blue
@@ -685,21 +684,21 @@ bool LightState::write(FILE *file) const {
 	return true;
 }
 
-bool StateData::read(FILE *file) {
+bool StateData::read(std::istream &stream) {
 	READTOVAR(surfaceIndex, U32); //surfaceIndex
 	READTOVAR(mapIndex, U32); //mapIndex
 	READTOVAR(lightStateIndex, U16); //lightStateIndex
 	return true;
 }
 
-bool StateData::write(FILE *file) const {
+bool StateData::write(std::ostream &stream) const {
 	WRITECHECK(surfaceIndex, U32); //surfaceIndex
 	WRITECHECK(mapIndex, U32); //mapIndex
 	WRITECHECK(lightStateIndex, U16); //lightStateIndex
 	return true;
 }
 
-bool ConvexHull::write(FILE *file) const {
+bool ConvexHull::write(std::ostream &stream) const {
 	WRITECHECK(hullStart, U32); //hullStart
 	WRITECHECK(hullCount, U16); //hullCount
 	WRITECHECK(minX, F32); //minX
@@ -717,14 +716,14 @@ bool ConvexHull::write(FILE *file) const {
 	return true;
 }
 
-bool TexMatrix::read(FILE *file) {
+bool TexMatrix::read(std::istream &stream) {
 	READTOVAR(T, S32); //T
 	READTOVAR(N, S32); //N
 	READTOVAR(B, S32); //B
 	return true;
 }
 
-bool TexMatrix::write(FILE *file) const {
+bool TexMatrix::write(std::ostream &stream) const {
 	WRITECHECK(T, S32); //T
 	WRITECHECK(N, S32); //N
 	WRITECHECK(B, S32); //B

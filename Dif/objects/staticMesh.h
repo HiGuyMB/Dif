@@ -45,8 +45,8 @@ struct Primitive : public Readable, Writable {
 	Point2I lightMapOffset;
 	Point2I lightMapSize;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 struct MaterialList : public Readable, Writable {
@@ -60,8 +60,8 @@ struct MaterialList : public Readable, Writable {
 	U32 *detailScale;
 	U32 *reflectionAmount;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 class StaticMesh {
@@ -100,9 +100,9 @@ public:
 	 @arg file - The FILE to read from (updates position)
 	 @return A StaticMesh
 	 */
-	StaticMesh(FILE *file);
+	StaticMesh(std::istream &stream);
 
-	bool write(FILE *file) const;
+	bool write(std::ostream &stream) const;
 
 	/**
 	 Frees the StaticMesh and all memory contained within it

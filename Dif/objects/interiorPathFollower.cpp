@@ -30,7 +30,7 @@
 #include "io.h"
 #include "interiorPathFollower.h"
 
-InteriorPathFollower::InteriorPathFollower(FILE *file) {
+InteriorPathFollower::InteriorPathFollower(std::istream &stream) {
 	READTOVAR(name, String); //name
 	READTOVAR(datablock, String); //datablock
 	READTOVAR(interiorResIndex, U32); //interiorResIndex
@@ -48,7 +48,7 @@ InteriorPathFollower::InteriorPathFollower(FILE *file) {
 	READTOVAR(totalMS, U32); //totalMS
 }
 
-bool InteriorPathFollower::write(FILE *file) const {
+bool InteriorPathFollower::write(std::ostream &stream) const {
 	WRITE(name, String); //name
 	WRITE(datablock, String); //datablock
 	WRITECHECK(interiorResIndex, U32); //interiorResIndex

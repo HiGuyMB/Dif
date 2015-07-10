@@ -28,7 +28,7 @@
 #include "staticMesh.h"
 #include <assert.h>
 
-StaticMesh::StaticMesh(FILE *file) {
+StaticMesh::StaticMesh(std::istream &stream) {
 	READLISTVAR(numPrimitives, primitive, Primitive);
 	READLISTVAR(numIndices, index, U16);
 	READLISTVAR(numVertices, vertex, Point3F);
@@ -39,7 +39,7 @@ StaticMesh::StaticMesh(FILE *file) {
 	READTOVAR(hasMaterialList, U8);
 	if (hasMaterialList) {
 		baseMaterialList = MaterialList();
-		baseMaterialList.read(file);
+		baseMaterialList.read(stream);
 	}
 
 	READTOVAR(hasSolid, U8);
@@ -49,7 +49,7 @@ StaticMesh::StaticMesh(FILE *file) {
 	READTOVAR(scale, Point3F);
 }
 
-bool StaticMesh::write(FILE *file) const {
+bool StaticMesh::write(std::ostream &stream) const {
 	WRITELIST(numPrimitives, primitive, Primitive);
 	WRITELIST(numIndices, index, U16);
 	WRITELIST(numVertices, vertex, Point3F);
@@ -58,7 +58,7 @@ bool StaticMesh::write(FILE *file) const {
 	WRITELIST(numLightmapUVs, lightmapUV, Point2F);
 
 	if (hasMaterialList) {
-		baseMaterialList.write(file);
+		baseMaterialList.write(stream);
 	}
 
 	WRITECHECK(hasSolid, U8);
@@ -79,7 +79,7 @@ StaticMesh::~StaticMesh() {
 	delete [] lightmapUV;
 }
 
-bool Primitive::read(FILE *file) {
+bool Primitive::read(std::istream &stream) {
 	READTOVAR(alpha, U8);
 	READTOVAR(texS, U32);
 	READTOVAR(texT, U32);
@@ -95,7 +95,7 @@ bool Primitive::read(FILE *file) {
 	return true;
 }
 
-bool Primitive::write(FILE *file) const {
+bool Primitive::write(std::ostream &stream) const {
 	WRITECHECK(alpha, U8);
 	WRITECHECK(texS, U32);
 	WRITECHECK(texT, U32);
@@ -111,14 +111,14 @@ bool Primitive::write(FILE *file) const {
 	return true;
 }
 
-bool MaterialList::read(FILE *file) {
+bool MaterialList::read(std::istream &stream) {
 	//It's a disaster
 	assert(1);
 
 	return true;
 }
 
-bool MaterialList::write(FILE *file) const {
+bool MaterialList::write(std::ostream &stream) const {
 	//Not going to bother
 	assert(1);
 

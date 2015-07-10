@@ -59,10 +59,10 @@ public:
 	 @arg file - The FILE to read from (updates position)
 	 @return An InteriorPathFollower
 	 */
-	InteriorPathFollower(FILE *file);
+	InteriorPathFollower(std::istream &stream);
 	~InteriorPathFollower();
 
-	bool write(FILE *file) const;
+	bool write(std::ostream &stream) const;
 };
 
 #endif

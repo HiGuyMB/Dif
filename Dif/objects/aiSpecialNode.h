@@ -40,9 +40,9 @@ public:
 	 Reads an AISpecialNode from a FILE
 	 @arg file - The FILE to read from (updates position)
 	 */
-	AISpecialNode(FILE *file);
+	AISpecialNode(std::istream &stream);
 
-	bool write(FILE *file) const;
+	bool write(std::ostream &stream) const;
 
 	/**
 	 Frees the AISpecialNode and all memory contained within it

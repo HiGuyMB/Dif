@@ -31,7 +31,7 @@
 #include "io.h"
 #include "trigger.h"
 
-Trigger::Trigger(FILE *file) {
+Trigger::Trigger(std::istream &stream) {
 	READTOVAR(name, String); //name
 	READTOVAR(datablock, String); //datablock
 	READTOVAR(properties, Dictionary); //properties
@@ -50,7 +50,7 @@ Trigger::Trigger(FILE *file) {
 	READTOVAR(offset, Point3F); //offset
 }
 
-bool Trigger::write(FILE *file) const {
+bool Trigger::write(std::ostream &stream) const {
 	WRITE(name, String); //name
 	WRITE(datablock, String); //datablock
 	WRITE(properties, Dictionary); //properties

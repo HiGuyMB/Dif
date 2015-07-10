@@ -49,16 +49,16 @@ struct Plane : public Readable, Writable {
 	U16 normalIndex;
 	F32 planeDistance;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 struct TexGenEq : public Readable, Writable {
 	PlaneF planeX;
 	PlaneF planeY;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 struct BSPNode : public Readable, Writable {
@@ -66,24 +66,24 @@ struct BSPNode : public Readable, Writable {
 	U16 frontIndex;
 	U16 backIndex;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 struct BSPSolidLeaf : public Readable, Writable {
 	U32 surfaceIndex;
 	U16 surfaceCount;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 struct WindingIndex : public Readable, Writable {
 	U32 windingStart;
 	U32 windingCount;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 struct Edge : public Readable, Writable {
@@ -92,8 +92,8 @@ struct Edge : public Readable, Writable {
 	S32 surfaceIndex0;
 	S32 surfaceIndex1;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 struct Zone : public Readable, Writable {
@@ -105,8 +105,8 @@ struct Zone : public Readable, Writable {
 	U32 staticMeshCount;
 	U16 flags;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 struct Portal : public Readable, Writable {
@@ -116,14 +116,17 @@ struct Portal : public Readable, Writable {
 	U16 zoneFront;
 	U16 zoneBack;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 struct LightMapF : public Readable, Writable {
 	U16 finalWord;
 	F32 texGenXDistance;
 	F32 texGenYDistance;
+
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 struct LightMap : public Readable, Writable {
@@ -131,8 +134,8 @@ struct LightMap : public Readable, Writable {
 	PNG lightDirMap;
 	U8 keepLightMap;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 struct Surface : public Readable, Writable {
@@ -152,8 +155,8 @@ struct Surface : public Readable, Writable {
 	U8 mapSizeX;
 	U8 mapSizeY;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 struct NullSurface : public Readable, Writable {
@@ -162,8 +165,8 @@ struct NullSurface : public Readable, Writable {
 	U8 surfaceFlags;
 	U8 windingCount;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 struct AnimatedLight : public Readable, Writable {
@@ -173,8 +176,8 @@ struct AnimatedLight : public Readable, Writable {
 	U16 flags;
 	U32 duration;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 struct LightState : public Readable, Writable {
@@ -185,8 +188,8 @@ struct LightState : public Readable, Writable {
 	U32 dataIndex;
 	U16 dataCount;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 struct StateData : public Readable, Writable {
@@ -194,8 +197,8 @@ struct StateData : public Readable, Writable {
 	U32 mapIndex;
 	U16 lightStateIndex;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 struct ConvexHull : public Readable, Writable {
@@ -215,16 +218,16 @@ struct ConvexHull : public Readable, Writable {
 	U32 polyListStringStart;
 	U8 staticMesh;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 struct CoordBin : public Readable, Writable {
 	U32 binStart;
 	U32 binCount;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 struct TexMatrix : public Readable, Writable {
@@ -232,8 +235,8 @@ struct TexMatrix : public Readable, Writable {
 	S32 N;
 	S32 B;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 class Interior : public Readable, Writable {
@@ -393,11 +396,11 @@ public:
 	 @arg file - The FILE to read from (updates position)
 	 @arg directory - The base directory for images
 	 */
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	bool read(std::istream &stream);
+	bool write(std::ostream &stream) const;
 
 private:
-	bool readSurface(FILE *file, Surface *surface, bool isTGEInterior);
+	bool readSurface(std::istream &stream, Surface *surface, bool isTGEInterior);
 	
 };
 

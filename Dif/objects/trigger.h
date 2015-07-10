@@ -58,9 +58,9 @@ public:
 	 Reads a Trigger from a FILE
 	 @arg file - The FILE to read from (updates position)
 	 */
-	Trigger(FILE *file);
+	Trigger(std::istream &stream);
 
-	bool write(FILE *file) const;
+	bool write(std::ostream &stream) const;
 
 	/**
 	 Frees the Trigger and all memory contained within it

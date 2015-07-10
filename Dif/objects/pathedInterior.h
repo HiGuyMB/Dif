@@ -42,7 +42,7 @@ public:
 	 @arg directory - The base directory for images
 	 @return An Interior
 	 */
-	PathedInterior(FILE *file, String directory);
+	PathedInterior(std::istream &stream, String directory);
 	~PathedInterior();
 };
 

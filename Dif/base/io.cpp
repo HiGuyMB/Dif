@@ -60,137 +60,80 @@ void IO::reverse(FILE **file, const U32 &bytes) {
 	fsetpos(*file, &pos);
 }
 
-bool IO::read(FILE *file, U64 *value, const String &name) {
-	if (feof(file))
-		return false;
-	fpos_t pos;
-	fgetpos(file, &pos);
-	fread(value, sizeof(*value), 1, file);
-
-	DEBUG_PRINT("Read U64 (%s) 0x%08llX %lld: 0x%016llX / %llu\n", (const char *)name, pos, pos, swapEndianness(*value), *value);
-	return true;
-}
-bool IO::read(FILE *file, U32 *value, const String &name) {
-	if (feof(file))
-		return false;
-	fpos_t pos;
-	fgetpos(file, &pos);
-	fread(value, sizeof(*value), 1, file);
-
-	DEBUG_PRINT("Read U32 (%s) 0x%08llX %lld: 0x%08X / %u\n", (const char *)name, pos, pos, swapEndianness(*value), *value);
-	return true;
-}
-bool IO::read(FILE *file, U16 *value, const String &name) {
-	if (feof(file))
-		return false;
-	fpos_t pos;
-	fgetpos(file, &pos);
-	fread(value, sizeof(*value), 1, file);
-
-	DEBUG_PRINT("Read U16 (%s) 0x%08llX %lld: 0x%04hX / %hu\n", (const char *)name, pos, pos, swapEndianness(*value), *value);
-	return true;
-}
-bool IO::read(FILE *file, U8 *value, const String &name) {
-	if (feof(file))
-		return false;
-	fpos_t pos;
-	fgetpos(file, &pos);
-	fread(value, sizeof(*value), 1, file);
-
-	DEBUG_PRINT("Read U8 (%s) 0x%08llX %lld: 0x%02hhX / %u\n", (const char *)name, pos, pos, *value, *value);
-	return true;
-}
-bool IO::read(FILE *file, F32 *value, const String &name) {
-	if (feof(file))
-		return false;
-	fpos_t pos;
-	fgetpos(file, &pos);
-	fread(value, sizeof(*value), 1, file);
-
-	DEBUG_PRINT("Read F32 (%s) 0x%08llX %lld: 0x%08X %f\n", (const char *)name, pos, pos, swapEndianness(*(U32 *)value), *value);
-	return true;
-}
-
-//Lazy!
-bool IO::read(FILE *file, S64 *value, const String &name) { return read(file, (U64 *)value, name); }
-bool IO::read(FILE *file, S32 *value, const String &name) { return read(file, (U32 *)value, name); }
-bool IO::read(FILE *file, S16 *value, const String &name) { return read(file, (U16 *)value, name); }
-bool IO::read(FILE *file, S8  *value, const String &name) { return read(file, (U8  *)value, name); }
-
-bool PlaneF::read(FILE *file) {
+bool PlaneF::read(std::istream &stream) {
 	return
-		io->read(file, &x, "x") &&
-		io->read(file, &y, "x") &&
-		io->read(file, &z, "x") &&
-		io->read(file, &d, "x");
+		io->read(stream, &x, "x") &&
+		io->read(stream, &y, "x") &&
+		io->read(stream, &z, "x") &&
+		io->read(stream, &d, "x");
 }
 
-bool QuatF::read(FILE *file) {
+bool QuatF::read(std::istream &stream) {
 	return
-		io->read(file, &w, "w") &&
-		io->read(file, &x, "x") &&
-		io->read(file, &y, "y") &&
-		io->read(file, &z, "z");
+		io->read(stream, &w, "w") &&
+		io->read(stream, &x, "x") &&
+		io->read(stream, &y, "y") &&
+		io->read(stream, &z, "z");
 }
 
-bool BoxF::read(FILE *file) {
+bool BoxF::read(std::istream &stream) {
 	return
-		io->read(file, &minX, "minX") &&
-		io->read(file, &minY, "minY") &&
-		io->read(file, &minZ, "minZ") &&
-		io->read(file, &maxX, "maxX") &&
-		io->read(file, &maxY, "maxY") &&
-		io->read(file, &maxZ, "maxZ");
+		io->read(stream, &minX, "minX") &&
+		io->read(stream, &minY, "minY") &&
+		io->read(stream, &minZ, "minZ") &&
+		io->read(stream, &maxX, "maxX") &&
+		io->read(stream, &maxY, "maxY") &&
+		io->read(stream, &maxZ, "maxZ");
 }
 
-bool SphereF::read(FILE *file) {
+bool SphereF::read(std::istream &stream) {
 	return
-		io->read(file, &x, "x") &&
-		io->read(file, &y, "y") &&
-		io->read(file, &z, "z") &&
-		io->read(file, &radius, "radius");
+		io->read(stream, &x, "x") &&
+		io->read(stream, &y, "y") &&
+		io->read(stream, &z, "z") &&
+		io->read(stream, &radius, "radius");
 }
 
-bool MatrixF::read(FILE *file) {
+bool MatrixF::read(std::istream &stream) {
 	return
-		io->read(file, &m[0], "m[0]") &&
-		io->read(file, &m[1], "m[1]") &&
-		io->read(file, &m[2], "m[2]") &&
-		io->read(file, &m[3], "m[3]") &&
-		io->read(file, &m[4], "m[4]") &&
-		io->read(file, &m[5], "m[5]") &&
-		io->read(file, &m[6], "m[6]") &&
-		io->read(file, &m[7], "m[7]") &&
-		io->read(file, &m[8], "m[8]") &&
-		io->read(file, &m[9], "m[9]") &&
-		io->read(file, &m[10], "m[10]") &&
-		io->read(file, &m[11], "m[11]") &&
-		io->read(file, &m[12], "m[12]") &&
-		io->read(file, &m[13], "m[13]") &&
-		io->read(file, &m[14], "m[14]") &&
-		io->read(file, &m[15], "m[15]");
+		io->read(stream, &m[0], "m[0]") &&
+		io->read(stream, &m[1], "m[1]") &&
+		io->read(stream, &m[2], "m[2]") &&
+		io->read(stream, &m[3], "m[3]") &&
+		io->read(stream, &m[4], "m[4]") &&
+		io->read(stream, &m[5], "m[5]") &&
+		io->read(stream, &m[6], "m[6]") &&
+		io->read(stream, &m[7], "m[7]") &&
+		io->read(stream, &m[8], "m[8]") &&
+		io->read(stream, &m[9], "m[9]") &&
+		io->read(stream, &m[10], "m[10]") &&
+		io->read(stream, &m[11], "m[11]") &&
+		io->read(stream, &m[12], "m[12]") &&
+		io->read(stream, &m[13], "m[13]") &&
+		io->read(stream, &m[14], "m[14]") &&
+		io->read(stream, &m[15], "m[15]");
 }
 
-bool String::read(FILE *file) {
+bool String::read(std::istream &stream) {
 	//<length><bytes>
 
-	io->read(file, (U8 *)&length, "length");
+	io->read(stream, (U8 *)&length, "length");
 	data = new U8[length + 1];
 	for (int i = 0; i < length; i ++) {
-		io->read(file, &(data[i]), "data");
+		io->read(stream, &(data[i]), "data");
 	}
 	//Null-terminate
 	data[length] = 0;
 	return true;
 }
 
-bool PNG::read(FILE *file) {
+bool PNG::read(std::istream &stream) {
 	U8 PNGFooter[8] = {0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82};
 	data = new U8[LIGHT_MAP_SIZE];
 
 	//I can't parse these, so I just read em all
 	for (size = 0; ;size ++) {
-		io->read(file, &(data[size]), "data");
+		io->read(stream, &(data[size]), "data");
 		if (size > 8 && memcmp(&data[size - 7], PNGFooter, 8) == 0)
 			break;
 	}
@@ -199,17 +142,17 @@ bool PNG::read(FILE *file) {
 	return true;
 }
 
-bool Dictionary::read(FILE *file) {
+bool Dictionary::read(std::istream &stream) {
 	//<length>[<name><value>]...
-	io->read(file, &size, "size");
+	io->read(stream, &size, "size");
 	names = new String[size];
 	values = new String[size];
 
 	for (int i = 0; i < size; i ++) {
 		names[i] = String();
 		values[i] = String();
-		names[i].read(file);
-		values[i].read(file);
+		names[i].read(stream);
+		values[i].read(stream);
 	}
 
 	return true;
@@ -217,131 +160,89 @@ bool Dictionary::read(FILE *file) {
 
 //-----------------------------------------------------------------------------
 
-bool IO::write(FILE *file, const U64 &value, const String &name) {
-	fpos_t pos;
-	fgetpos(file, &pos);
-	DEBUG_PRINT("Write U64 (%s) 0x%08llX %lld: 0x%016llX / %llu\n", (const char *)name, pos, pos, swapEndianness(value), value);
-	fwrite(&value, sizeof(value), 1, file);
-	return true;
-}
-bool IO::write(FILE *file, const U32 &value, const String &name) {
-	fpos_t pos;
-	fgetpos(file, &pos);
-	DEBUG_PRINT("Write U32 (%s) 0x%08llX %lld: 0x%08X / %u\n", (const char *)name, pos, pos, swapEndianness(value), value);
-	fwrite(&value, sizeof(value), 1, file);
-	return true;
-}
-bool IO::write(FILE *file, const U16 &value, const String &name) {
-	fpos_t pos;
-	fgetpos(file, &pos);
-	DEBUG_PRINT("Write U16 (%s) 0x%08llX %lld: 0x%04hX / %hu\n", (const char *)name, pos, pos, swapEndianness(value), value);
-	fwrite(&value, sizeof(value), 1, file);
-	return true;
-}
-bool IO::write(FILE *file, const U8 &value, const String &name) {
-	fpos_t pos;
-	fgetpos(file, &pos);
-	DEBUG_PRINT("Write U8 (%s) 0x%08llX %lld: 0x%02hhX / %u\n", (const char *)name, pos, pos, value, value);
-	fwrite(&value, sizeof(value), 1, file);
-	return true;
-}
-bool IO::write(FILE *file, const F32 &value, const String &name) {
-	fpos_t pos;
-	fgetpos(file, &pos);
-	DEBUG_PRINT("Write F32 (%s) 0x%08llX %lld: 0x%08X %f\n", (const char *)name, pos, pos, swapEndianness(*(U32 *)&value), value);
-	fwrite(&value, sizeof(value), 1, file);
-	return true;
-}
-
-//Lazy!
-bool IO::write(FILE *file, const S64 &value, const String &name) { return write(file, (U64)value, name); }
-bool IO::write(FILE *file, const S32 &value, const String &name) { return write(file, (U32)value, name); }
-bool IO::write(FILE *file, const S16 &value, const String &name) { return write(file, (U16)value, name); }
-bool IO::write(FILE *file, const S8  &value, const String &name) { return write(file, (U8) value, name); }
-
-bool PlaneF::write(FILE *file) const {
+bool PlaneF::write(std::ostream &stream) const {
 	return
-		io->write(file, x, "x") &&
-		io->write(file, y, "y") &&
-		io->write(file, z, "z") &&
-		io->write(file, d, "d");
+		io->write(stream, x, "x") &&
+		io->write(stream, y, "y") &&
+		io->write(stream, z, "z") &&
+		io->write(stream, d, "d");
 }
 
-bool QuatF::write(FILE *file) const {
+bool QuatF::write(std::ostream &stream) const {
 	return
-		io->write(file, w, "w") &&
-		io->write(file, x, "x") &&
-		io->write(file, y, "y") &&
-		io->write(file, z, "z");
+		io->write(stream, w, "w") &&
+		io->write(stream, x, "x") &&
+		io->write(stream, y, "y") &&
+		io->write(stream, z, "z");
 }
 
-bool BoxF::write(FILE *file) const {
+bool BoxF::write(std::ostream &stream) const {
 	return
-		io->write(file, minX, "minX") &&
-		io->write(file, minY, "minY") &&
-		io->write(file, minZ, "minZ") &&
-		io->write(file, maxX, "maxX") &&
-		io->write(file, maxY, "maxY") &&
-		io->write(file, maxZ, "maxZ");
+		io->write(stream, minX, "minX") &&
+		io->write(stream, minY, "minY") &&
+		io->write(stream, minZ, "minZ") &&
+		io->write(stream, maxX, "maxX") &&
+		io->write(stream, maxY, "maxY") &&
+		io->write(stream, maxZ, "maxZ");
 }
 
-bool SphereF::write(FILE *file) const {
+bool SphereF::write(std::ostream &stream) const {
 	return
-		io->write(file, x, "x") &&
-		io->write(file, y, "y") &&
-		io->write(file, z, "z") &&
-		io->write(file, radius, "radius");
+		io->write(stream, x, "x") &&
+		io->write(stream, y, "y") &&
+		io->write(stream, z, "z") &&
+		io->write(stream, radius, "radius");
 }
 
-bool MatrixF::write(FILE *file) const {
+bool MatrixF::write(std::ostream &stream) const {
 	return
-		io->write(file, m[0], "m[0]") &&
-		io->write(file, m[1], "m[1]") &&
-		io->write(file, m[2], "m[2]") &&
-		io->write(file, m[3], "m[3]") &&
-		io->write(file, m[4], "m[4]") &&
-		io->write(file, m[5], "m[5]") &&
-		io->write(file, m[6], "m[6]") &&
-		io->write(file, m[7], "m[7]") &&
-		io->write(file, m[8], "m[8]") &&
-		io->write(file, m[9], "m[9]") &&
-		io->write(file, m[10], "m[10]") &&
-		io->write(file, m[11], "m[11]") &&
-		io->write(file, m[12], "m[12]") &&
-		io->write(file, m[13], "m[13]") &&
-		io->write(file, m[14], "m[14]") &&
-		io->write(file, m[15], "m[15]");
+		io->write(stream, m[0], "m[0]") &&
+		io->write(stream, m[1], "m[1]") &&
+		io->write(stream, m[2], "m[2]") &&
+		io->write(stream, m[3], "m[3]") &&
+		io->write(stream, m[4], "m[4]") &&
+		io->write(stream, m[5], "m[5]") &&
+		io->write(stream, m[6], "m[6]") &&
+		io->write(stream, m[7], "m[7]") &&
+		io->write(stream, m[8], "m[8]") &&
+		io->write(stream, m[9], "m[9]") &&
+		io->write(stream, m[10], "m[10]") &&
+		io->write(stream, m[11], "m[11]") &&
+		io->write(stream, m[12], "m[12]") &&
+		io->write(stream, m[13], "m[13]") &&
+		io->write(stream, m[14], "m[14]") &&
+		io->write(stream, m[15], "m[15]");
 }
 
-bool String::write(FILE *file) const {
+bool String::write(std::ostream &stream) const {
 	//<length><bytes>
-	if (!io->write(file, (U8)length, "length"))
+	if (!io->write(stream, (U8)length, "length"))
 		return false;
 	for (int i = 0; i < length; i ++) {
-		if (!io->write(file, data[i], "data"))
+		if (!io->write(stream, data[i], "data"))
 			return false;
 	}
 	return true;
 }
 
-bool PNG::write(FILE *file) const {
+bool PNG::write(std::ostream &stream) const {
 	//Basically dump out everything. Yeah.
 
 	for (U32 i = 0; i < size; i ++) {
-		if (!io->write(file, data[i], "data"))
+		if (!io->write(stream, data[i], "data"))
 			return false;
 	}
 	return true;
 }
 
-bool Dictionary::write(FILE *file) const {
+bool Dictionary::write(std::ostream &stream) const {
 	//<length>[<name><value>]...
 
-	if (!io->write(file, size, "size"))
+	if (!io->write(stream, size, "size"))
 		return false;
 	for (int i = 0; i < size; i ++) {
-		if (!names[i].write(file) ||
-		    !values[i].write(file))
+		if (!names[i].write(stream) ||
+		    !values[i].write(stream))
 		return false;
 	}
 

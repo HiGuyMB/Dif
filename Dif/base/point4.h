@@ -63,8 +63,8 @@ public:
 	Point4<T> normalize() const;
 	Point4<T> roundThousands() const;
 
-	bool read(FILE *file);
-	bool write(FILE *file) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 template <typename T>
