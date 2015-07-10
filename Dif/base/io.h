@@ -41,6 +41,7 @@
  */
 class IO {
 public:
+	//Read primitive types from a std::istream
 	template <typename T, bool=true>
 	struct read_impl {
 		static inline bool read(std::istream &stream, T *value, const String &name) {
@@ -50,6 +51,7 @@ public:
 			return true;
 		}
 	};
+	//Read structures from a std::istream
 	template <typename T>
 	struct read_impl<T, false> {
 		static inline bool read(std::istream &stream, T *value, const String &name) {
@@ -57,11 +59,21 @@ public:
 		}
 	};
 
+	/**
+	 Read types from a stream
+	 @var stream - The stream from which the data is read
+	 @var value - A pointer into which the data will be read
+	 @var name - A string containing the name of the variable (for debugging)
+	 @return If the operation was successful
+	 */
 	template <typename T>
 	static inline bool read(std::istream &stream, T *value, const String &name) {
+		//This will select one of the two read_impls above based on whether or not
+		// T is a struct or a primitive type.
 		return read_impl<T, std::is_fundamental<T>::value>::read(stream, value, name);
 	}
 
+	//Write primitive types from a std::istream
 	template <typename T, bool=true>
 	struct write_impl {
 		static inline bool write(std::ostream &stream, const T &value, const String &name) {
@@ -69,6 +81,7 @@ public:
 			return true;
 		}
 	};
+	//Write structures from a std::istream
 	template <typename T>
 	struct write_impl<T, false> {
 		static inline bool write(std::ostream &stream, const T &value, const String &name) {
@@ -76,8 +89,17 @@ public:
 		}
 	};
 
+	/**
+	 Write types to a stream
+	 @var stream - The stream to which the data is written
+	 @var value - The value of the data to write
+	 @var name - A string containing the name of the variable (for debugging)
+	 @return If the operation was successful
+	 */
 	template <typename T>
 	static inline bool write(std::ostream &stream, const T &value, const String &name) {
+		//This will select one of the two write_impls above based on whether or not
+		// T is a struct or a primitive type.
 		return write_impl<T, std::is_fundamental<T>::value>::write(stream, value, name);
 	}
 
