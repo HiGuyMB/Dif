@@ -30,12 +30,15 @@
 
 #include "types.h"
 
-class WayPoint {
+class WayPoint : public Readable, public Writable {
 public:
 	Point3F position;
 	QuatF rotation;
 	U32 msToNext;
 	U32 smoothingType;
+
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 class InteriorPathFollower {
@@ -46,11 +49,9 @@ public:
 	Point3F offset;
 	Dictionary properties;
 
-	U32 numTriggerIds;
-	U32 *triggerId;
+	Vector<U32>triggerId;
 
-	U32 numWayPoints;
-	WayPoint *wayPoint;
+	Vector<WayPoint>wayPoint;
 
 	U32 totalMS;
 
@@ -60,7 +61,6 @@ public:
 	 @return An InteriorPathFollower
 	 */
 	InteriorPathFollower(std::istream &stream);
-	~InteriorPathFollower();
 
 	bool write(std::ostream &stream) const;
 };

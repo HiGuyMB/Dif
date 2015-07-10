@@ -36,15 +36,8 @@ InteriorPathFollower::InteriorPathFollower(std::istream &stream) {
 	READTOVAR(interiorResIndex, U32); //interiorResIndex
 	READTOVAR(offset, Point3F); //offset
 	READTOVAR(properties, Dictionary); //properties
-	READLOOPVAR(numTriggerIds, triggerId, U32) {
-		READTOVAR(triggerId[i], U32); //triggerId
-	}
-	READLOOPVAR(numWayPoints, wayPoint, WayPoint) {
-		READTOVAR(wayPoint[i].position, Point3F); //position
-		READTOVAR(wayPoint[i].rotation, QuatF); //rotation
-		READTOVAR(wayPoint[i].msToNext, U32); //msToNext
-		READTOVAR(wayPoint[i].smoothingType, U32); //smoothingType
-	}
+	READTOVAR(triggerId, Vector<U32>); //triggerId
+	READTOVAR(wayPoint, Vector<WayPoint>); //wayPoint
 	READTOVAR(totalMS, U32); //totalMS
 }
 
@@ -54,19 +47,27 @@ bool InteriorPathFollower::write(std::ostream &stream) const {
 	WRITECHECK(interiorResIndex, U32); //interiorResIndex
 	WRITECHECK(offset, Point3F); //offset
 	WRITE(properties, Dictionary); //properties
-	WRITELIST(numTriggerIds, triggerId, U32); //triggerId
-	WRITELOOP(numWayPoints) { //numWayPoints
-		WRITECHECK(wayPoint[i].position, Point3F); //position
-		WRITECHECK(wayPoint[i].rotation, QuatF); //rotation
-		WRITECHECK(wayPoint[i].msToNext, U32); //msToNext
-		WRITECHECK(wayPoint[i].smoothingType, U32); //smoothingType
-	}
+	WRITE(triggerId, Vector<U32>); //triggerId
+	WRITE(wayPoint, Vector<WayPoint>); //wayPoint
 	WRITECHECK(totalMS, U32); //totalMS
 
 	return true;
 }
 
-InteriorPathFollower::~InteriorPathFollower() {
-	delete [] triggerId;
-	delete [] wayPoint;
+bool WayPoint::read(std::istream &stream) {
+	READTOVAR(position, Point3F); //position
+	READTOVAR(rotation, QuatF); //rotation
+	READTOVAR(msToNext, U32); //msToNext
+	READTOVAR(smoothingType, U32); //smoothingType
+
+	return true;
+}
+
+bool WayPoint::write(std::ostream &stream) const {
+	WRITE(position, Point3F); //position
+	WRITE(rotation, QuatF); //rotation
+	WRITE(msToNext, U32); //msToNext
+	WRITE(smoothingType, U32); //smoothingType
+
+	return true;
 }
