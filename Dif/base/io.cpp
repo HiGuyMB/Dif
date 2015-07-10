@@ -54,12 +54,6 @@ IO::~IO() {
 	
 }
 
-void IO::reverse(FILE **file, const U32 &bytes) {
-	fpos_t pos = ftell(*file);
-	pos -= bytes;
-	fsetpos(*file, &pos);
-}
-
 bool PlaneF::read(std::istream &stream) {
 	return
 		io->read(stream, &x, "x") &&

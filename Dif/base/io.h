@@ -47,8 +47,6 @@ public:
 
 	static IO *getIO();
 
-	void reverse(FILE **file, const U32 &bytes);
-
 	template <typename T, bool=true>
 	struct read_impl {
 		static inline bool read(std::istream &stream, T *value, const String &name) {
@@ -162,9 +160,6 @@ bool Color<T>::write(std::ostream &stream) const {
 	io->write(stream, blue, "blue") &&
 	io->write(stream, alpha, "alpha");
 }
-
-//Macros to speed up file reading
-#define REVERSE(size) io->reverse(&file, size)
 
 //Hack to get the read() macro to return a value from a function that uses a ref
 template <typename T>
