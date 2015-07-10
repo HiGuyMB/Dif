@@ -30,7 +30,7 @@
 
 #include "types.h"
 
-typedef struct {
+struct VehicleConvexHull : public Readable, public Writable {
 	U32 hullStart;
 	U16 hullCount;
 	F32 minX;
@@ -45,48 +45,44 @@ typedef struct {
 	U32 polyListPlaneStart;
 	U32 polyListPointStart;
 	U32 polyListStringStart;
-} VehicleConvexHull;
 
-typedef struct {
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
+};
+
+struct VehicleNullSurface : public Readable, public Writable {
 	U32 windingStart;
 	U16 planeIndex;
 	U8 surfaceFlags;
 	U32 windingCount;
-} VehicleNullSurface;
+
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
+};
 
 class VehicleCollision {
 public:
 	U32 vehicleCollisionFileVersion;
 
-	U32 numVehicleConvexHulls;
-	VehicleConvexHull *vehicleConvexHull;
+	Vector<VehicleConvexHull>vehicleConvexHull;
 
-	U32 numVehicleConvexHullEmitStrings;
-	U8 *vehicleConvexHullEmitStringCharacter;
+	Vector<U8>vehicleConvexHullEmitStringCharacter;
 
-	U32 numVehicleHullIndices;
-	U32 *vehicleHullIndex;
+	Vector<U32>vehicleHullIndex;
 
-	U32 numVehicleHullPlaneIndices;
-	U16 *vehicleHullPlaneIndex;
+	Vector<U16>vehicleHullPlaneIndex;
 
-	U32 numVehicleHullEmitStringIndices;
-	U32 *vehicleHullEmitStringIndex;
+	Vector<U32>vehicleHullEmitStringIndex;
 
-	U32 numVehicleHullSurfaceIndices;
-	U32 *vehicleHullSurfaceIndex;
+	Vector<U32>vehicleHullSurfaceIndex;
 
-	U32 numVehiclePolyListPlanes;
-	U16 *vehiclePolyListPlaneIndex;
+	Vector<U16>vehiclePolyListPlaneIndex;
 
-	U32 numVehiclePolyListPoints;
-	U32 *vehiclePolyListPointIndex;
+	Vector<U32>vehiclePolyListPointIndex;
 
-	U32 numVehiclePolyListStrings;
-	U8 *vehiclePolyListStringCharacter;
+	Vector<U8>vehiclePolyListStringCharacter;
 
-	U32 numVehicleNullSurfaces;
-	VehicleNullSurface *vehicleNullSurface;
+	Vector<VehicleNullSurface>vehicleNullSurface;
 
 	/**
 	 Reads a VehicleCollision from a FILE
@@ -95,11 +91,6 @@ public:
 	VehicleCollision(std::istream &stream);
 
 	bool write(std::ostream &stream) const;
-
-	/**
-	 Frees the VehicleCollision and all memory contained within it
-	 */
-	~VehicleCollision();
 };
 
 #endif
