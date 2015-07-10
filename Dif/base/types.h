@@ -191,8 +191,6 @@ typedef Color<F32> ColorF;
 
 //More names stolen from TGE
 
-class QuatF;
-
 class AngAxisF {
 public:
 	Point3F axis;
@@ -290,21 +288,6 @@ public:
 	~PNG() {
 		delete [] data;
 	}
-};
-
-class TriangleF {
-public:
-	Point3F point0;
-	Point3F point1;
-	Point3F point2;
-};
-
-class TetrahetronF {
-public:
-	Point3F point0;
-	Point3F point1;
-	Point3F point2;
-	Point3F point3;
 };
 
 class MatrixF : public Readable, Writable {
