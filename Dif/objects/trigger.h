@@ -43,8 +43,7 @@ public:
 	String datablock;
 	Dictionary properties;
 
-	U32 numPolyHedronPoints;
-	Point3F *polyHedronPoint;
+	Vector<Point3F> polyHedronPoint;
 
 	U32 numPolyHedronPlanes;
 	PlaneF *polyHedronPlane;
