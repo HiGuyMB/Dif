@@ -33,7 +33,6 @@
 #include <type_traits>
 
 #define LIGHT_MAP_SIZE 0x400
-#define io IO::getIO()
 
 /*
  Read number types from a file
@@ -42,11 +41,6 @@
  */
 class IO {
 public:
-	IO();
-	~IO();
-
-	static IO *getIO();
-
 	template <typename T, bool=true>
 	struct read_impl {
 		static inline bool read(std::istream &stream, T *value, const String &name) {
@@ -64,7 +58,7 @@ public:
 	};
 
 	template <typename T>
-	inline bool read(std::istream &stream, T *value, const String &name) {
+	static inline bool read(std::istream &stream, T *value, const String &name) {
 		return read_impl<T, std::is_fundamental<T>::value>::read(stream, value, name);
 	}
 
@@ -83,82 +77,82 @@ public:
 	};
 
 	template <typename T>
-	inline bool write(std::ostream &stream, const T &value, const String &name) {
+	static inline bool write(std::ostream &stream, const T &value, const String &name) {
 		return write_impl<T, std::is_fundamental<T>::value>::write(stream, value, name);
 	}
 
-	String getPath(const String &file);
-	String getName(const String &file);
-	String getExtension(const String &file);
+	static String getPath(const String &file);
+	static String getName(const String &file);
+	static String getExtension(const String &file);
 
-	bool isfile(const String &file);
-	U8 *readFile(const String &file, U32 *length);
+	static bool isfile(const String &file);
+	static U8 *readFile(const String &file, U32 *length);
 };
 
 template <typename T>
 bool Point2<T>::read(std::istream &stream) {
 	return
-	io->read(stream, &x, "x") &&
-	io->read(stream, &y, "y");
+	IO::read(stream, &x, "x") &&
+	IO::read(stream, &y, "y");
 }
 
 template <typename T>
 bool Point3<T>::read(std::istream &stream) {
 	return
-	io->read(stream, &x, "x") &&
-	io->read(stream, &y, "y") &&
-	io->read(stream, &z, "z");
+	IO::read(stream, &x, "x") &&
+	IO::read(stream, &y, "y") &&
+	IO::read(stream, &z, "z");
 }
 
 template <typename T>
 bool Point4<T>::read(std::istream &stream) {
 	return
-	io->read(stream, &w, "w") &&
-	io->read(stream, &x, "x") &&
-	io->read(stream, &y, "y") &&
-	io->read(stream, &z, "z");
+	IO::read(stream, &w, "w") &&
+	IO::read(stream, &x, "x") &&
+	IO::read(stream, &y, "y") &&
+	IO::read(stream, &z, "z");
 }
 
 template <typename T>
 bool Color<T>::read(std::istream &stream) {
 	return
-	io->read(stream, &red, "red") &&
-	io->read(stream, &green, "green") &&
-	io->read(stream, &blue, "blue") &&
-	io->read(stream, &alpha, "alpha");
+	IO::read(stream, &red, "red") &&
+	IO::read(stream, &green, "green") &&
+	IO::read(stream, &blue, "blue") &&
+	IO::read(stream, &alpha, "alpha");
 }
 
 template <typename T>
 bool Point2<T>::write(std::ostream &stream) const {
 	return
-	io->write(stream, x, "x") &&
-	io->write(stream, y, "y");
+	IO::write(stream, x, "x") &&
+	IO::write(stream, y, "y");
 }
 
 template <typename T>
 bool Point3<T>::write(std::ostream &stream) const {
 	return
-	io->write(stream, x, "x") &&
-	io->write(stream, y, "y") &&
-	io->write(stream, z, "z");
+	IO::write(stream, x, "x") &&
+	IO::write(stream, y, "y") &&
+	IO::write(stream, z, "z");
 }
 
 template <typename T>
 bool Point4<T>::write(std::ostream &stream) const {
 	return
-	io->write(stream, w, "w") &&
-	io->write(stream, x, "x") &&
-	io->write(stream, y, "y") &&
-	io->write(stream, z, "z");
+	IO::write(stream, w, "w") &&
+	IO::write(stream, x, "x") &&
+	IO::write(stream, y, "y") &&
+	IO::write(stream, z, "z");
 }
 
 template <typename T>
 bool Color<T>::write(std::ostream &stream) const {
 	return
-	io->write(stream, red, "red") &&
-	io->write(stream, green, "green") &&
-	io->write(stream, blue, "blue") &&
-	io->write(stream, alpha, "alpha");
+	IO::write(stream, red, "red") &&
+	IO::write(stream, green, "green") &&
+	IO::write(stream, blue, "blue") &&
+	IO::write(stream, alpha, "alpha");
 }
 
 //Hack to get the read() macro to return a value from a function that uses a ref
@@ -166,9 +160,9 @@ template <typename T>
 inline T __read(std::istream &stream, T *thing) {
 	T __garbage;
 #ifdef DEBUG
-	io->read(stream, &__garbage, "garbage");
+	IO::read(stream, &__garbage, "garbage");
 #else
-	io->read(stream, &__garbage, "");
+	IO::read(stream, &__garbage, "");
 #endif
 	return __garbage;
 }
@@ -179,8 +173,8 @@ inline T __read(std::istream &stream, T *thing) {
 #ifdef DEBUG
 	#define READVAR(name, type) \
 		type name; \
-		io->read(stream, (type *)&name, String(#name))
-	#define READTOVAR(name, type) io->read(stream, (type *)&name, String(#name))
+		IO::read(stream, (type *)&name, String(#name))
+	#define READTOVAR(name, type) IO::read(stream, (type *)&name, String(#name))
 	#define READCHECK(type, value) { \
 		if (READ(type) != value)\
 			return;\
@@ -188,8 +182,8 @@ inline T __read(std::istream &stream, T *thing) {
 #else
 	#define READVAR(name, type) \
 		type name; \
-		io->read(stream, (type *)&name, "")
-	#define READTOVAR(name, type) io->read(stream, (type *)&name, "")
+		IO::read(stream, (type *)&name, "")
+	#define READTOVAR(name, type) IO::read(stream, (type *)&name, "")
 	#define READCHECK(type, value) { \
 	READVAR(check, type); \
 	if (check != value)\
@@ -279,9 +273,9 @@ for (U32 i = 0; i < name##_length; i ++) { \
 
 //Macros to speed up file reading
 #ifdef DEBUG
-#define WRITE(value, type) io->write(stream, (type) value, String(#value))
+#define WRITE(value, type) IO::write(stream, (type) value, String(#value))
 #else
-#define WRITE(value, type) io->write(stream, (type) value, "")
+#define WRITE(value, type) IO::write(stream, (type) value, "")
 #endif
 
 #define WRITECHECK(value, type) { if (!WRITE(value, type)) return false; }

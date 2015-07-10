@@ -31,90 +31,67 @@
 #include <math.h>
 #include "io.h"
 
-#if 0
-#define DEBUG_PRINT(...) printf(__VA_ARGS__)
-#else
-#define DEBUG_PRINT(...)
-#endif
-
-IO *IO::getIO() {
-	static IO *gIO = NULL;
-
-	if (gIO == NULL) {
-		gIO = new IO;
-	}
-	return gIO;
-}
-
-IO::IO() {
-
-}
-
-IO::~IO() {
-	
-}
-
 bool PlaneF::read(std::istream &stream) {
 	return
-		io->read(stream, &x, "x") &&
-		io->read(stream, &y, "x") &&
-		io->read(stream, &z, "x") &&
-		io->read(stream, &d, "x");
+		IO::read(stream, &x, "x") &&
+		IO::read(stream, &y, "x") &&
+		IO::read(stream, &z, "x") &&
+		IO::read(stream, &d, "x");
 }
 
 bool QuatF::read(std::istream &stream) {
 	return
-		io->read(stream, &w, "w") &&
-		io->read(stream, &x, "x") &&
-		io->read(stream, &y, "y") &&
-		io->read(stream, &z, "z");
+		IO::read(stream, &w, "w") &&
+		IO::read(stream, &x, "x") &&
+		IO::read(stream, &y, "y") &&
+		IO::read(stream, &z, "z");
 }
 
 bool BoxF::read(std::istream &stream) {
 	return
-		io->read(stream, &minX, "minX") &&
-		io->read(stream, &minY, "minY") &&
-		io->read(stream, &minZ, "minZ") &&
-		io->read(stream, &maxX, "maxX") &&
-		io->read(stream, &maxY, "maxY") &&
-		io->read(stream, &maxZ, "maxZ");
+		IO::read(stream, &minX, "minX") &&
+		IO::read(stream, &minY, "minY") &&
+		IO::read(stream, &minZ, "minZ") &&
+		IO::read(stream, &maxX, "maxX") &&
+		IO::read(stream, &maxY, "maxY") &&
+		IO::read(stream, &maxZ, "maxZ");
 }
 
 bool SphereF::read(std::istream &stream) {
 	return
-		io->read(stream, &x, "x") &&
-		io->read(stream, &y, "y") &&
-		io->read(stream, &z, "z") &&
-		io->read(stream, &radius, "radius");
+		IO::read(stream, &x, "x") &&
+		IO::read(stream, &y, "y") &&
+		IO::read(stream, &z, "z") &&
+		IO::read(stream, &radius, "radius");
 }
 
 bool MatrixF::read(std::istream &stream) {
 	return
-		io->read(stream, &m[0], "m[0]") &&
-		io->read(stream, &m[1], "m[1]") &&
-		io->read(stream, &m[2], "m[2]") &&
-		io->read(stream, &m[3], "m[3]") &&
-		io->read(stream, &m[4], "m[4]") &&
-		io->read(stream, &m[5], "m[5]") &&
-		io->read(stream, &m[6], "m[6]") &&
-		io->read(stream, &m[7], "m[7]") &&
-		io->read(stream, &m[8], "m[8]") &&
-		io->read(stream, &m[9], "m[9]") &&
-		io->read(stream, &m[10], "m[10]") &&
-		io->read(stream, &m[11], "m[11]") &&
-		io->read(stream, &m[12], "m[12]") &&
-		io->read(stream, &m[13], "m[13]") &&
-		io->read(stream, &m[14], "m[14]") &&
-		io->read(stream, &m[15], "m[15]");
+		IO::read(stream, &m[0], "m[0]") &&
+		IO::read(stream, &m[1], "m[1]") &&
+		IO::read(stream, &m[2], "m[2]") &&
+		IO::read(stream, &m[3], "m[3]") &&
+		IO::read(stream, &m[4], "m[4]") &&
+		IO::read(stream, &m[5], "m[5]") &&
+		IO::read(stream, &m[6], "m[6]") &&
+		IO::read(stream, &m[7], "m[7]") &&
+		IO::read(stream, &m[8], "m[8]") &&
+		IO::read(stream, &m[9], "m[9]") &&
+		IO::read(stream, &m[10], "m[10]") &&
+		IO::read(stream, &m[11], "m[11]") &&
+		IO::read(stream, &m[12], "m[12]") &&
+		IO::read(stream, &m[13], "m[13]") &&
+		IO::read(stream, &m[14], "m[14]") &&
+		IO::read(stream, &m[15], "m[15]");
 }
 
 bool String::read(std::istream &stream) {
 	//<length><bytes>
 
-	io->read(stream, (U8 *)&length, "length");
+	IO::read(stream, (U8 *)&length, "length");
 	data = new U8[length + 1];
 	for (int i = 0; i < length; i ++) {
-		io->read(stream, &(data[i]), "data");
+		IO::read(stream, &(data[i]), "data");
 	}
 	//Null-terminate
 	data[length] = 0;
@@ -127,7 +104,7 @@ bool PNG::read(std::istream &stream) {
 
 	//I can't parse these, so I just read em all
 	for (size = 0; ;size ++) {
-		io->read(stream, &(data[size]), "data");
+		IO::read(stream, &(data[size]), "data");
 		if (size > 8 && memcmp(&data[size - 7], PNGFooter, 8) == 0)
 			break;
 	}
@@ -138,7 +115,7 @@ bool PNG::read(std::istream &stream) {
 
 bool Dictionary::read(std::istream &stream) {
 	//<length>[<name><value>]...
-	io->read(stream, &size, "size");
+	IO::read(stream, &size, "size");
 	names = new String[size];
 	values = new String[size];
 
@@ -156,64 +133,64 @@ bool Dictionary::read(std::istream &stream) {
 
 bool PlaneF::write(std::ostream &stream) const {
 	return
-		io->write(stream, x, "x") &&
-		io->write(stream, y, "y") &&
-		io->write(stream, z, "z") &&
-		io->write(stream, d, "d");
+		IO::write(stream, x, "x") &&
+		IO::write(stream, y, "y") &&
+		IO::write(stream, z, "z") &&
+		IO::write(stream, d, "d");
 }
 
 bool QuatF::write(std::ostream &stream) const {
 	return
-		io->write(stream, w, "w") &&
-		io->write(stream, x, "x") &&
-		io->write(stream, y, "y") &&
-		io->write(stream, z, "z");
+		IO::write(stream, w, "w") &&
+		IO::write(stream, x, "x") &&
+		IO::write(stream, y, "y") &&
+		IO::write(stream, z, "z");
 }
 
 bool BoxF::write(std::ostream &stream) const {
 	return
-		io->write(stream, minX, "minX") &&
-		io->write(stream, minY, "minY") &&
-		io->write(stream, minZ, "minZ") &&
-		io->write(stream, maxX, "maxX") &&
-		io->write(stream, maxY, "maxY") &&
-		io->write(stream, maxZ, "maxZ");
+		IO::write(stream, minX, "minX") &&
+		IO::write(stream, minY, "minY") &&
+		IO::write(stream, minZ, "minZ") &&
+		IO::write(stream, maxX, "maxX") &&
+		IO::write(stream, maxY, "maxY") &&
+		IO::write(stream, maxZ, "maxZ");
 }
 
 bool SphereF::write(std::ostream &stream) const {
 	return
-		io->write(stream, x, "x") &&
-		io->write(stream, y, "y") &&
-		io->write(stream, z, "z") &&
-		io->write(stream, radius, "radius");
+		IO::write(stream, x, "x") &&
+		IO::write(stream, y, "y") &&
+		IO::write(stream, z, "z") &&
+		IO::write(stream, radius, "radius");
 }
 
 bool MatrixF::write(std::ostream &stream) const {
 	return
-		io->write(stream, m[0], "m[0]") &&
-		io->write(stream, m[1], "m[1]") &&
-		io->write(stream, m[2], "m[2]") &&
-		io->write(stream, m[3], "m[3]") &&
-		io->write(stream, m[4], "m[4]") &&
-		io->write(stream, m[5], "m[5]") &&
-		io->write(stream, m[6], "m[6]") &&
-		io->write(stream, m[7], "m[7]") &&
-		io->write(stream, m[8], "m[8]") &&
-		io->write(stream, m[9], "m[9]") &&
-		io->write(stream, m[10], "m[10]") &&
-		io->write(stream, m[11], "m[11]") &&
-		io->write(stream, m[12], "m[12]") &&
-		io->write(stream, m[13], "m[13]") &&
-		io->write(stream, m[14], "m[14]") &&
-		io->write(stream, m[15], "m[15]");
+		IO::write(stream, m[0], "m[0]") &&
+		IO::write(stream, m[1], "m[1]") &&
+		IO::write(stream, m[2], "m[2]") &&
+		IO::write(stream, m[3], "m[3]") &&
+		IO::write(stream, m[4], "m[4]") &&
+		IO::write(stream, m[5], "m[5]") &&
+		IO::write(stream, m[6], "m[6]") &&
+		IO::write(stream, m[7], "m[7]") &&
+		IO::write(stream, m[8], "m[8]") &&
+		IO::write(stream, m[9], "m[9]") &&
+		IO::write(stream, m[10], "m[10]") &&
+		IO::write(stream, m[11], "m[11]") &&
+		IO::write(stream, m[12], "m[12]") &&
+		IO::write(stream, m[13], "m[13]") &&
+		IO::write(stream, m[14], "m[14]") &&
+		IO::write(stream, m[15], "m[15]");
 }
 
 bool String::write(std::ostream &stream) const {
 	//<length><bytes>
-	if (!io->write(stream, (U8)length, "length"))
+	if (!IO::write(stream, (U8)length, "length"))
 		return false;
 	for (int i = 0; i < length; i ++) {
-		if (!io->write(stream, data[i], "data"))
+		if (!IO::write(stream, data[i], "data"))
 			return false;
 	}
 	return true;
@@ -223,7 +200,7 @@ bool PNG::write(std::ostream &stream) const {
 	//Basically dump out everything. Yeah.
 
 	for (U32 i = 0; i < size; i ++) {
-		if (!io->write(stream, data[i], "data"))
+		if (!IO::write(stream, data[i], "data"))
 			return false;
 	}
 	return true;
@@ -232,7 +209,7 @@ bool PNG::write(std::ostream &stream) const {
 bool Dictionary::write(std::ostream &stream) const {
 	//<length>[<name><value>]...
 
-	if (!io->write(stream, size, "size"))
+	if (!IO::write(stream, size, "size"))
 		return false;
 	for (int i = 0; i < size; i ++) {
 		if (!names[i].write(stream) ||

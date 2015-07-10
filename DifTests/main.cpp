@@ -6,7 +6,7 @@ int main(int argc, const char * argv[]) {
 
 	if (fb.open(argv[1], std::ios::in)) {
 		std::istream stream(&fb);
-		DIF *dif = new DIF(stream, io->getPath(argv[1]));
+		DIF *dif = new DIF(stream, IO::getPath(argv[1]));
 		fb.close();
 
 		for (int i = 0; i < dif->numDetailLevels; i ++) {
