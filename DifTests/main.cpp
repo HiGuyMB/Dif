@@ -2,21 +2,25 @@
 #include "objects/dif.h"
 
 int main(int argc, const char * argv[]) {
-//	std::istream stream = fopen(argv[1], "r");
-	DIF *dif;// = new DIF(stream, io->getPath(argv[1]));
-//	fclose(file);
+	std::filebuf fb;
 
-	for (int i = 0; i < dif->numDetailLevels; i ++) {
-		Interior *interior = dif->interior[i];
+	if (fb.open(argv[1], std::ios::in)) {
+		std::istream stream(&fb);
+		DIF *dif = new DIF(stream, io->getPath(argv[1]));
+		fb.close();
 
-		for (int j = 0; j < interior->numMaterials; j ++) {
-			String name = interior->materialName[j];
+		for (int i = 0; i < dif->numDetailLevels; i ++) {
+			Interior *interior = dif->interior[i];
 
-			std::cout << (const char *)name << std::endl;
+			for (int j = 0; j < interior->numMaterials; j ++) {
+				String name = interior->materialName[j];
+
+				std::cout << (const char *)name << std::endl;
+			}
 		}
-	}
 
-	delete dif;
+		delete dif;
+	}
 
 	return 0;
 }
