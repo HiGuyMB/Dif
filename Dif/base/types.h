@@ -315,7 +315,4 @@ public:
 	virtual bool write(std::ostream &stream) const;
 };
 
-#include "ray.h"
-typedef Ray<F32> RayF;
-
 #endif
