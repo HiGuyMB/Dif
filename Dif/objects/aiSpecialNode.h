@@ -35,7 +35,6 @@ public:
 	String name;
 	Point3F position;
 
-
 	/**
 	 Reads an AISpecialNode from a FILE
 	 @arg file - The FILE to read from (updates position)
