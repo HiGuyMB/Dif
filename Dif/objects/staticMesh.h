@@ -65,23 +65,17 @@ struct MaterialList : public Readable, Writable {
 };
 
 class StaticMesh {
-	U32 numPrimitives;
-	Primitive *primitive;
+	Vector<Primitive>primitive;
 
-	U32 numIndices;
-	U16 *index;
+	Vector<U16>index;
 
-	U32 numVertices;
-	Point3F *vertex;
+	Vector<Point3F>vertex;
 
-	U32 numNormals;
-	Point3F *normal;
+	Vector<Point3F>normal;
 
-	U32 numDiffuseUVs;
-	Point2F *diffuseUV;
+	Vector<Point2F>diffuseUV;
 
-	U32 numLightmapUVs;
-	Point2F *lightmapUV;
+	Vector<Point2F>lightmapUV;
 
 	U8 hasMaterialList;
 	MaterialList baseMaterialList;
@@ -103,11 +97,6 @@ public:
 	StaticMesh(std::istream &stream);
 
 	bool write(std::ostream &stream) const;
-
-	/**
-	 Frees the StaticMesh and all memory contained within it
-	 */
-	~StaticMesh();
 };
 
 #endif
