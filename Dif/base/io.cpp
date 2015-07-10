@@ -116,12 +116,9 @@ bool PNG::read(std::istream &stream) {
 bool Dictionary::read(std::istream &stream) {
 	//<length>[<name><value>]...
 	IO::read(stream, &size, "size");
-	names = new String[size];
-	values = new String[size];
-
 	for (int i = 0; i < size; i ++) {
-		names[i] = String();
-		values[i] = String();
+		names.push_back(String());
+		values.push_back(String());
 		names[i].read(stream);
 		values[i].read(stream);
 	}

@@ -33,6 +33,7 @@
 #include <cstdlib>
 
 #include <fstream>
+#include <vector>
 
 //Base types (names stolen from TGE because lazy)
 typedef unsigned char      U8;
@@ -148,6 +149,28 @@ struct String : public Readable, Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
+template <typename T>
+class Vector : public Readable, public Writable {
+public:
+	typedef std::vector<T> VectorType;
+private:
+	VectorType vector;
+
+public:
+	T operator[](U32 pos) const {
+		return vector[pos];
+	}
+	T & operator[](U32 pos) {
+		return vector[pos];
+	}
+	void push_back(T value) {
+		vector.push_back(value);
+	}
+
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
+};
+
 #include "point2.h"
 #include "point3.h"
 #include "point4.h"
@@ -238,8 +261,8 @@ public:
 class Dictionary : public Readable, Writable {
 public:
 	U32 size;
-	String *names;
-	String *values;
+	std::vector<String> names;
+	std::vector<String> values;
 
 	virtual bool read(std::istream &stream);
 	virtual bool write(std::ostream &stream) const;
@@ -250,11 +273,6 @@ public:
 				return values[i];
 		}
 		return "";
-	}
-
-	~Dictionary() {
-		delete [] names;
-		delete [] values;
 	}
 };
 

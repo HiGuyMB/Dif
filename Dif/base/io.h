@@ -145,6 +145,21 @@ bool Color<T>::read(std::istream &stream) {
 }
 
 template <typename T>
+bool Vector<T>::read(std::istream &stream) {
+	U32 size;
+	if (!IO::read(stream, &size, "size"))
+		return false;
+	for (int i = 0; i < size; i ++) {
+		T value;
+		if (IO::read(stream, &value, "value"))
+			push_back(value);
+		else
+			return false;
+	}
+	return true;
+}
+
+template <typename T>
 bool Point2<T>::write(std::ostream &stream) const {
 	return
 	IO::write(stream, x, "x") &&
@@ -176,6 +191,18 @@ bool Color<T>::write(std::ostream &stream) const {
 	IO::write(stream, blue, "blue") &&
 	IO::write(stream, alpha, "alpha");
 }
+
+template <typename T>
+bool Vector<T>::write(std::ostream &stream) const {
+	if (!IO::write(stream, vector.size(), "size"))
+		return false;
+	for (int i = 0; i < vector.size(); i ++) {
+		if (!IO::write(stream, vector[i], "value"))
+			return false;
+	}
+	return true;
+}
+
 
 //Hack to get the read() macro to return a value from a function that uses a ref
 template <typename T>
