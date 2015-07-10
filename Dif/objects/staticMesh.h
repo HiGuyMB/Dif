@@ -65,12 +65,12 @@ struct MaterialList : public Readable, Writable {
 };
 
 class StaticMesh {
-	Vector<Primitive> primitive;
-	Vector<U16> index;
-	Vector<Point3F> vertex;
-	Vector<Point3F> normal;
-	Vector<Point2F> diffuseUV;
-	Vector<Point2F> lightmapUV;
+	std::vector<Primitive> primitive;
+	std::vector<U16> index;
+	std::vector<Point3F> vertex;
+	std::vector<Point3F> normal;
+	std::vector<Point2F> diffuseUV;
+	std::vector<Point2F> lightmapUV;
 
 	U8 hasMaterialList;
 	MaterialList baseMaterialList;

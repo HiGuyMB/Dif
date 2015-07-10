@@ -43,15 +43,15 @@ bool Interior::read(std::istream &stream) {
 	READTOVAR(boundingSphere, SphereF); //boundingSphere
 	READTOVAR(hasAlarmState, U8); //hasAlarmState
 	READTOVAR(numLightStateEntries, U32); //numLightStateEntries
-	READTOVAR(normal, Vector<Point3F>); //normal
-	READTOVAR(plane, Vector<Plane>); //plane
-	READTOVAR(point, Vector<Point3F>); //point
+	READTOVAR(normal, std::vector<Point3F>); //normal
+	READTOVAR(plane, std::vector<Plane>); //plane
+	READTOVAR(point, std::vector<Point3F>); //point
 	if (this->interiorFileVersion == 4) { //They exist in 0, 2, 3 but not 4
 		//Probably defaulted to FF but uncertain
 	} else {
-		READTOVAR(pointVisibility, Vector<U8>); //pointVisibility
+		READTOVAR(pointVisibility, std::vector<U8>); //pointVisibility
 	}
-	READTOVAR(texGenEq, Vector<TexGenEq>); //texGenEq
+	READTOVAR(texGenEq, std::vector<TexGenEq>); //texGenEq
 	READLOOPVAR(numBSPNodes, BSPNode, ::BSPNode) {
 		READTOVAR(BSPNode[i].planeIndex, U16); //planeIndex
 		if (this->interiorFileVersion >= 14) {
@@ -80,14 +80,14 @@ bool Interior::read(std::istream &stream) {
 			READTOVAR(BSPNode[i].backIndex, U16); //backIndex
 		}
 	}
-	READTOVAR(BSPSolidLeaf, Vector<::BSPSolidLeaf>); //BSPSolidLeaf
+	READTOVAR(BSPSolidLeaf, std::vector<::BSPSolidLeaf>); //BSPSolidLeaf
 	//MaterialList
 	READTOVAR(materialListVersion, U8); //version
-	READTOVAR(materialName, Vector<String>); //materialName
+	READTOVAR(materialName, std::vector<String>); //materialName
 	READLISTVAR2(numWindings, index, readnumWindings2, U32, U16);
-	READTOVAR(windingIndex, Vector<WindingIndex>); //windingIndex
+	READTOVAR(windingIndex, std::vector<WindingIndex>); //windingIndex
 	if (this->interiorFileVersion >= 12) {
-		READTOVAR(edge, Vector<Edge>); //edge
+		READTOVAR(edge, std::vector<Edge>); //edge
 	} else {
 
 	}
@@ -108,12 +108,12 @@ bool Interior::read(std::istream &stream) {
 	}
 	READLISTVAR2(numZoneSurfaces, zoneSurface, 0, U16, U16);
 	if (this->interiorFileVersion >= 12) {
-		READTOVAR(zoneStaticMesh, Vector<U32>); //zoneStaticMesh
+		READTOVAR(zoneStaticMesh, std::vector<U32>); //zoneStaticMesh
 	} else {
 
 	}
 	READLISTVAR2(numZonePortalList, zonePortalList, 0, U16, U16);
-	READTOVAR(portal, Vector<Portal>); //portal
+	READTOVAR(portal, std::vector<Portal>); //portal
 
 	//Ok so Torque needs to fuck themselves in the ass, multiple times.
 	// They have two "version 0"s, one for TGE and one for TGEA. So, you
@@ -190,15 +190,15 @@ bool Interior::read(std::istream &stream) {
 		}
 	}
 	if (this->interiorFileVersion == 4) { //Found in 0, 2, 3, and TGE (14)
-		READTOVAR(normalLMapIndex, Vector<U8>); //normalLMapIndex
+		READTOVAR(normalLMapIndex, std::vector<U8>); //normalLMapIndex
 	} else if (this->interiorFileVersion >= 13) {
 		//These are 32-bit values in v13 and up
-		READTOVAR(normalLMapIndex, Vector<U8>); //normalLMapIndex
-		READTOVAR(alarmLMapIndex, Vector<U8>); //alarmLMapIndex
+		READTOVAR(normalLMapIndex, std::vector<U8>); //normalLMapIndex
+		READTOVAR(alarmLMapIndex, std::vector<U8>); //alarmLMapIndex
 	} else {
 		//Normally they're just 8
-		READTOVAR(normalLMapIndex, Vector<U8>); //normalLMapIndex
-		READTOVAR(alarmLMapIndex, Vector<U8>); //alarmLMapIndex
+		READTOVAR(normalLMapIndex, std::vector<U8>); //normalLMapIndex
+		READTOVAR(alarmLMapIndex, std::vector<U8>); //alarmLMapIndex
 	}
 	READLOOPVAR(numNullSurfaces, nullSurface, NullSurface) {
 		READTOVAR(nullSurface[i].windingStart, U32); //windingStart
@@ -223,16 +223,16 @@ bool Interior::read(std::istream &stream) {
 		}
 	}
 	READLISTVAR2(numSolidLeafSurfaces, solidLeafSurface, (readnumSolidLeafSurfaces2), U32, U16);
-	READTOVAR(animatedLight, Vector<AnimatedLight>); //animatedLight
-	READTOVAR(lightState, Vector<LightState>); //lightState
+	READTOVAR(animatedLight, std::vector<AnimatedLight>); //animatedLight
+	READTOVAR(lightState, std::vector<LightState>); //lightState
 	if (this->interiorFileVersion == 4) { //Yet more things found in 0, 2, 3, 14
 		flags = 0;
 		numStateDataBuffers = 0;
 	} else {
-		READTOVAR(stateData, Vector<StateData>); //stateData
+		READTOVAR(stateData, std::vector<StateData>); //stateData
 		READLISTVAR(numStateDataBuffers, stateDataBuffer, U8); //stateDataBuffer
 		READTOVAR(flags, U32); //flags
-		READTOVAR(nameBufferCharacter, Vector<U8>); //nameBufferCharacter
+		READTOVAR(nameBufferCharacter, std::vector<U8>); //nameBufferCharacter
 
 		READLOOP(numSubObjects) {
 			//NFC
@@ -260,7 +260,7 @@ bool Interior::read(std::istream &stream) {
 			convexHull[i].staticMesh = 0;
 		}
 	}
-	READTOVAR(convexHullEmitStringCharacter, Vector<U8>); //convexHullEmitStringCharacter
+	READTOVAR(convexHullEmitStringCharacter, std::vector<U8>); //convexHullEmitStringCharacter
 
 	//-------------------------------------------------------------------------
 	// Lots of index lists here that have U16 or U32 versions based on loop2.
@@ -281,7 +281,7 @@ bool Interior::read(std::istream &stream) {
 	READLISTVAR2(numPolyListPoints, polyListPointIndex, (readnumPolyListPoints2), U32, U16);
 	//Not sure if this should be a READLISTVAR2, but I haven't seen any evidence
 	// of needing that for U8 lists.
-	READTOVAR(polyListStringCharacter, Vector<U8>); //polyListStringCharacter
+	READTOVAR(polyListStringCharacter, std::vector<U8>); //polyListStringCharacter
 
 	coordBin = new CoordBin[gNumCoordBins * gNumCoordBins];
 	for (U32 i = 0; i < gNumCoordBins * gNumCoordBins; i ++) {
@@ -308,9 +308,9 @@ bool Interior::read(std::istream &stream) {
 			numStaticMeshes = 0;
 		}
 		if (this->interiorFileVersion >= 11) {
-			READTOVAR(texNormal, Vector<Point3F>); //texNormal
-			READTOVAR(texMatrix, Vector<TexMatrix>); //texMatrix
-			READTOVAR(texMatIndex, Vector<U32>); //texMatIndex
+			READTOVAR(texNormal, std::vector<Point3F>); //texNormal
+			READTOVAR(texMatrix, std::vector<TexMatrix>); //texMatrix
+			READTOVAR(texMatIndex, std::vector<U32>); //texMatIndex
 		} else {
 			READ(U32); //numTexNormals
 			READ(U32); //numTexMatrices
@@ -337,43 +337,43 @@ bool Interior::write(std::ostream &stream) const {
 	WRITECHECK(boundingSphere, SphereF); //boundingSphere
 	WRITECHECK(hasAlarmState, U8); //hasAlarmState
 	WRITECHECK(numLightStateEntries, U32); //numLightStateEntries
-	WRITE(normal, Vector<Point3F>); //normal
-	WRITE(plane, Vector<Plane>); //numPlanes
-	WRITE(point, Vector<Point3F>); //point
-	WRITE(pointVisibility, Vector<U8>); //pointVisibility
-	WRITE(texGenEq, Vector<TexGenEq>); //texGenEq
+	WRITE(normal, std::vector<Point3F>); //normal
+	WRITE(plane, std::vector<Plane>); //numPlanes
+	WRITE(point, std::vector<Point3F>); //point
+	WRITE(pointVisibility, std::vector<U8>); //pointVisibility
+	WRITE(texGenEq, std::vector<TexGenEq>); //texGenEq
 	WRITELIST(numBSPNodes, BSPNode, ::BSPNode); //BSPNode
-	WRITE(BSPSolidLeaf, Vector<::BSPSolidLeaf>); //BSPSolidLeaf
+	WRITE(BSPSolidLeaf, std::vector<::BSPSolidLeaf>); //BSPSolidLeaf
 	WRITECHECK(materialListVersion, U8); //materialListVersion
-	WRITE(materialName, Vector<String>); //material
+	WRITE(materialName, std::vector<String>); //material
 	WRITELIST(numWindings, index, U32); //index
-	WRITE(windingIndex, Vector<WindingIndex>); //windingIndex
+	WRITE(windingIndex, std::vector<WindingIndex>); //windingIndex
 	WRITELIST(numZones, zone, Zone); //zone
 	WRITELIST(numZoneSurfaces, zoneSurface, U16); //zoneSurface
 	WRITELIST(numZonePortalList, zonePortalList, U16); //zonePortalList
-	WRITE(portal, Vector<Portal>); //portal
+	WRITE(portal, std::vector<Portal>); //portal
 	WRITELIST(numSurfaces, surface, Surface); //surface
-	WRITE(normalLMapIndex, Vector<U8>); //normalLMapIndex
-	WRITE(alarmLMapIndex, Vector<U8>); //alarmLMapIndex
+	WRITE(normalLMapIndex, std::vector<U8>); //normalLMapIndex
+	WRITE(alarmLMapIndex, std::vector<U8>); //alarmLMapIndex
 	WRITELIST(numNullSurfaces, nullSurface, NullSurface); //nullSurface
 	WRITELIST(numLightMaps, lightMap, LightMap); //lightMap
 	WRITELIST(numSolidLeafSurfaces, solidLeafSurface, U32); //solidLeafSurface
-	WRITE(animatedLight, Vector<AnimatedLight>); //animatedLight
-	WRITE(lightState, Vector<LightState>); //lightState
-	WRITE(stateData, Vector<StateData>); //stateData
+	WRITE(animatedLight, std::vector<AnimatedLight>); //animatedLight
+	WRITE(lightState, std::vector<LightState>); //lightState
+	WRITE(stateData, std::vector<StateData>); //stateData
 	WRITELIST(numStateDataBuffers, stateDataBuffer, U32); //stateDataBuffer
 	WRITECHECK(flags, U32); //flags
-	WRITE(nameBufferCharacter, Vector<U8>); //nameBufferCharacter
+	WRITE(nameBufferCharacter, std::vector<U8>); //nameBufferCharacter
 	WRITELOOP(numSubObjects) {} //numSubObjects
 	WRITELIST(numConvexHulls, convexHull, ConvexHull); //convexHull
-	WRITE(convexHullEmitStringCharacter, Vector<U8>); //convexHullEmitStringCharacter
+	WRITE(convexHullEmitStringCharacter, std::vector<U8>); //convexHullEmitStringCharacter
 	WRITELIST(numHullIndices, hullIndex, U32); //hullIndex
 	WRITELIST(numHullPlaneIndices, hullPlaneIndex, U16); //hullPlaneIndex
 	WRITELIST(numHullEmitStringIndices, hullEmitStringIndex, U32); //hullEmitStringIndex
 	WRITELIST(numHullSurfaceIndices, hullSurfaceIndex, U32); //hullSurfaceIndex
 	WRITELIST(numPolyListPlanes, polyListPlaneIndex, U16); //polyListPlaneIndex
 	WRITELIST(numPolyListPoints, polyListPointIndex, U32); //polyListPointIndex
-	WRITE(polyListStringCharacter, Vector<U8>); //polyListStringCharacter
+	WRITE(polyListStringCharacter, std::vector<U8>); //polyListStringCharacter
 	for (U32 i = 0; i < gNumCoordBins * gNumCoordBins; i ++) {
 		WRITECHECK(coordBin[i].binStart, U32); //binStart
 		WRITECHECK(coordBin[i].binCount, U32); //binCount
@@ -385,9 +385,9 @@ bool Interior::write(std::ostream &stream) const {
 	/*
 	 Static meshes (not included)
 	 */
-	WRITE(texNormal, Vector<Point3F>); //texNormal
-	WRITE(texMatrix, Vector<TexMatrix>); //texMatrix
-	WRITE(texMatIndex, Vector<U32>); //texMatIndex
+	WRITE(texNormal, std::vector<Point3F>); //texNormal
+	WRITE(texMatrix, std::vector<TexMatrix>); //texMatrix
+	WRITE(texMatIndex, std::vector<U32>); //texMatIndex
 	WRITECHECK(0, U32); //extendedLightMapData
 //	WRITECHECK(extendedLightMapData, U32); //extendedLightMapData
 

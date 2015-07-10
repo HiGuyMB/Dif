@@ -70,18 +70,18 @@ public:
 	U32 forceFieldFileVersion;
 	String name;
 
-	Vector<String> trigger;
+	std::vector<String> trigger;
 
 	BoxF boundingBox;
 	SphereF boundingSphere;
 
-	Vector<Point3F> normal;
-	Vector<Plane_FF> plane;
-	Vector<BSPNode_FF> BSPNode;
-	Vector<BSPSolidLeaf_FF> BSPSolidLeaf;
-	Vector<U32> index;
-	Vector<Surface_FF> surface;
-	Vector<U32> solidLeafSurface;
+	std::vector<Point3F> normal;
+	std::vector<Plane_FF> plane;
+	std::vector<BSPNode_FF> BSPNode;
+	std::vector<BSPSolidLeaf_FF> BSPSolidLeaf;
+	std::vector<U32> index;
+	std::vector<Surface_FF> surface;
+	std::vector<U32> solidLeafSurface;
 
 	ColorI color;
 

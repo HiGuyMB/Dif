@@ -73,6 +73,23 @@ public:
 		return read_impl<T, std::is_fundamental<T>::value>::read(stream, value, name);
 	}
 
+	template <typename T>
+	static inline bool read(std::istream &stream, std::vector<T> *value, const String &name) {
+		U32 size;
+		if (!read(stream, &size, "size"))
+			return false;
+		value->reserve(size);
+		for (int i = 0; i < size; i ++) {
+			T obj;
+			if (read(stream, &obj, "obj"))
+				value->push_back(obj);
+			else
+				return false;
+		}
+
+		return true;
+	}
+
 	//Write primitive types from a std::istream
 	template <typename T, bool=true>
 	struct write_impl {
@@ -101,6 +118,17 @@ public:
 		//This will select one of the two write_impls above based on whether or not
 		// T is a struct or a primitive type.
 		return write_impl<T, std::is_fundamental<T>::value>::write(stream, value, name);
+	}
+
+	template <typename T>
+	static inline bool write(std::ostream &stream, const std::vector<T> &value, const String &name) {
+		if (!write(stream, value.size(), "size"))
+			return false;
+		for (int i = 0; i < value.size(); i ++) {
+			if (!write(stream, value[i], "value"))
+				return false;
+		}
+		return true;
 	}
 
 	static String getPath(const String &file);
@@ -145,22 +173,6 @@ bool Color<T>::read(std::istream &stream) {
 }
 
 template <typename T>
-bool Vector<T>::read(std::istream &stream) {
-	U32 size;
-	if (!IO::read(stream, &size, "size"))
-		return false;
-	vector.reserve(size);
-	for (int i = 0; i < size; i ++) {
-		T value;
-		if (IO::read(stream, &value, "value"))
-			push_back(value);
-		else
-			return false;
-	}
-	return true;
-}
-
-template <typename T>
 bool Point2<T>::write(std::ostream &stream) const {
 	return
 	IO::write(stream, x, "x") &&
@@ -191,17 +203,6 @@ bool Color<T>::write(std::ostream &stream) const {
 	IO::write(stream, green, "green") &&
 	IO::write(stream, blue, "blue") &&
 	IO::write(stream, alpha, "alpha");
-}
-
-template <typename T>
-bool Vector<T>::write(std::ostream &stream) const {
-	if (!IO::write(stream, vector.size(), "size"))
-		return false;
-	for (int i = 0; i < vector.size(); i ++) {
-		if (!IO::write(stream, vector[i], "value"))
-			return false;
-	}
-	return true;
 }
 
 

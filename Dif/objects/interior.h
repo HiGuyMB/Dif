@@ -225,25 +225,25 @@ public:
 	U8 hasAlarmState;
 	U32 numLightStateEntries;
 
-	Vector<Point3F> normal;
-	Vector<Plane> plane;
-	Vector<Point3F> point;
-	Vector<U8> pointVisibility;
-	Vector<TexGenEq> texGenEq;
+	std::vector<Point3F> normal;
+	std::vector<Plane> plane;
+	std::vector<Point3F> point;
+	std::vector<U8> pointVisibility;
+	std::vector<TexGenEq> texGenEq;
 
 	U32 numBSPNodes;
 	BSPNode *BSPNode;
 
-	Vector<BSPSolidLeaf> BSPSolidLeaf;
+	std::vector<BSPSolidLeaf> BSPSolidLeaf;
 
 	U8 materialListVersion;
-	Vector<String> materialName;
+	std::vector<String> materialName;
 
 	U32 numWindings;
 	U32 *index;
 
-	Vector<WindingIndex> windingIndex;
-	Vector<Edge> edge;
+	std::vector<WindingIndex> windingIndex;
+	std::vector<Edge> edge;
 
 	U32 numZones;
 	Zone *zone;
@@ -251,18 +251,18 @@ public:
 	U32 numZoneSurfaces;
 	U16 *zoneSurface;
 
-	Vector<U32> zoneStaticMesh;
+	std::vector<U32> zoneStaticMesh;
 
 	U32 numZonePortalList;
 	U16 *zonePortalList;
 
-	Vector<Portal> portal;
+	std::vector<Portal> portal;
 
 	U32 numSurfaces;
 	Surface *surface;
 
-	Vector<U8> normalLMapIndex;
-	Vector<U8> alarmLMapIndex;
+	std::vector<U8> normalLMapIndex;
+	std::vector<U8> alarmLMapIndex;
 
 	U32 numNullSurfaces;
 	NullSurface *nullSurface;
@@ -273,16 +273,16 @@ public:
 	U32 numSolidLeafSurfaces;
 	U32 *solidLeafSurface;
 
-	Vector<AnimatedLight> animatedLight;
-	Vector<LightState> lightState;
-	Vector<StateData> stateData;
+	std::vector<AnimatedLight> animatedLight;
+	std::vector<LightState> lightState;
+	std::vector<StateData> stateData;
 
 	U32 numStateDataBuffers;
 	U8 *stateDataBuffer;
 
 	U32 flags;
 
-	Vector<U8> nameBufferCharacter;
+	std::vector<U8> nameBufferCharacter;
 
 	U32 numSubObjects;
 	//SubObject *subObject;
@@ -290,7 +290,7 @@ public:
 	U32 numConvexHulls;
 	ConvexHull *convexHull;
 
-	Vector<U8> convexHullEmitStringCharacter;
+	std::vector<U8> convexHullEmitStringCharacter;
 
 	U32 numHullIndices;
 	U32 *hullIndex;
@@ -310,7 +310,7 @@ public:
 	U32 numPolyListPoints;
 	U32 *polyListPointIndex;
 
-	Vector<U8> polyListStringCharacter;
+	std::vector<U8> polyListStringCharacter;
 
 	CoordBin *coordBin;
 
@@ -324,9 +324,9 @@ public:
 	U32 numStaticMeshes;
 	StaticMesh **staticMesh;
 
-	Vector<Point3F> texNormal;
-	Vector<TexMatrix> texMatrix;
-	Vector<U32> texMatIndex;
+	std::vector<Point3F> texNormal;
+	std::vector<TexMatrix> texMatrix;
+	std::vector<U32> texMatIndex;
 
 	U32 extendedLightMapData;
 	U32 lightMapBorderSize;

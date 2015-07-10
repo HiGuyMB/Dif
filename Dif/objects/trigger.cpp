@@ -35,9 +35,9 @@ Trigger::Trigger(std::istream &stream) {
 	READTOVAR(name, String); //name
 	READTOVAR(datablock, String); //datablock
 	READTOVAR(properties, Dictionary); //properties
-	READTOVAR(polyHedronPoint, Vector<Point3F>); //point
-	READTOVAR(polyHedronPlane, Vector<PlaneF>); //plane
-	READTOVAR(polyHedronEdge, Vector<PolyHedronEdge>); //polyHedronEdge
+	READTOVAR(polyHedronPoint, std::vector<Point3F>); //point
+	READTOVAR(polyHedronPlane, std::vector<PlaneF>); //plane
+	READTOVAR(polyHedronEdge, std::vector<PolyHedronEdge>); //polyHedronEdge
 	READTOVAR(offset, Point3F); //offset
 }
 
@@ -45,9 +45,9 @@ bool Trigger::write(std::ostream &stream) const {
 	WRITE(name, String); //name
 	WRITE(datablock, String); //datablock
 	WRITE(properties, Dictionary); //properties
-	WRITE(polyHedronPoint, Vector<Point3F>); //polyHedronPoint
-	WRITE(polyHedronPlane, Vector<PlaneF>); //polyHedronPlane
-	WRITE(polyHedronEdge, Vector<PolyHedronEdge>); //numPolyHedronEdges
+	WRITE(polyHedronPoint, std::vector<Point3F>); //polyHedronPoint
+	WRITE(polyHedronPlane, std::vector<PlaneF>); //polyHedronPlane
+	WRITE(polyHedronEdge, std::vector<PolyHedronEdge>); //numPolyHedronEdges
 	WRITECHECK(offset, Point3F); //offset
 
 	return true;

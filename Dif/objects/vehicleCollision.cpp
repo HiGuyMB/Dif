@@ -32,30 +32,30 @@
 
 VehicleCollision::VehicleCollision(std::istream &stream) {
 	READTOVAR(vehicleCollisionFileVersion, U32); //vehicleCollisionFileVersion
-	READTOVAR(vehicleConvexHull, Vector<VehicleConvexHull>); //vehicleConvexHull
-	READTOVAR(vehicleConvexHullEmitStringCharacter, Vector<U8>); //vehicleConvexHullEmitStringCharacter
-	READTOVAR(vehicleHullIndex, Vector<U32>); //vehicleHullIndex
-	READTOVAR(vehicleHullPlaneIndex, Vector<U16>); //vehicleHullPlaneIndex
-	READTOVAR(vehicleHullEmitStringIndex, Vector<U32>); //vehicleHullEmitStringIndex
-	READTOVAR(vehicleHullSurfaceIndex, Vector<U32>); //vehicleHullSurfaceIndex
-	READTOVAR(vehiclePolyListPlaneIndex, Vector<U16>); //vehiclePolyListPlaneIndex
-	READTOVAR(vehiclePolyListPointIndex, Vector<U32>); //vehiclePolyListPointIndex
-	READTOVAR(vehiclePolyListStringCharacter, Vector<U8>); //vehiclePolyListStringCharacter
-	READTOVAR(vehicleNullSurface, Vector<VehicleNullSurface>); //vehicleNullSurface
+	READTOVAR(vehicleConvexHull, std::vector<VehicleConvexHull>); //vehicleConvexHull
+	READTOVAR(vehicleConvexHullEmitStringCharacter, std::vector<U8>); //vehicleConvexHullEmitStringCharacter
+	READTOVAR(vehicleHullIndex, std::vector<U32>); //vehicleHullIndex
+	READTOVAR(vehicleHullPlaneIndex, std::vector<U16>); //vehicleHullPlaneIndex
+	READTOVAR(vehicleHullEmitStringIndex, std::vector<U32>); //vehicleHullEmitStringIndex
+	READTOVAR(vehicleHullSurfaceIndex, std::vector<U32>); //vehicleHullSurfaceIndex
+	READTOVAR(vehiclePolyListPlaneIndex, std::vector<U16>); //vehiclePolyListPlaneIndex
+	READTOVAR(vehiclePolyListPointIndex, std::vector<U32>); //vehiclePolyListPointIndex
+	READTOVAR(vehiclePolyListStringCharacter, std::vector<U8>); //vehiclePolyListStringCharacter
+	READTOVAR(vehicleNullSurface, std::vector<VehicleNullSurface>); //vehicleNullSurface
 }
 
 bool VehicleCollision::write(std::ostream &stream) const {
 	WRITECHECK(vehicleCollisionFileVersion, U32);
-	WRITE(vehicleConvexHull, Vector<VehicleConvexHull>); //vehicleConvexHull
-	WRITE(vehicleConvexHullEmitStringCharacter, Vector<U8>); //vehicleConvexHullEmitStringCharacter
-	WRITE(vehicleHullIndex, Vector<U32>); //vehicleHullIndex
-	WRITE(vehicleHullPlaneIndex, Vector<U16>); //vehicleHullPlaneIndex
-	WRITE(vehicleHullEmitStringIndex, Vector<U32>); //vehicleHullEmitStringIndex
-	WRITE(vehicleHullSurfaceIndex, Vector<U32>); //vehicleHullSurfaceIndex
-	WRITE(vehiclePolyListPlaneIndex, Vector<U16>); //vehiclePolyListPlaneIndex
-	WRITE(vehiclePolyListPointIndex, Vector<U32>); //vehiclePolyListPointIndex
-	WRITE(vehiclePolyListStringCharacter, Vector<U8>); //vehiclePolyListStringCharacter
-	WRITE(vehicleNullSurface, Vector<VehicleNullSurface>); //vehicleNullSurface
+	WRITE(vehicleConvexHull, std::vector<VehicleConvexHull>); //vehicleConvexHull
+	WRITE(vehicleConvexHullEmitStringCharacter, std::vector<U8>); //vehicleConvexHullEmitStringCharacter
+	WRITE(vehicleHullIndex, std::vector<U32>); //vehicleHullIndex
+	WRITE(vehicleHullPlaneIndex, std::vector<U16>); //vehicleHullPlaneIndex
+	WRITE(vehicleHullEmitStringIndex, std::vector<U32>); //vehicleHullEmitStringIndex
+	WRITE(vehicleHullSurfaceIndex, std::vector<U32>); //vehicleHullSurfaceIndex
+	WRITE(vehiclePolyListPlaneIndex, std::vector<U16>); //vehiclePolyListPlaneIndex
+	WRITE(vehiclePolyListPointIndex, std::vector<U32>); //vehiclePolyListPointIndex
+	WRITE(vehiclePolyListStringCharacter, std::vector<U8>); //vehiclePolyListStringCharacter
+	WRITE(vehicleNullSurface, std::vector<VehicleNullSurface>); //vehicleNullSurface
 
 	return true;
 }

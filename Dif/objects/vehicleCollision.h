@@ -64,16 +64,16 @@ class VehicleCollision {
 public:
 	U32 vehicleCollisionFileVersion;
 
-	Vector<VehicleConvexHull> vehicleConvexHull;
-	Vector<U8> vehicleConvexHullEmitStringCharacter;
-	Vector<U32> vehicleHullIndex;
-	Vector<U16> vehicleHullPlaneIndex;
-	Vector<U32> vehicleHullEmitStringIndex;
-	Vector<U32> vehicleHullSurfaceIndex;
-	Vector<U16> vehiclePolyListPlaneIndex;
-	Vector<U32> vehiclePolyListPointIndex;
-	Vector<U8> vehiclePolyListStringCharacter;
-	Vector<VehicleNullSurface> vehicleNullSurface;
+	std::vector<VehicleConvexHull> vehicleConvexHull;
+	std::vector<U8> vehicleConvexHullEmitStringCharacter;
+	std::vector<U32> vehicleHullIndex;
+	std::vector<U16> vehicleHullPlaneIndex;
+	std::vector<U32> vehicleHullEmitStringIndex;
+	std::vector<U32> vehicleHullSurfaceIndex;
+	std::vector<U16> vehiclePolyListPlaneIndex;
+	std::vector<U32> vehiclePolyListPointIndex;
+	std::vector<U8> vehiclePolyListStringCharacter;
+	std::vector<VehicleNullSurface> vehicleNullSurface;
 
 	/**
 	 Reads a VehicleCollision from a FILE

@@ -36,8 +36,8 @@ InteriorPathFollower::InteriorPathFollower(std::istream &stream) {
 	READTOVAR(interiorResIndex, U32); //interiorResIndex
 	READTOVAR(offset, Point3F); //offset
 	READTOVAR(properties, Dictionary); //properties
-	READTOVAR(triggerId, Vector<U32>); //triggerId
-	READTOVAR(wayPoint, Vector<WayPoint>); //wayPoint
+	READTOVAR(triggerId, std::vector<U32>); //triggerId
+	READTOVAR(wayPoint, std::vector<WayPoint>); //wayPoint
 	READTOVAR(totalMS, U32); //totalMS
 }
 
@@ -47,8 +47,8 @@ bool InteriorPathFollower::write(std::ostream &stream) const {
 	WRITECHECK(interiorResIndex, U32); //interiorResIndex
 	WRITECHECK(offset, Point3F); //offset
 	WRITE(properties, Dictionary); //properties
-	WRITE(triggerId, Vector<U32>); //triggerId
-	WRITE(wayPoint, Vector<WayPoint>); //wayPoint
+	WRITE(triggerId, std::vector<U32>); //triggerId
+	WRITE(wayPoint, std::vector<WayPoint>); //wayPoint
 	WRITECHECK(totalMS, U32); //totalMS
 
 	return true;

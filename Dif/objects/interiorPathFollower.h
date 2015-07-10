@@ -49,8 +49,8 @@ public:
 	Point3F offset;
 	Dictionary properties;
 
-	Vector<U32> triggerId;
-	Vector<WayPoint> wayPoint;
+	std::vector<U32> triggerId;
+	std::vector<WayPoint> wayPoint;
 
 	U32 totalMS;
 

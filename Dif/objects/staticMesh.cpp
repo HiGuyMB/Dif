@@ -29,12 +29,12 @@
 #include <assert.h>
 
 StaticMesh::StaticMesh(std::istream &stream) {
-	READTOVAR(primitive, Vector<Primitive>); //primitive
-	READTOVAR(index, Vector<U16>); //index
-	READTOVAR(vertex, Vector<Point3F>); //vertex
-	READTOVAR(normal, Vector<Point3F>); //normal
-	READTOVAR(diffuseUV, Vector<Point2F>); //diffuseUV
-	READTOVAR(lightmapUV, Vector<Point2F>); //lightmapUV
+	READTOVAR(primitive, std::vector<Primitive>); //primitive
+	READTOVAR(index, std::vector<U16>); //index
+	READTOVAR(vertex, std::vector<Point3F>); //vertex
+	READTOVAR(normal, std::vector<Point3F>); //normal
+	READTOVAR(diffuseUV, std::vector<Point2F>); //diffuseUV
+	READTOVAR(lightmapUV, std::vector<Point2F>); //lightmapUV
 
 	READTOVAR(hasMaterialList, U8);
 	if (hasMaterialList) {
@@ -50,12 +50,12 @@ StaticMesh::StaticMesh(std::istream &stream) {
 }
 
 bool StaticMesh::write(std::ostream &stream) const {
-	WRITE(primitive, Vector<Primitive>); //primitive
-	WRITE(index, Vector<U16>); //index
-	WRITE(vertex, Vector<Point3F>); //vertex
-	WRITE(normal, Vector<Point3F>); //normal
-	WRITE(diffuseUV, Vector<Point2F>); //diffuseUV
-	WRITE(lightmapUV, Vector<Point2F>); //lightmapUV
+	WRITE(primitive, std::vector<Primitive>); //primitive
+	WRITE(index, std::vector<U16>); //index
+	WRITE(vertex, std::vector<Point3F>); //vertex
+	WRITE(normal, std::vector<Point3F>); //normal
+	WRITE(diffuseUV, std::vector<Point2F>); //diffuseUV
+	WRITE(lightmapUV, std::vector<Point2F>); //lightmapUV
 
 	if (hasMaterialList) {
 		baseMaterialList.write(stream);

@@ -33,32 +33,32 @@
 ForceField::ForceField(std::istream &stream) {
 	READTOVAR(forceFieldFileVersion, U32); //forceFieldFileVersion
 	READTOVAR(name, String); //name
-	READTOVAR(trigger, Vector<String>); //trigger
+	READTOVAR(trigger, std::vector<String>); //trigger
 	READTOVAR(boundingBox, BoxF); //boundingBox
 	READTOVAR(boundingSphere, SphereF); //boundingSphere
-	READTOVAR(normal, Vector<Point3F>); //normal
-	READTOVAR(plane, Vector<Plane_FF>); //plane
-	READTOVAR(BSPNode, Vector<BSPNode_FF>); //BSPNode
-	READTOVAR(BSPSolidLeaf, Vector<BSPSolidLeaf_FF>); //BSPSolidLeaf
-	READTOVAR(index, Vector<U32>); //index
-	READTOVAR(surface, Vector<Surface_FF>); //surface
-	READTOVAR(solidLeafSurface, Vector<U32>); //solidLeafSurface
+	READTOVAR(normal, std::vector<Point3F>); //normal
+	READTOVAR(plane, std::vector<Plane_FF>); //plane
+	READTOVAR(BSPNode, std::vector<BSPNode_FF>); //BSPNode
+	READTOVAR(BSPSolidLeaf, std::vector<BSPSolidLeaf_FF>); //BSPSolidLeaf
+	READTOVAR(index, std::vector<U32>); //index
+	READTOVAR(surface, std::vector<Surface_FF>); //surface
+	READTOVAR(solidLeafSurface, std::vector<U32>); //solidLeafSurface
 	READTOVAR(color, ColorI); //color
 }
 
 bool ForceField::write(std::ostream &stream) const {
 	WRITECHECK(forceFieldFileVersion, U32); //forceFieldFileVersion
 	WRITE(name, String); //name
-	WRITE(trigger, Vector<String>); //trigger
+	WRITE(trigger, std::vector<String>); //trigger
 	WRITECHECK(boundingBox, BoxF); //boundingBox
 	WRITECHECK(boundingSphere, SphereF); //boundingSphere
-	WRITE(normal, Vector<Point3F>); //normal
-	WRITE(plane, Vector<Plane_FF>); //plane
-	WRITE(BSPNode, Vector<BSPNode_FF>); //BSPNode
-	WRITE(BSPSolidLeaf, Vector<BSPSolidLeaf_FF>); //BSPSolidLeaf
-	WRITE(index, Vector<U32>); //index
-	WRITE(surface, Vector<Surface_FF>); //surface
-	WRITE(solidLeafSurface, Vector<U32>); //solidLeafSurface
+	WRITE(normal, std::vector<Point3F>); //normal
+	WRITE(plane, std::vector<Plane_FF>); //plane
+	WRITE(BSPNode, std::vector<BSPNode_FF>); //BSPNode
+	WRITE(BSPSolidLeaf, std::vector<BSPSolidLeaf_FF>); //BSPSolidLeaf
+	WRITE(index, std::vector<U32>); //index
+	WRITE(surface, std::vector<Surface_FF>); //surface
+	WRITE(solidLeafSurface, std::vector<U32>); //solidLeafSurface
 	WRITECHECK(color, ColorI); //color
 
 	return true;

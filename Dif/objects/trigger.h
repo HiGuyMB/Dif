@@ -46,9 +46,9 @@ public:
 	String datablock;
 	Dictionary properties;
 
-	Vector<Point3F> polyHedronPoint;
-	Vector<PlaneF> polyHedronPlane;
-	Vector<PolyHedronEdge> polyHedronEdge;
+	std::vector<Point3F> polyHedronPoint;
+	std::vector<PlaneF> polyHedronPlane;
+	std::vector<PolyHedronEdge> polyHedronEdge;
 
 	Point3F offset;
 

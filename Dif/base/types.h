@@ -149,31 +149,6 @@ struct String : public Readable, Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-template <typename T>
-class Vector : public Readable, public Writable {
-public:
-	typedef std::vector<T> VectorType;
-private:
-	VectorType vector;
-
-public:
-	T operator[](U32 pos) const {
-		return vector[pos];
-	}
-	T & operator[](U32 pos) {
-		return vector[pos];
-	}
-	void push_back(T value) {
-		vector.push_back(value);
-	}
-	typename VectorType::size_type size() {
-		return vector.size();
-	}
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
 #include "point2.h"
 #include "point3.h"
 #include "point4.h"
