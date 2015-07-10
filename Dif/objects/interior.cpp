@@ -445,6 +445,10 @@ Interior::~Interior() {
 	delete [] texNormal;
 	delete [] texMatrix;
 	delete [] texMatIndex;
+	for (int i = 0; i < numStaticMeshes; i ++) {
+		delete staticMesh[i];
+	}
+	delete [] staticMesh;
 }
 
 //----------------------------------------------------------------------------

@@ -263,6 +263,10 @@ public:
 
 	bool read(FILE *file);
 	bool write(FILE *file) const;
+
+	~PNG() {
+		delete [] data;
+	}
 };
 
 class TriangleF {

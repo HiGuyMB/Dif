@@ -121,12 +121,33 @@ bool DIF::write(FILE *file, String directory) const {
 }
 
 DIF::~DIF() {
+	for (int i = 0; i < numDetailLevels; i ++) {
+		delete interior[i];
+	}
 	delete [] interior;
+	for (int i = 0; i < numSubObjects; i ++) {
+		delete subObject[i];
+	}
 	delete [] subObject;
+	for (int i = 0; i < numTriggers; i ++) {
+		delete trigger[i];
+	}
 	delete [] trigger;
+	for (int i = 0; i < numInteriorPathFollowers; i ++) {
+		delete interiorPathFollower[i];
+	}
 	delete [] interiorPathFollower;
+	for (int i = 0; i < numForceFields; i ++) {
+		delete forceField[i];
+	}
 	delete [] forceField;
+	for (int i = 0; i < numAISpecialNodes; i ++) {
+		delete aiSpecialNode[i];
+	}
 	delete [] aiSpecialNode;
 	delete vehicleCollision;
+	for (int i = 0; i < numGameEntities; i ++) {
+		delete gameEntity[i];
+	}
 	delete [] gameEntity;
 }
