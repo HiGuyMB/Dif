@@ -68,7 +68,8 @@ DIF::DIF(std::istream &stream, String directory) {
 	READ(U32); //unknown
 	if (READ(U32) == 2) { //readGameEntities
 		READLOOPVAR(numGameEntities, gameEntity, GameEntity *) {
-			gameEntity[i] = new GameEntity(stream);
+			gameEntity[i] = new GameEntity();
+			gameEntity[i]->read(stream);
 		}
 	} else {
 		numGameEntities = 0;
