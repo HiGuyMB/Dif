@@ -243,12 +243,22 @@ public:
 	virtual bool read(std::istream &stream);
 	virtual bool write(std::ostream &stream) const;
 
+	Dictionary() : size(0) {
+
+	}
+
 	String get(const String &key) const {
 		for (U32 i = 0; i < size; i ++) {
 			if (names[i] == key)
 				return values[i];
 		}
 		return "";
+	}
+
+	void put(const String &key, const String &value) {
+		names.push_back(key);
+		values.push_back(value);
+		size ++;
 	}
 };
 
@@ -261,7 +271,7 @@ public:
 	virtual bool write(std::ostream &stream) const;
 
 	~PNG() {
-		delete [] data;
+//		delete [] data;
 	}
 };
 
