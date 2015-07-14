@@ -35,9 +35,7 @@ Trigger::Trigger(std::istream &stream) {
 	READTOVAR(name, String); //name
 	READTOVAR(datablock, String); //datablock
 	READTOVAR(properties, Dictionary); //properties
-	READTOVAR(polyHedronPoint, std::vector<Point3F>); //point
-	READTOVAR(polyHedronPlane, std::vector<PlaneF>); //plane
-	READTOVAR(polyHedronEdge, std::vector<PolyHedronEdge>); //polyHedronEdge
+	READTOVAR(polyhedron, PolyHedron);
 	READTOVAR(offset, Point3F); //offset
 }
 
@@ -45,28 +43,67 @@ bool Trigger::write(std::ostream &stream) const {
 	WRITE(name, String); //name
 	WRITE(datablock, String); //datablock
 	WRITE(properties, Dictionary); //properties
-	WRITE(polyHedronPoint, std::vector<Point3F>); //polyHedronPoint
-	WRITE(polyHedronPlane, std::vector<PlaneF>); //polyHedronPlane
-	WRITE(polyHedronEdge, std::vector<PolyHedronEdge>); //numPolyHedronEdges
+	WRITE(polyhedron, PolyHedron);
 	WRITECHECK(offset, Point3F); //offset
 
 	return true;
 }
 
+bool PolyHedron::read(std::istream &stream) {
+	READTOVAR(pointList, std::vector<Point3F>); //point
+	READTOVAR(planeList, std::vector<PlaneF>); //plane
+	READTOVAR(edgeList, std::vector<PolyHedronEdge>); //polyHedronEdge
+
+	return true;
+}
+
+bool PolyHedron::write(std::ostream &stream) const {
+	WRITE(pointList, std::vector<Point3F>); //polyHedronPoint
+	WRITE(planeList, std::vector<PlaneF>); //polyHedronPlane
+	WRITE(edgeList, std::vector<PolyHedronEdge>); //numPolyHedronEdges
+
+	return true;
+}
+
+
 bool PolyHedronEdge::read(std::istream &stream) {
-	READTOVAR(face0, U32); //face0
-	READTOVAR(face1, U32); //face1
-	READTOVAR(vertex0, U32); //vertex0
-	READTOVAR(vertex1, U32); //vertex1
+	READTOVAR(face[0], U32); //face0
+	READTOVAR(face[1], U32); //face1
+	READTOVAR(vertex[0], U32); //vertex0
+	READTOVAR(vertex[1], U32); //vertex1
 
 	return true;
 }
 
 bool PolyHedronEdge::write(std::ostream &stream) const {
-	WRITECHECK(face0, U32); //face0
-	WRITECHECK(face1, U32); //face1
-	WRITECHECK(vertex0, U32); //vertex0
-	WRITECHECK(vertex1, U32); //vertex1
+	WRITECHECK(face[0], U32); //face0
+	WRITECHECK(face[1], U32); //face1
+	WRITECHECK(vertex[0], U32); //vertex0
+	WRITECHECK(vertex[1], U32); //vertex1
 
 	return true;
+}
+
+String Trigger::getPolyhedron() {
+	// First point is corner, need to find the three vectors...`
+	Point3F origin = polyhedron.pointList[0];
+	U32 currVec = 0;
+	Point3F vecs[3];
+	for (U32 i = 0; i < polyhedron.edgeList.size(); i++) {
+		const U32 *vertex = polyhedron.edgeList[i].vertex;
+		if (vertex[0] == 0)
+			vecs[currVec++] = polyhedron.pointList[vertex[1]] - origin;
+		else
+			if (vertex[1] == 0)
+				vecs[currVec++] = polyhedron.pointList[vertex[0]] - origin;
+	}
+
+	// Build output string.
+	String ret(1024);
+	snprintf(ret, 1023, "%7.7f %7.7f %7.7f %7.7f %7.7f %7.7f %7.7f %7.7f %7.7f %7.7f %7.7f %7.7f",
+			 origin.x, origin.y, origin.z,
+			 vecs[0].x, vecs[0].y, vecs[0].z,
+			 vecs[2].x, vecs[2].y, vecs[2].z,
+			 vecs[1].x, vecs[1].y, vecs[1].z);
+	return ret;
 }

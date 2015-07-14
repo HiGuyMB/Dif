@@ -31,10 +31,17 @@
 #include "types.h"
 
 struct PolyHedronEdge : public Readable, public Writable {
-	U32 face0;
-	U32 face1;
-	U32 vertex0;
-	U32 vertex1;
+	U32 face[2];
+	U32 vertex[2];
+
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
+};
+
+struct PolyHedron : public Readable, public Writable {
+	std::vector<Point3F> pointList;
+	std::vector<PlaneF> planeList;
+	std::vector<PolyHedronEdge> edgeList;
 
 	virtual bool read(std::istream &stream);
 	virtual bool write(std::ostream &stream) const;
@@ -46,10 +53,7 @@ public:
 	String datablock;
 	Dictionary properties;
 
-	std::vector<Point3F> polyHedronPoint;
-	std::vector<PlaneF> polyHedronPlane;
-	std::vector<PolyHedronEdge> polyHedronEdge;
-
+	PolyHedron polyhedron;
 	Point3F offset;
 
 	/**
@@ -59,6 +63,8 @@ public:
 	Trigger(std::istream &stream);
 
 	bool write(std::ostream &stream) const;
+
+	String getPolyhedron();
 };
 
 #endif
