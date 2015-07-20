@@ -34,6 +34,7 @@
 
 #include <fstream>
 #include <vector>
+#include <map>
 
 //Base types (names stolen from TGE because lazy)
 typedef unsigned char      U8;
@@ -73,6 +74,8 @@ typedef Point4<F32> Point4F;
 
 typedef Color<U8>  ColorI;
 typedef Color<F32> ColorF;
+
+typedef std::map<std::string, std::string> Dictionary;
 
 //More names stolen from TGE
 
@@ -142,34 +145,6 @@ public:
 
 	virtual bool read(std::istream &stream);
 	virtual bool write(std::ostream &stream) const;
-};
-
-class Dictionary : public Readable, Writable {
-public:
-	U32 size;
-	std::vector<std::string> names;
-	std::vector<std::string> values;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-
-	Dictionary() : size(0) {
-
-	}
-
-	std::string get(const std::string &key) const {
-		for (U32 i = 0; i < size; i ++) {
-			if (names[i] == key)
-				return values[i];
-		}
-		return "";
-	}
-
-	void put(const std::string &key, const std::string &value) {
-		names.push_back(key);
-		values.push_back(value);
-		size ++;
-	}
 };
 
 class PNG : public Readable, Writable {

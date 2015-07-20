@@ -100,21 +100,6 @@ bool PNG::read(std::istream &stream) {
 	return true;
 }
 
-bool Dictionary::read(std::istream &stream) {
-	//<length>[<name><value>]...
-	IO::read(stream, &size, "size");
-	for (int i = 0; i < size; i ++) {
-		std::string name, value;
-		IO::read(stream, &name, "name");
-		IO::read(stream, &value, "value");
-
-		names.push_back(name);
-		values.push_back(value);
-	}
-
-	return true;
-}
-
 //-----------------------------------------------------------------------------
 
 bool PlaneF::write(std::ostream &stream) const {
@@ -178,20 +163,6 @@ bool PNG::write(std::ostream &stream) const {
 		if (!IO::write(stream, data[i], "data"))
 			return false;
 	}
-	return true;
-}
-
-bool Dictionary::write(std::ostream &stream) const {
-	//<length>[<name><value>]...
-
-	if (!IO::write(stream, size, "size"))
-		return false;
-	for (int i = 0; i < size; i ++) {
-		if (!IO::write(stream, names[i], "name") ||
-			!IO::write(stream, values[i], "value"))
-		return false;
-	}
-
 	return true;
 }
 

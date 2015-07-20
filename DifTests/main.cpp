@@ -12,8 +12,12 @@ void printTriggers(DIF *dif) {
 		std::cout << "   scale = \"1 1 1 \";" << std::endl;
 		std::cout << "   datablock = \"" << trigger->datablock <<  "\";" << std::endl;
 		std::cout << "   polyhedron = \"" << trigger->getPolyhedron() << "\";" << std::endl;
-		for (int j = 0; j < trigger->properties.size; j ++) {
-			std::cout << "      " << trigger->properties.names[j] << " = \"" << trigger->properties.values[j] << "\";" << std::endl;
+		for (auto it : trigger->properties) {
+			std::cout << "      " << it.first << " = \"" << it.second << "\";" << std::endl;
+		}
+		std::cout << "};" << std::endl;
+	}
+}
 		}
 		std::cout << "};" << std::endl;
 	}

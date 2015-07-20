@@ -31,6 +31,7 @@
 #include "types.h"
 #include "math.h"
 #include <type_traits>
+#include <map>
 
 #define LIGHT_MAP_SIZE 0x400
 
@@ -135,6 +136,39 @@ public:
 		return true;
 	}
 
+	/**
+	 Read a map from a stream
+	 @var stream - The stream from which the data is read
+	 @var value - A pointer into which the data will be read
+	 @var name - A string containing the name of the variable (for debugging)
+	 @return If the operation was successful
+	 */
+	static inline bool read(std::istream &stream, std::map<std::string, std::string> *value, const std::string &name) {
+		//How long is the map
+		U32 length;
+		if (!read(stream, &length, "length"))
+			return false;
+
+		//Empty the map
+		*value = std::map<std::string, std::string>();
+
+		//Read the map strings
+		for (U32 i = 0; i < length; i ++) {
+			std::string name, val;
+
+			//Make sure we can read it
+			if (!IO::read(stream, &name, "name") ||
+			    !IO::read(stream, &val, "val")) {
+				return false;
+			}
+
+			//Insert the pair
+			(*value)[name] = val;
+		}
+
+		return true;
+	}
+
 	//Write primitive types from a std::istream
 	template <typename T, bool=true>
 	struct write_impl {
@@ -199,6 +233,28 @@ public:
 		//Write each byte of the string
 		for (U32 i = 0; i < value.length(); i ++) {
 			if (!write(stream, value[i], "char"))
+				return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 Write a map to a stream
+	 @var stream - The stream to which the data is written
+	 @var value - The map to write
+	 @var name - A string containing the name of the variable (for debugging)
+	 @return If the operation was successful
+	 */
+	static inline bool write(std::ostream &stream, const std::map<std::string, std::string> &value, const std::string &name) {
+		//How long is the map
+		if (!write(stream, (U32)value.size(), "length"))
+			return false;
+		
+		//Write each string in the map
+		for (auto pair : value) {
+			if (!write(stream, pair.first, "name") ||
+			    !write(stream, pair.second, "value"))
 				return false;
 		}
 
