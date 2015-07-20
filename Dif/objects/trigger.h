@@ -57,10 +57,16 @@ public:
 	Point3F offset;
 
 	/**
-	 Reads a Trigger from a FILE
-	 @arg file - The FILE to read from (updates position)
+	 Reads a Trigger from a stream
+	 @arg stream - The stream to read from
+	 @return If the operation was successful
 	 */
 	virtual bool read(std::istream &stream);
+	/**
+	 Writes a Trigger to a stream
+	 @arg stream - The stream to write to
+	 @return If the operation was successful
+	 */
 	virtual bool write(std::ostream &stream) const;
 
 	std::string getPolyhedron();

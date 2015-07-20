@@ -39,7 +39,17 @@ public:
 	Color() : red(0), green(0), blue(0), alpha(0) {};
 	Color(const T &red, const T &green, const T &blue, const T &alpha) : red(red), green(green), blue(blue), alpha(alpha) {};
 
+	/**
+	 Reads a Color from a stream
+	 @arg stream - The stream to read from
+	 @return If the operation was successful
+	 */
 	virtual bool read(std::istream &stream);
+	/**
+	 Writes a Color to a stream
+	 @arg stream - The stream to write to
+	 @return If the operation was successful
+	 */
 	virtual bool write(std::ostream &stream) const;
 };
 
