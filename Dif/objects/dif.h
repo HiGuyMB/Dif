@@ -48,11 +48,6 @@ public:
 	std::vector<AISpecialNode> aiSpecialNode;
 	VehicleCollision vehicleCollision;
 
-	U32 unknown0;
-	U32 unknown1;
-	U32 unknown2;
-	U32 unknown3;
-
 	U32 readGameEntities;
 	std::vector<GameEntity> gameEntity;
 

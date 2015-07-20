@@ -40,6 +40,10 @@ bool VehicleCollision::read(std::istream &stream) {
 	READCHECK(vehiclePolyListPointIndex, std::vector<U32>); //vehiclePolyListPointIndex
 	READCHECK(vehiclePolyListStringCharacter, std::vector<U8>); //vehiclePolyListStringCharacter
 	READCHECK(vehicleNullSurface, std::vector<VehicleNullSurface>); //vehicleNullSurface
+	READCHECK(vehiclePoints, std::vector<Point3F>); //vehiclePoints
+	READCHECK(vehiclePlanes, std::vector<PlaneF>); //vehiclePlanes
+	READCHECK(vehicleWindings, std::vector<U32>); //vehicleWindings
+	READCHECK(vehicleWindingIndices, std::vector<VehicleWindingIndex>); //vehicleWindingIndices
 
 	return true;
 }
@@ -56,6 +60,10 @@ bool VehicleCollision::write(std::ostream &stream) const {
 	WRITECHECK(vehiclePolyListPointIndex, std::vector<U32>); //vehiclePolyListPointIndex
 	WRITECHECK(vehiclePolyListStringCharacter, std::vector<U8>); //vehiclePolyListStringCharacter
 	WRITECHECK(vehicleNullSurface, std::vector<VehicleNullSurface>); //vehicleNullSurface
+	WRITECHECK(vehiclePoints, std::vector<Point3F>); //vehiclePoints
+	WRITECHECK(vehiclePlanes, std::vector<PlaneF>); //vehiclePlanes
+	WRITECHECK(vehicleWindings, std::vector<U32>); //vehicleWindings
+	WRITECHECK(vehicleWindingIndices, std::vector<VehicleWindingIndex>); //vehicleWindingIndices
 
 	return true;
 }
@@ -75,6 +83,7 @@ bool VehicleConvexHull::read(std::istream &stream) {
 	READCHECK(polyListPlaneStart, U32); //polyListPlaneStart
 	READCHECK(polyListPointStart, U32); //polyListPointStart
 	READCHECK(polyListStringStart, U32); //polyListStringStart
+
 
 	return true;
 }
@@ -111,6 +120,20 @@ bool VehicleNullSurface::write(std::ostream &stream) const {
 	WRITECHECK(windingStart, U32); //windingStart
 	WRITECHECK(planeIndex, U16); //planeIndex
 	WRITECHECK(surfaceFlags, U8); //surfaceFlags
+	WRITECHECK(windingCount, U32); //windingCount
+
+	return true;
+}
+
+bool VehicleWindingIndex::read(std::istream &stream) {
+	READCHECK(windingStart, U32); //windingStart
+	READCHECK(windingCount, U32); //windingCount
+
+	return true;
+}
+
+bool VehicleWindingIndex::write(std::ostream &stream) const {
+	WRITECHECK(windingStart, U32); //windingStart
 	WRITECHECK(windingCount, U32); //windingCount
 
 	return true;

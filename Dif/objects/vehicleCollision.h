@@ -60,6 +60,14 @@ struct VehicleNullSurface : public Readable, public Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
+struct VehicleWindingIndex : public Readable, public Writable {
+	U32 windingStart;
+	U32 windingCount;
+
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
+};
+
 class VehicleCollision : public Readable, public Writable {
 public:
 	U32 vehicleCollisionFileVersion;
@@ -74,6 +82,10 @@ public:
 	std::vector<U32> vehiclePolyListPointIndex;
 	std::vector<U8> vehiclePolyListStringCharacter;
 	std::vector<VehicleNullSurface> vehicleNullSurface;
+	std::vector<Point3F> vehiclePoints;
+	std::vector<PlaneF> vehiclePlanes;
+	std::vector<U32> vehicleWindings;
+	std::vector<VehicleWindingIndex> vehicleWindingIndices;
 
 	/**
 	 * Reads a VehicleCollision from a stream

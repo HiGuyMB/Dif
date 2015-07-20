@@ -51,10 +51,6 @@ bool DIF::read(std::istream &stream) {
 	if (READ(U32) == 1) { //readVehicleCollision
 		vehicleCollision.read(stream); //vehicleCollision
 	}
-	READ(U32); //unknown
-	READ(U32); //unknown
-	READ(U32); //unknown
-	READ(U32); //unknown
 	if (READ(U32) == 2) { //readGameEntities
 		READCHECK(gameEntity, std::vector<GameEntity>); //gameEntity
 	}
@@ -76,10 +72,6 @@ bool DIF::write(std::ostream &stream) const {
 	WRITECHECK(1, U32); //readVehicleCollision
 	vehicleCollision.write(stream); //vehicleCollision
 
-	WRITECHECK(0, U32); //unknown
-	WRITECHECK(0, U32); //unknown
-	WRITECHECK(0, U32); //unknown
-	WRITECHECK(0, U32); //unknown
 	if (gameEntity.size()) {
 		WRITECHECK(2, U32); //readGameEntities
 		WRITECHECK(gameEntity, std::vector<GameEntity>); //gameEntity
