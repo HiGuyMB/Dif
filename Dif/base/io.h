@@ -430,18 +430,6 @@ for (U32 i = 0; i < name##_length; i ++) { \
 	READ(type); \
 }
 
-#define READLOOPVAR2(countvar, listvar, type) \
-bool read##countvar##2 = false; \
-U8 read##countvar##param = 0; \
-READTOVAR(countvar, U32); \
-if (countvar  & 0x80000000) { \
-	countvar ^= 0x80000000; \
-	read##countvar##2 = true; \
-	READTOVAR(read##countvar##param, U8); \
-} \
-listvar = new type[countvar]; \
-for (U32 i = 0; i < countvar; i ++)
-
 #define READLISTVAR2(countvar, listvar, condition, normaltype, alternatetype) \
 bool read##countvar##2 = false; \
 U8 read##countvar##param = 0; \
@@ -459,17 +447,6 @@ for (U32 i = 0; i < countvar; i ++) { \
 		READTOVAR(listvar[i], normaltype); \
 	} \
 }
-
-#define READLOOP2(name) \
-bool read##name##2 = false; \
-U8 read##name##param = 0; \
-READVAR(name##_length, U32); \
-if (name##_length  & 0x80000000) { \
-	name##_length ^= 0x80000000; \
-	read##name##2 = true; \
-	READTOVAR(read##name##param, U8); \
-} \
-for (U32 i = 0; i < name##_length; i ++)
 
 #define READLIST2(name, condition, normaltype, alternatetype) \
 bool read##name##2 = false; \
