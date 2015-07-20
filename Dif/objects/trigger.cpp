@@ -32,16 +32,16 @@
 #include "trigger.h"
 
 Trigger::Trigger(std::istream &stream) {
-	READTOVAR(name, String); //name
-	READTOVAR(datablock, String); //datablock
+	READTOVAR(name, std::string); //name
+	READTOVAR(datablock, std::string); //datablock
 	READTOVAR(properties, Dictionary); //properties
 	READTOVAR(polyhedron, PolyHedron);
 	READTOVAR(offset, Point3F); //offset
 }
 
 bool Trigger::write(std::ostream &stream) const {
-	WRITE(name, String); //name
-	WRITE(datablock, String); //datablock
+	WRITE(name, std::string); //name
+	WRITE(datablock, std::string); //datablock
 	WRITE(properties, Dictionary); //properties
 	WRITE(polyhedron, PolyHedron);
 	WRITECHECK(offset, Point3F); //offset

@@ -35,8 +35,8 @@ GameEntity::GameEntity() {
 }
 
 bool GameEntity::read(std::istream &stream) {
-	READTOVAR(datablock, String); //datablock
-	READTOVAR(gameClass, String); //gameClass
+	READTOVAR(datablock, std::string); //datablock
+	READTOVAR(gameClass, std::string); //gameClass
 	READTOVAR(position, Point3F); //position
 	READTOVAR(properties, Dictionary); //properties
 
@@ -44,8 +44,8 @@ bool GameEntity::read(std::istream &stream) {
 }
 
 bool GameEntity::write(std::ostream &stream) const {
-	WRITE(datablock, String); //datablock
-	WRITE(gameClass, String); //gameClass
+	WRITE(datablock, std::string); //datablock
+	WRITE(gameClass, std::string); //gameClass
 	WRITECHECK(position, Point3F); //position
 	WRITE(properties, Dictionary); //properties
 

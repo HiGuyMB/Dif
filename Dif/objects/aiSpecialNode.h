@@ -32,7 +32,7 @@
 
 class AISpecialNode {
 public:
-	String name;
+	std::string name;
 	Point3F position;
 
 	/**

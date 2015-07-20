@@ -32,8 +32,8 @@
 
 class GameEntity {
 public:
-	String datablock;
-	String gameClass;
+	std::string datablock;
+	std::string gameClass;
 	Point3F position;
 	Dictionary properties;
 

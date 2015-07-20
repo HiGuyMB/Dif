@@ -237,7 +237,7 @@ public:
 	std::vector<BSPSolidLeaf> BSPSolidLeaf;
 
 	U8 materialListVersion;
-	std::vector<String> materialName;
+	std::vector<std::string> materialName;
 
 	U32 numWindings;
 	U32 *index;

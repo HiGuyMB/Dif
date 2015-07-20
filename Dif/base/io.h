@@ -102,6 +102,33 @@ public:
 		return true;
 	}
 
+	/**
+	 Read a string from a stream
+	 @var stream - The stream from which the data is read
+	 @var value - A pointer into which the data will be read
+	 @var name - A string containing the name of the variable (for debugging)
+	 @return If the operation was successful
+	 */
+	static inline bool read(std::istream &stream, std::string *value, const String &name) {
+		//How long is the string
+		U8 length;
+		if (!read(stream, &length, "length"))
+			return false;
+		//Empty the string
+		*value = std::string();
+		//Read each byte of the string
+		for (U32 i = 0; i < length; i ++) {
+			//If we can read the byte, append it to the string
+			U8 chr;
+			if (read(stream, &chr, "chr"))
+				*value += chr;
+			else
+				return false;
+		}
+
+		return true;
+	}
+
 	//Write primitive types from a std::istream
 	template <typename T, bool=true>
 	struct write_impl {
@@ -149,6 +176,26 @@ public:
 			if (!write(stream, (T)value[i], "value"))
 				return false;
 		}
+		return true;
+	}
+
+	/**
+	 Write a string to a stream
+	 @var stream - The stream to which the data is written
+	 @var value - The string to write
+	 @var name - A string containing the name of the variable (for debugging)
+	 @return If the operation was successful
+	 */
+	static inline bool write(std::ostream &stream, const std::string &value, const String &name) {
+		//How long is the string
+		if (!write(stream, (U8)value.length(), "length"))
+			return false;
+		//Write each byte of the string
+		for (U32 i = 0; i < value.length(); i ++) {
+			if (!write(stream, value[i], "char"))
+				return false;
+		}
+
 		return true;
 	}
 

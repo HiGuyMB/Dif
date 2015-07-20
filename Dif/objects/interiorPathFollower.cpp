@@ -31,8 +31,8 @@
 #include "interiorPathFollower.h"
 
 InteriorPathFollower::InteriorPathFollower(std::istream &stream) {
-	READTOVAR(name, String); //name
-	READTOVAR(datablock, String); //datablock
+	READTOVAR(name, std::string); //name
+	READTOVAR(datablock, std::string); //datablock
 	READTOVAR(interiorResIndex, U32); //interiorResIndex
 	READTOVAR(offset, Point3F); //offset
 	READTOVAR(properties, Dictionary); //properties
@@ -42,8 +42,8 @@ InteriorPathFollower::InteriorPathFollower(std::istream &stream) {
 }
 
 bool InteriorPathFollower::write(std::ostream &stream) const {
-	WRITE(name, String); //name
-	WRITE(datablock, String); //datablock
+	WRITE(name, std::string); //name
+	WRITE(datablock, std::string); //datablock
 	WRITECHECK(interiorResIndex, U32); //interiorResIndex
 	WRITECHECK(offset, Point3F); //offset
 	WRITE(properties, Dictionary); //properties

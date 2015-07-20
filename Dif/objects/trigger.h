@@ -49,8 +49,8 @@ struct PolyHedron : public Readable, public Writable {
 
 class Trigger {
 public:
-	String name;
-	String datablock;
+	std::string name;
+	std::string datablock;
 	Dictionary properties;
 
 	PolyHedron polyhedron;

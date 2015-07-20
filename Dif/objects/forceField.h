@@ -68,9 +68,9 @@ struct Surface_FF : public Readable, public Writable {
 class ForceField {
 public:
 	U32 forceFieldFileVersion;
-	String name;
+	std::string name;
 
-	std::vector<String> trigger;
+	std::vector<std::string> trigger;
 
 	BoxF boundingBox;
 	SphereF boundingSphere;

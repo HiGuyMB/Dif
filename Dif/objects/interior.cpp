@@ -83,7 +83,7 @@ bool Interior::read(std::istream &stream) {
 	READTOVAR(BSPSolidLeaf, std::vector<::BSPSolidLeaf>); //BSPSolidLeaf
 	//MaterialList
 	READTOVAR(materialListVersion, U8); //version
-	READTOVAR(materialName, std::vector<String>); //materialName
+	READTOVAR(materialName, std::vector<std::string>); //materialName
 	READLISTVAR2(numWindings, index, readnumWindings2, U32, U16);
 	READTOVAR(windingIndex, std::vector<WindingIndex>); //windingIndex
 	if (this->interiorFileVersion >= 12) {
@@ -345,7 +345,7 @@ bool Interior::write(std::ostream &stream) const {
 	WRITELIST(numBSPNodes, BSPNode, ::BSPNode); //BSPNode
 	WRITE(BSPSolidLeaf, std::vector<::BSPSolidLeaf>); //BSPSolidLeaf
 	WRITECHECK(materialListVersion, U8); //materialListVersion
-	WRITE(materialName, std::vector<String>); //material
+	WRITE(materialName, std::vector<std::string>); //material
 	WRITELIST(numWindings, index, U32); //index
 	WRITE(windingIndex, std::vector<WindingIndex>); //windingIndex
 	WRITELIST(numZones, zone, Zone); //zone

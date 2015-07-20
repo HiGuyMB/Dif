@@ -43,8 +43,8 @@ public:
 
 class InteriorPathFollower {
 public:
-	String name;
-	String datablock;
+	std::string name;
+	std::string datablock;
 	U32 interiorResIndex;
 	Point3F offset;
 	Dictionary properties;

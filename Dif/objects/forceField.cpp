@@ -32,8 +32,8 @@
 
 ForceField::ForceField(std::istream &stream) {
 	READTOVAR(forceFieldFileVersion, U32); //forceFieldFileVersion
-	READTOVAR(name, String); //name
-	READTOVAR(trigger, std::vector<String>); //trigger
+	READTOVAR(name, std::string); //name
+	READTOVAR(trigger, std::vector<std::string>); //trigger
 	READTOVAR(boundingBox, BoxF); //boundingBox
 	READTOVAR(boundingSphere, SphereF); //boundingSphere
 	READTOVAR(normal, std::vector<Point3F>); //normal
@@ -48,8 +48,8 @@ ForceField::ForceField(std::istream &stream) {
 
 bool ForceField::write(std::ostream &stream) const {
 	WRITECHECK(forceFieldFileVersion, U32); //forceFieldFileVersion
-	WRITE(name, String); //name
-	WRITE(trigger, std::vector<String>); //trigger
+	WRITE(name, std::string); //name
+	WRITE(trigger, std::vector<std::string>); //trigger
 	WRITECHECK(boundingBox, BoxF); //boundingBox
 	WRITECHECK(boundingSphere, SphereF); //boundingSphere
 	WRITE(normal, std::vector<Point3F>); //normal
