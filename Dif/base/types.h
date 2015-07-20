@@ -58,7 +58,6 @@ public:
 
 #include "point2.h"
 #include "point3.h"
-#include "point4.h"
 #include "color.h"
 
 typedef Point2<S16> Point2I;
@@ -66,7 +65,6 @@ typedef Point2<F32> Point2F;
 typedef Point3<S32> Point3I;
 typedef Point3<F32> Point3F;
 typedef Point3<F64> Point3D;
-typedef Point4<F32> Point4F;
 
 typedef Color<U8>  ColorI;
 typedef Color<F32> ColorF;
