@@ -436,21 +436,6 @@ public:
 	 * @return The file's base name
 	 */
 	static const std::string getBase(const std::string &file, const char &separator = DIR_SEP);
-
-	/**
-	 * Determine if a file exists in the filesystem.
-	 * @param file The file whose existence to check
-	 * @return If the file exists
-	 */
-	static bool isfile(const std::string &file);
-	/**
-	 * Read a file from the filesystem in its entirety to a U8* buffer.
-	 * @param file The file to read
-	 * @param length A U32 in which the file's length will be stored
-	 * @return A character buffer containing the contents of the file, or NULL if
-	 *         the file could not be found.
-	 */
-	static U8 *readFile(const std::string &file, U32 *length);
 };
 
 template <typename T>

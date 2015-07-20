@@ -162,35 +162,6 @@ bool PNG::write(std::ostream &stream) const {
 	return true;
 }
 
-bool IO::isfile(const std::string &file) {
-	FILE *stream = fopen(file.c_str(), "r");
-	if (stream) {
-		fclose(stream);
-		return true;
-	}
-	return false;
-}
-
-U8 *IO::readFile(const std::string &file, U32 *length) {
-	FILE *stream = fopen(file.c_str(), "rb");
-
-	if (!stream)
-		return NULL;
-
-	//Read length of file
-	fseek(stream, 0L, SEEK_END);
-	*length = (U32)ftell(stream);
-	fseek(stream, 0L, SEEK_SET);
-
-	U8 *data = new U8[*length + 1];
-	fread(data, sizeof(U8), *length, stream);
-	data[*length ++] = 0;
-
-	fclose(stream);
-
-	return data;
-}
-
 const std::string IO::getPath(const std::string &file, const char &seperator) {
 	std::string::size_type last = file.find_last_of(seperator);
 	if (last != std::string::npos)
