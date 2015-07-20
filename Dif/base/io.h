@@ -540,20 +540,11 @@ inline T __read(std::istream &stream, T *thing) {
 		type name; \
 		IO::read(stream, reinterpret_cast<type *>(&name), #name)
 	#define READTOVAR(name, type) IO::read(stream, reinterpret_cast<type *>(&name), #name)
-	#define READCHECK(type, value) { \
-		if (READ(type) != value)\
-			return false;\
-	}
 #else
 	#define READVAR(name, type) \
 		type name; \
 		IO::read(stream, reinterpret_cast<type *>(&name), "")
 	#define READTOVAR(name, type) IO::read(stream, reinterpret_cast<type *>(&name), "")
-	#define READCHECK(type, value) { \
-	READVAR(check, type); \
-	if (check != value)\
-		return false;\
-	}
 #endif
 
 #define READLOOPVAR(countvar, listvar, type) \

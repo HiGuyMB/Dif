@@ -32,7 +32,12 @@ bool DIF::read(std::istream &stream) {
 	//http://rustycode.com/tutorials/DIF_File_Format_44_14.html
 	// Someone give that guy all the cookies.
 
-	READCHECK(U32, 44); //interiorResourceFileVersion
+	//Must always be 44
+	if (READ(U32) != 44) { //interiorResourceFileVersion
+		return false;
+	}
+
+	//We don't export these (as we export MBG spec)
 	if (READ(U8)) { //previewIncluded
 		READ(PNG); //previewBitmap
 	}
