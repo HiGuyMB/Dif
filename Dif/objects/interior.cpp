@@ -82,13 +82,9 @@ bool Interior::read(std::istream &stream) {
 
 	bool isTGEInterior = false;
 
-	READLOOPVAR(numSurfaces, surface, Surface) {
-		if (!readSurface(stream, &surface[i], false)) {
-			isTGEInterior = true;
-			break;
-		}
-	}
-	if (isTGEInterior) {
+	if (!IO::read_with<Surface>(stream, &surface, [=](Surface *surface, std::istream &stream)->bool{return surface->read(stream, interiorFileVersion, false, index.size(), plane.size(), materialName.size(), texGenEq.size());}, "surface")) {
+		isTGEInterior = true;
+
 		if (interiorFileVersion != 0) {
 			//Oh fuck oh fuck, TGE interiors only have version 0
 			//This means that readSurface failed on a TGEA interior
@@ -102,17 +98,11 @@ bool Interior::read(std::istream &stream) {
 		//First, rewind
 		stream.seekg(pos);
 
-		//Second, clean up
-		numSurfaces = 0;
-		delete [] surface;
-
-		//Third, re-read
-		READLOOPVAR(numSurfaces, surface, Surface) {
-			if (!readSurface(stream, &surface[i], true)) {
-				//Ok this surface failed too. Bail.
-				//TODO: Blow up here
-				return false;
-			}
+		//Second, re-read
+		if (!IO::read_with<Surface>(stream, &surface, [=](Surface *surface, std::istream &stream)->bool{return surface->read(stream, interiorFileVersion, true, index.size(), plane.size(), materialName.size(), texGenEq.size());}, "surface")) {
+			//Ok this surface failed too. Bail.
+			//TODO: Blow up here
+			return false;
 		}
 	}
 
@@ -274,7 +264,7 @@ bool Interior::write(std::ostream &stream) const {
 	WRITE(zoneSurface, std::vector<U16>); //zoneSurface
 	WRITE(zonePortalList, std::vector<U16>); //zonePortalList
 	WRITE(portal, std::vector<Portal>); //portal
-	WRITELIST(numSurfaces, surface, Surface); //surface
+	WRITE(surface, std::vector<Surface>); //surface
 	WRITE(normalLMapIndex, std::vector<U8>); //normalLMapIndex
 	WRITE(alarmLMapIndex, std::vector<U8>); //alarmLMapIndex
 	WRITE(nullSurface, std::vector<NullSurface>); //nullSurface
@@ -319,58 +309,58 @@ bool Interior::write(std::ostream &stream) const {
 
 //----------------------------------------------------------------------------
 
-bool Interior::readSurface(std::istream &stream, Surface *surface, bool isTGEInterior) {
-	READTOVAR(surface->windingStart, U32); //windingStart
-	if (this->interiorFileVersion >= 13) {
-		READTOVAR(surface->windingCount, U32); //windingCount
+bool Surface::read(std::istream &stream, U32 interiorFileVersion, bool isTGEInterior, U32 indexSize, U32 planeSize, U32 materialSize, U32 texGenEqSize) {
+	READTOVAR(windingStart, U32); //windingStart
+	if (interiorFileVersion >= 13) {
+		READTOVAR(windingCount, U32); //windingCount
 	} else {
-		READTOVAR(surface->windingCount, U8); //windingCount
+		READTOVAR(windingCount, U8); //windingCount
 	}
-	if (surface->windingStart + surface->windingCount > index.size())
+	if (windingStart + windingCount > indexSize)
 		return false;
 
 	//Fucking GarageGames. Sometimes the plane is | 0x8000 because WHY NOT
 	READVAR(plane, S16); //planeIndex
 	//Ugly hack
-	surface->planeFlipped = (plane >> 15 != 0);
+	planeFlipped = (plane >> 15 != 0);
 	plane &= ~0x8000;
-	surface->planeIndex = plane;
-	if (surface->planeIndex > this->plane.size())
+	planeIndex = plane;
+	if (planeIndex > planeSize)
 		return false;
 
-	READTOVAR(surface->textureIndex, U16); //textureIndex
-	if (surface->textureIndex > this->materialName.size())
+	READTOVAR(textureIndex, U16); //textureIndex
+	if (textureIndex > materialSize)
 		return false;
 
-	READTOVAR(surface->texGenIndex, U32); //texGenIndex
-	if (surface->texGenIndex > this->texGenEq.size())
+	READTOVAR(texGenIndex, U32); //texGenIndex
+	if (texGenIndex > texGenEqSize)
 		return false;
 
-	READTOVAR(surface->surfaceFlags, U8); //surfaceFlags
-	READTOVAR(surface->fanMask, U32); //fanMask
+	READTOVAR(surfaceFlags, U8); //surfaceFlags
+	READTOVAR(fanMask, U32); //fanMask
 	{ //LightMap
-		READTOVAR(surface->lightMap.finalWord, U16); //finalWord
-		READTOVAR(surface->lightMap.texGenXDistance, F32); //texGenXDistance
-		READTOVAR(surface->lightMap.texGenYDistance, F32); //texGenYDistance
+		READTOVAR(lightMap.finalWord, U16); //finalWord
+		READTOVAR(lightMap.texGenXDistance, F32); //texGenXDistance
+		READTOVAR(lightMap.texGenYDistance, F32); //texGenYDistance
 	}
-	READTOVAR(surface->lightCount, U16); //lightCount
-	READTOVAR(surface->lightStateInfoStart, U32); //lightStateInfoStart
+	READTOVAR(lightCount, U16); //lightCount
+	READTOVAR(lightStateInfoStart, U32); //lightStateInfoStart
 
-	if (this->interiorFileVersion >= 13) {
-		READTOVAR(surface->mapOffsetX, U32); //mapOffsetX
-		READTOVAR(surface->mapOffsetY, U32); //mapOffsetY
-		READTOVAR(surface->mapSizeX, U32); //mapSizeX
-		READTOVAR(surface->mapSizeY, U32); //mapSizeY
+	if (interiorFileVersion >= 13) {
+		READTOVAR(mapOffsetX, U32); //mapOffsetX
+		READTOVAR(mapOffsetY, U32); //mapOffsetY
+		READTOVAR(mapSizeX, U32); //mapSizeX
+		READTOVAR(mapSizeY, U32); //mapSizeY
 	} else {
-		READTOVAR(surface->mapOffsetX, U8); //mapOffsetX
-		READTOVAR(surface->mapOffsetY, U8); //mapOffsetY
-		READTOVAR(surface->mapSizeX, U8); //mapSizeX
-		READTOVAR(surface->mapSizeY, U8); //mapSizeY
+		READTOVAR(mapOffsetX, U8); //mapOffsetX
+		READTOVAR(mapOffsetY, U8); //mapOffsetY
+		READTOVAR(mapSizeX, U8); //mapSizeX
+		READTOVAR(mapSizeY, U8); //mapSizeY
 	}
 
 	if (!isTGEInterior) {
 		READ(U8); //unused
-		if (this->interiorFileVersion > 0 && this->interiorFileVersion <= 4) {
+		if (interiorFileVersion > 0 && interiorFileVersion <= 4) {
 			READ(U32); //Extra bytes used for some unknown purpose, seen in versions 2, 3, 4
 		}
 	}

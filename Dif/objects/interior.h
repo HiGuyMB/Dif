@@ -140,6 +140,7 @@ struct Surface : public Writable {
 	U8 mapSizeX;
 	U8 mapSizeY;
 
+	bool read(std::istream &stream, U32 interiorFileVersion, bool isTGEInterior, U32 indexSize, U32 planeSize, U32 materialSize, U32 texGenEqSize);
 	virtual bool write(std::ostream &stream) const;
 };
 
@@ -251,10 +252,7 @@ public:
 	std::vector<U32> zoneStaticMesh;
 	std::vector<U16>zonePortalList;
 	std::vector<Portal> portal;
-
-	U32 numSurfaces;
-	Surface *surface;
-
+	std::vector<Surface>surface;
 	std::vector<U8> normalLMapIndex;
 	std::vector<U8> alarmLMapIndex;
 	std::vector<NullSurface>nullSurface;
