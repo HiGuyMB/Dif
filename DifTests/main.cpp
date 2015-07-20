@@ -32,49 +32,57 @@ void printEntities(DIF dif) {
 	}
 }
 
+bool readDif(const char *file, DIF *dif) {
+	std::ifstream stream(file);
+	if (stream.good()) {
+		dif->read(stream);
+		stream.close();
+		return true;
+	}
+	return false;
+}
+
 bool testEquality(const char *file) {
-	//Read the file to a stream
-	std::ifstream inFile(file);
-	std::stringstream inString;
-	inString << inFile.rdbuf();
-
-	//Read it into the dif
-	std::filebuf fb;
-	if (fb.open(file, std::ios::in)) {
-		std::istream stream(&fb);
-		DIF dif;
-		dif.read(stream);
-		fb.close();
-
+	DIF dif;
+	//Make sure we can actually read/write the dif first
+	if (readDif(file, &dif)) {
 		std::ostringstream out;
 		if (dif.write(out)) {
-			//Check the two
-			std::string fileStr = inString.str();
-			std::string difStr = out.str();
+			out.flush();
 
-			for (auto i = 0; i < fileStr.size(); i ++) {
-				if (fileStr[i] != difStr[i]) {
-					//Inconsistency
-					std::cout << "DIF output inconsistency starting at offset " << i << " (0x" << std::hex << i << std::dec << ")" << std::endl;
-					return false;
+			//Take the written output of the DIF and feed it back into itself
+			std::stringstream in;
+			in << out.str();
+
+			//Clear the output stream so we can reuse it
+			out.clear();
+			if (dif.read(in) && dif.write(out)) {
+				//Read the two strings from their streams
+				std::string fileStr = in.str();
+				std::string difStr = out.str();
+
+				//Check the two strings for equality
+				for (auto i = 0; i < fileStr.size(); i ++) {
+					if (fileStr[i] != difStr[i]) {
+						//Inconsistency
+						std::cout << "DIF output inconsistency starting at offset " << i << " (0x" << std::hex << i << std::dec << ")" << std::endl;
+						return false;
+					}
 				}
-			}
 
-			return true;
+				//No error? They're the same
+				return true;
+			}
 		}
 	}
+	//Couldn't read/write somewhere along the lines
 	return false;
 }
 
 int main(int argc, const char * argv[]) {
 	//Read it into the dif
-	std::filebuf fb;
-	if (fb.open(argv[1], std::ios::in)) {
-		std::istream stream(&fb);
-		DIF dif;
-		dif.read(stream);
-		fb.close();
-
+	DIF dif;
+	if (readDif(argv[1], &dif)) {
 		printTriggers(dif);
 		printEntities(dif);
 	}
