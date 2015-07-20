@@ -28,10 +28,6 @@
 #ifndef types_h
 #define types_h
 
-#include <cstdio>
-#include <cstring>
-#include <cstdlib>
-
 #include <fstream>
 #include <vector>
 #include <map>

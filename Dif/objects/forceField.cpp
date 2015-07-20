@@ -25,8 +25,6 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //------------------------------------------------------------------------------
 
-#include <stdio.h>
-#include <stdlib.h>
 #include "io.h"
 #include "forceField.h"
 
