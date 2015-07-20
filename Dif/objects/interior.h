@@ -301,10 +301,6 @@ public:
 	 */
 	bool read(std::istream &stream);
 	bool write(std::ostream &stream) const;
-
-private:
-	bool readSurface(std::istream &stream, Surface *surface, bool isTGEInterior);
-	
 };
 
 #endif
