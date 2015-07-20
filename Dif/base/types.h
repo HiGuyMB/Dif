@@ -156,7 +156,7 @@ public:
 	virtual bool write(std::ostream &stream) const;
 
 	~PNG() {
-//		delete [] data;
+		delete [] data;
 	}
 };
 
