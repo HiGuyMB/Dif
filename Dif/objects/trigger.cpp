@@ -34,7 +34,7 @@ bool Trigger::read(std::istream &stream) {
 	READTOVAR(name, std::string); //name
 	READTOVAR(datablock, std::string); //datablock
 	READTOVAR(properties, Dictionary); //properties
-	READTOVAR(polyhedron, PolyHedron);
+	READTOVAR(polyhedron, PolyHedron); //polyhedron
 	READTOVAR(offset, Point3F); //offset
 
 	return true;
@@ -44,7 +44,7 @@ bool Trigger::write(std::ostream &stream) const {
 	WRITECHECK(name, std::string); //name
 	WRITECHECK(datablock, std::string); //datablock
 	WRITECHECK(properties, Dictionary); //properties
-	WRITECHECK(polyhedron, PolyHedron);
+	WRITECHECK(polyhedron, PolyHedron); //polyhedron
 	WRITECHECK(offset, Point3F); //offset
 
 	return true;

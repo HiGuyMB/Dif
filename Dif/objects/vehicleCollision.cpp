@@ -45,7 +45,7 @@ bool VehicleCollision::read(std::istream &stream) {
 }
 
 bool VehicleCollision::write(std::ostream &stream) const {
-	WRITECHECK(vehicleCollisionFileVersion, U32);
+	WRITECHECK(vehicleCollisionFileVersion, U32); //vehicleCollisionFileVersion
 	WRITECHECK(vehicleConvexHull, std::vector<VehicleConvexHull>); //vehicleConvexHull
 	WRITECHECK(vehicleConvexHullEmitStringCharacter, std::vector<U8>); //vehicleConvexHullEmitStringCharacter
 	WRITECHECK(vehicleHullIndex, std::vector<U32>); //vehicleHullIndex

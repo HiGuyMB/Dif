@@ -36,16 +36,16 @@ bool StaticMesh::read(std::istream &stream) {
 	READTOVAR(diffuseUV, std::vector<Point2F>); //diffuseUV
 	READTOVAR(lightmapUV, std::vector<Point2F>); //lightmapUV
 
-	READTOVAR(hasMaterialList, U8);
+	READTOVAR(hasMaterialList, U8); //hasMaterialList
 	if (hasMaterialList) {
-		baseMaterialList.read(stream);
+		baseMaterialList.read(stream); //baseMaterialList
 	}
 
-	READTOVAR(hasSolid, U8);
-	READTOVAR(hasTranslucency, U8);
-	READTOVAR(bounds, BoxF);
-	READTOVAR(transform, MatrixF);
-	READTOVAR(scale, Point3F);
+	READTOVAR(hasSolid, U8); //hasSolid
+	READTOVAR(hasTranslucency, U8); //hasTranslucency
+	READTOVAR(bounds, BoxF); //bounds
+	READTOVAR(transform, MatrixF); //transform
+	READTOVAR(scale, Point3F); //scale
 
 	return true;
 }
@@ -58,47 +58,48 @@ bool StaticMesh::write(std::ostream &stream) const {
 	WRITECHECK(diffuseUV, std::vector<Point2F>); //diffuseUV
 	WRITECHECK(lightmapUV, std::vector<Point2F>); //lightmapUV
 
+	WRITECHECK(hasMaterialList, U8); //hasMaterialList
 	if (hasMaterialList) {
-		baseMaterialList.write(stream);
+		baseMaterialList.write(stream); //baseMaterialList
 	}
 
-	WRITECHECK(hasSolid, U8);
-	WRITECHECK(hasTranslucency, U8);
-	WRITECHECK(bounds, BoxF);
-	WRITECHECK(transform, MatrixF);
-	WRITECHECK(scale, Point3F);
+	WRITECHECK(hasSolid, U8); //hasSolid
+	WRITECHECK(hasTranslucency, U8); //hasTranslucency
+	WRITECHECK(bounds, BoxF); //bounds
+	WRITECHECK(transform, MatrixF); //transform
+	WRITECHECK(scale, Point3F); //scale
 
 	return true;
 }
 
 bool Primitive::read(std::istream &stream) {
-	READTOVAR(alpha, U8);
-	READTOVAR(texS, U32);
-	READTOVAR(texT, U32);
-	READTOVAR(diffuseIndex, S32);
-	READTOVAR(lightMapIndex, S32);
-	READTOVAR(start, U32);
-	READTOVAR(count, U32);
-	READTOVAR(lightMapEquationX, PlaneF);
-	READTOVAR(lightMapEquationY, PlaneF);
-	READTOVAR(lightMapOffset, Point2I);
-	READTOVAR(lightMapSize, Point2I);
+	READTOVAR(alpha, U8); //alpha
+	READTOVAR(texS, U32); //texS
+	READTOVAR(texT, U32); //texT
+	READTOVAR(diffuseIndex, S32); //diffuseIndex
+	READTOVAR(lightMapIndex, S32); //lightMapIndex
+	READTOVAR(start, U32); //start
+	READTOVAR(count, U32); //count
+	READTOVAR(lightMapEquationX, PlaneF); //lightMapEquationX
+	READTOVAR(lightMapEquationY, PlaneF); //lightMapEquationY
+	READTOVAR(lightMapOffset, Point2I); //lightMapOffset
+	READTOVAR(lightMapSize, Point2I); //lightMapSize
 
 	return true;
 }
 
 bool Primitive::write(std::ostream &stream) const {
-	WRITECHECK(alpha, U8);
-	WRITECHECK(texS, U32);
-	WRITECHECK(texT, U32);
-	WRITECHECK(diffuseIndex, S32);
-	WRITECHECK(lightMapIndex, S32);
-	WRITECHECK(start, U32);
-	WRITECHECK(count, U32);
-	WRITECHECK(lightMapEquationX, PlaneF);
-	WRITECHECK(lightMapEquationY, PlaneF);
-	WRITECHECK(lightMapOffset, Point2I);
-	WRITECHECK(lightMapSize, Point2I);
+	WRITECHECK(alpha, U8); //alpha
+	WRITECHECK(texS, U32); //texS
+	WRITECHECK(texT, U32); //texT
+	WRITECHECK(diffuseIndex, S32); //diffuseIndex
+	WRITECHECK(lightMapIndex, S32); //lightMapIndex
+	WRITECHECK(start, U32); //start
+	WRITECHECK(count, U32); //count
+	WRITECHECK(lightMapEquationX, PlaneF); //lightMapEquationX
+	WRITECHECK(lightMapEquationY, PlaneF); //lightMapEquationY
+	WRITECHECK(lightMapOffset, Point2I); //lightMapOffset
+	WRITECHECK(lightMapSize, Point2I); //lightMapSize
 
 	return true;
 }

@@ -37,21 +37,21 @@ bool DIF::read(std::istream &stream) {
 		READ(PNG); //previewBitmap
 	}
 
-	READTOVAR(interior, std::vector<Interior>);
-	READTOVAR(subObject, std::vector<Interior>);
-	READTOVAR(trigger, std::vector<Trigger>);
-	READTOVAR(interiorPathFollower, std::vector<InteriorPathFollower>);
-	READTOVAR(forceField, std::vector<ForceField>);
-	READTOVAR(aiSpecialNode, std::vector<AISpecialNode>);
+	READTOVAR(interior, std::vector<Interior>); //interior
+	READTOVAR(subObject, std::vector<Interior>); //subObject
+	READTOVAR(trigger, std::vector<Trigger>); //trigger
+	READTOVAR(interiorPathFollower, std::vector<InteriorPathFollower>); //interiorPathFollower
+	READTOVAR(forceField, std::vector<ForceField>); //forceField
+	READTOVAR(aiSpecialNode, std::vector<AISpecialNode>); //aiSpecialNode
 	if (READ(U32) == 1) { //readVehicleCollision
-		vehicleCollision.read(stream);
+		vehicleCollision.read(stream); //vehicleCollision
 	}
 	READ(U32); //unknown
 	READ(U32); //unknown
 	READ(U32); //unknown
 	READ(U32); //unknown
 	if (READ(U32) == 2) { //readGameEntities
-		READTOVAR(gameEntity, std::vector<GameEntity>);
+		READTOVAR(gameEntity, std::vector<GameEntity>); //gameEntity
 	}
 	READ(U32); //dummy
 
@@ -62,27 +62,27 @@ bool DIF::write(std::ostream &stream) const {
 	WRITECHECK(44, U32); //interiorResourceFileVersion
 	WRITECHECK(0, U8); //previewIncluded
 
-	WRITECHECK(interior, std::vector<Interior>);
-	WRITECHECK(subObject, std::vector<Interior>);
-	WRITECHECK(trigger, std::vector<Trigger>);
-	WRITECHECK(interiorPathFollower, std::vector<InteriorPathFollower>);
-	WRITECHECK(forceField, std::vector<ForceField>);
-	WRITECHECK(aiSpecialNode, std::vector<AISpecialNode>);
-	WRITECHECK(1, U32);
-	vehicleCollision.write(stream);
+	WRITECHECK(interior, std::vector<Interior>); //interior
+	WRITECHECK(subObject, std::vector<Interior>); //subObject
+	WRITECHECK(trigger, std::vector<Trigger>); //trigger
+	WRITECHECK(interiorPathFollower, std::vector<InteriorPathFollower>); //interiorPathFollower
+	WRITECHECK(forceField, std::vector<ForceField>); //forceField
+	WRITECHECK(aiSpecialNode, std::vector<AISpecialNode>); //aiSpecialNode
+	WRITECHECK(1, U32); //readVehicleCollision
+	vehicleCollision.write(stream); //vehicleCollision
 
-	WRITECHECK(0, U32);
-	WRITECHECK(0, U32);
-	WRITECHECK(0, U32);
-	WRITECHECK(0, U32);
+	WRITECHECK(0, U32); //unknown
+	WRITECHECK(0, U32); //unknown
+	WRITECHECK(0, U32); //unknown
+	WRITECHECK(0, U32); //unknown
 	if (gameEntity.size()) {
-		WRITECHECK(2, U32);
-		WRITECHECK(gameEntity, std::vector<GameEntity>);
+		WRITECHECK(2, U32); //readGameEntities
+		WRITECHECK(gameEntity, std::vector<GameEntity>); //gameEntity
 	} else {
-		WRITECHECK(0, U32);
+		WRITECHECK(0, U32); //readGameEntities
 	}
 
-	WRITECHECK(0, U32);
+	WRITECHECK(0, U32); //dummy
 
 	return true;
 }
