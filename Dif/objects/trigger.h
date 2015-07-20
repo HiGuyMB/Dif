@@ -32,25 +32,25 @@
 
 DIF_NAMESPACE
 
-struct PolyHedronEdge : public Readable, public Writable {
-	U32 face[2];
-	U32 vertex[2];
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct PolyHedron : public Readable, public Writable {
-	std::vector<Point3F> pointList;
-	std::vector<PlaneF> planeList;
-	std::vector<PolyHedronEdge> edgeList;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
 class Trigger : public Readable, public Writable {
 public:
+	struct PolyHedronEdge : public Readable, public Writable {
+		U32 face[2];
+		U32 vertex[2];
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct PolyHedron : public Readable, public Writable {
+		std::vector<Point3F> pointList;
+		std::vector<PlaneF> planeList;
+		std::vector<PolyHedronEdge> edgeList;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
 	std::string name;
 	std::string datablock;
 	Dictionary properties;

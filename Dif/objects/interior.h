@@ -35,202 +35,204 @@ DIF_NAMESPACE
 
 static U32 gNumCoordBins = 16;
 
-struct Plane : public Readable, public Writable {
-	U16 normalIndex;
-	F32 planeDistance;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct TexGenEq : public Readable, public Writable {
-	PlaneF planeX;
-	PlaneF planeY;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct BSPNode : public Writable {
-	U16 planeIndex;
-	U16 frontIndex;
-	U16 backIndex;
-
-	bool read(std::istream &stream, U32 interiorFileVersion);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct BSPSolidLeaf : public Readable, public Writable {
-	U32 surfaceIndex;
-	U16 surfaceCount;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct WindingIndex : public Readable, public Writable {
-	U32 windingStart;
-	U32 windingCount;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct Edge : public Readable, public Writable {
-	S32 pointIndex0;
-	S32 pointIndex1;
-	S32 surfaceIndex0;
-	S32 surfaceIndex1;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct Zone : public Writable {
-	U16 portalStart;
-	U16 portalCount;
-	U32 surfaceStart;
-	U32 surfaceCount;
-	U32 staticMeshStart;
-	U32 staticMeshCount;
-	U16 flags;
-
-	bool read(std::istream &stream, U32 interiorFileVersion);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct Portal : public Readable, public Writable {
-	U16 planeIndex;
-	U16 triFanCount;
-	U32 triFanStart;
-	U16 zoneFront;
-	U16 zoneBack;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct LightMapF : public Readable, public Writable {
-	U16 finalWord;
-	F32 texGenXDistance;
-	F32 texGenYDistance;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct LightMap : public Writable {
-	PNG lightMap;
-	PNG lightDirMap;
-	U8 keepLightMap;
-
-	bool read(std::istream &stream, bool isTGEInterior);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct Surface : public Writable {
-	U32 windingStart;
-	U8 windingCount;
-	U16 planeIndex;
-	U8 planeFlipped;
-	U16 textureIndex;
-	U32 texGenIndex;
-	U8 surfaceFlags;
-	U32 fanMask;
-	LightMapF lightMap;
-	U16 lightCount;
-	U32 lightStateInfoStart;
-	U8 mapOffsetX;
-	U8 mapOffsetY;
-	U8 mapSizeX;
-	U8 mapSizeY;
-
-	bool read(std::istream &stream, U32 interiorFileVersion, bool isTGEInterior, U32 indexSize, U32 planeSize, U32 materialSize, U32 texGenEqSize);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct NullSurface : public Writable {
-	U32 windingStart;
-	U16 planeIndex;
-	U8 surfaceFlags;
-	U8 windingCount;
-
-	bool read(std::istream &stream, U32 interiorFileVersion);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct AnimatedLight : public Readable, public Writable {
-	U32 nameIndex;
-	U32 stateIndex;
-	U16 stateCount;
-	U16 flags;
-	U32 duration;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct LightState : public Readable, public Writable {
-	U8 red;
-	U8 green;
-	U8 blue;
-	U32 activeTime;
-	U32 dataIndex;
-	U16 dataCount;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct StateData : public Readable, public Writable {
-	U32 surfaceIndex;
-	U32 mapIndex;
-	U16 lightStateIndex;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct ConvexHull : public Writable {
-	U32 hullStart;
-	U16 hullCount;
-	F32 minX;
-	F32 maxX;
-	F32 minY;
-	F32 maxY;
-	F32 minZ;
-	F32 maxZ;
-	U32 surfaceStart;
-	U16 surfaceCount;
-	U32 planeStart;
-	U32 polyListPlaneStart;
-	U32 polyListPointStart;
-	U32 polyListStringStart;
-	U8 staticMesh;
-
-	bool read(std::istream &stream, U32 interiorFileVersion);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct CoordBin : public Readable, public Writable {
-	U32 binStart;
-	U32 binCount;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct TexMatrix : public Readable, public Writable {
-	S32 T;
-	S32 N;
-	S32 B;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
 class Interior : public Readable, public Writable {
 public:
+
+	struct Plane : public Readable, public Writable {
+		U16 normalIndex;
+		F32 planeDistance;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct TexGenEq : public Readable, public Writable {
+		PlaneF planeX;
+		PlaneF planeY;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct BSPNode : public Writable {
+		U16 planeIndex;
+		U16 frontIndex;
+		U16 backIndex;
+
+		bool read(std::istream &stream, U32 interiorFileVersion);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct BSPSolidLeaf : public Readable, public Writable {
+		U32 surfaceIndex;
+		U16 surfaceCount;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct WindingIndex : public Readable, public Writable {
+		U32 windingStart;
+		U32 windingCount;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct Edge : public Readable, public Writable {
+		S32 pointIndex0;
+		S32 pointIndex1;
+		S32 surfaceIndex0;
+		S32 surfaceIndex1;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct Zone : public Writable {
+		U16 portalStart;
+		U16 portalCount;
+		U32 surfaceStart;
+		U32 surfaceCount;
+		U32 staticMeshStart;
+		U32 staticMeshCount;
+		U16 flags;
+
+		bool read(std::istream &stream, U32 interiorFileVersion);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct Portal : public Readable, public Writable {
+		U16 planeIndex;
+		U16 triFanCount;
+		U32 triFanStart;
+		U16 zoneFront;
+		U16 zoneBack;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct LightMap : public Writable {
+		PNG lightMap;
+		PNG lightDirMap;
+		U8 keepLightMap;
+
+		bool read(std::istream &stream, bool isTGEInterior);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct Surface : public Writable {
+		
+		struct LightMap : public Readable, public Writable {
+			U16 finalWord;
+			F32 texGenXDistance;
+			F32 texGenYDistance;
+
+			virtual bool read(std::istream &stream);
+			virtual bool write(std::ostream &stream) const;
+		};
+
+		U32 windingStart;
+		U8 windingCount;
+		U16 planeIndex;
+		U8 planeFlipped;
+		U16 textureIndex;
+		U32 texGenIndex;
+		U8 surfaceFlags;
+		U32 fanMask;
+		LightMap lightMap;
+		U16 lightCount;
+		U32 lightStateInfoStart;
+		U8 mapOffsetX;
+		U8 mapOffsetY;
+		U8 mapSizeX;
+		U8 mapSizeY;
+
+		bool read(std::istream &stream, U32 interiorFileVersion, bool isTGEInterior, U32 indexSize, U32 planeSize, U32 materialSize, U32 texGenEqSize);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct NullSurface : public Writable {
+		U32 windingStart;
+		U16 planeIndex;
+		U8 surfaceFlags;
+		U8 windingCount;
+
+		bool read(std::istream &stream, U32 interiorFileVersion);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct AnimatedLight : public Readable, public Writable {
+		U32 nameIndex;
+		U32 stateIndex;
+		U16 stateCount;
+		U16 flags;
+		U32 duration;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct LightState : public Readable, public Writable {
+		U8 red;
+		U8 green;
+		U8 blue;
+		U32 activeTime;
+		U32 dataIndex;
+		U16 dataCount;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct StateData : public Readable, public Writable {
+		U32 surfaceIndex;
+		U32 mapIndex;
+		U16 lightStateIndex;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct ConvexHull : public Writable {
+		U32 hullStart;
+		U16 hullCount;
+		F32 minX;
+		F32 maxX;
+		F32 minY;
+		F32 maxY;
+		F32 minZ;
+		F32 maxZ;
+		U32 surfaceStart;
+		U16 surfaceCount;
+		U32 planeStart;
+		U32 polyListPlaneStart;
+		U32 polyListPointStart;
+		U32 polyListStringStart;
+		U8 staticMesh;
+
+		bool read(std::istream &stream, U32 interiorFileVersion);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct CoordBin : public Readable, public Writable {
+		U32 binStart;
+		U32 binCount;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+	
+	struct TexMatrix : public Readable, public Writable {
+		S32 T;
+		S32 N;
+		S32 B;
+		
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
 	U32 interiorFileVersion;
 	U32 detailLevel;
 	U32 minPixels;
@@ -244,8 +246,8 @@ public:
 	std::vector<Point3F> point;
 	std::vector<U8> pointVisibility;
 	std::vector<TexGenEq> texGenEq;
-	std::vector<BSPNode> BSPNode;
-	std::vector<BSPSolidLeaf> BSPSolidLeaf;
+	std::vector<BSPNode> bspNode;
+	std::vector<BSPSolidLeaf> bspSolidLeaf;
 
 	U8 materialListVersion;
 	std::vector<std::string> materialName;

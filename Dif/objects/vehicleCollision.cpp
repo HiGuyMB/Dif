@@ -32,7 +32,7 @@ DIF_NAMESPACE
 
 bool VehicleCollision::read(std::istream &stream) {
 	READCHECK(vehicleCollisionFileVersion, U32); //vehicleCollisionFileVersion
-	READCHECK(vehicleConvexHull, std::vector<VehicleConvexHull>); //vehicleConvexHull
+	READCHECK(vehicleConvexHull, std::vector<ConvexHull>); //vehicleConvexHull
 	READCHECK(vehicleConvexHullEmitStringCharacter, std::vector<U8>); //vehicleConvexHullEmitStringCharacter
 	READCHECK(vehicleHullIndex, std::vector<U32>); //vehicleHullIndex
 	READCHECK(vehicleHullPlaneIndex, std::vector<U16>); //vehicleHullPlaneIndex
@@ -41,18 +41,18 @@ bool VehicleCollision::read(std::istream &stream) {
 	READCHECK(vehiclePolyListPlaneIndex, std::vector<U16>); //vehiclePolyListPlaneIndex
 	READCHECK(vehiclePolyListPointIndex, std::vector<U32>); //vehiclePolyListPointIndex
 	READCHECK(vehiclePolyListStringCharacter, std::vector<U8>); //vehiclePolyListStringCharacter
-	READCHECK(vehicleNullSurface, std::vector<VehicleNullSurface>); //vehicleNullSurface
+	READCHECK(vehicleNullSurface, std::vector<NullSurface>); //vehicleNullSurface
 	READCHECK(vehiclePoints, std::vector<Point3F>); //vehiclePoints
 	READCHECK(vehiclePlanes, std::vector<PlaneF>); //vehiclePlanes
 	READCHECK(vehicleWindings, std::vector<U32>); //vehicleWindings
-	READCHECK(vehicleWindingIndices, std::vector<VehicleWindingIndex>); //vehicleWindingIndices
+	READCHECK(vehicleWindingIndices, std::vector<WindingIndex>); //vehicleWindingIndices
 
 	return true;
 }
 
 bool VehicleCollision::write(std::ostream &stream) const {
 	WRITECHECK(vehicleCollisionFileVersion, U32); //vehicleCollisionFileVersion
-	WRITECHECK(vehicleConvexHull, std::vector<VehicleConvexHull>); //vehicleConvexHull
+	WRITECHECK(vehicleConvexHull, std::vector<ConvexHull>); //vehicleConvexHull
 	WRITECHECK(vehicleConvexHullEmitStringCharacter, std::vector<U8>); //vehicleConvexHullEmitStringCharacter
 	WRITECHECK(vehicleHullIndex, std::vector<U32>); //vehicleHullIndex
 	WRITECHECK(vehicleHullPlaneIndex, std::vector<U16>); //vehicleHullPlaneIndex
@@ -61,16 +61,16 @@ bool VehicleCollision::write(std::ostream &stream) const {
 	WRITECHECK(vehiclePolyListPlaneIndex, std::vector<U16>); //vehiclePolyListPlaneIndex
 	WRITECHECK(vehiclePolyListPointIndex, std::vector<U32>); //vehiclePolyListPointIndex
 	WRITECHECK(vehiclePolyListStringCharacter, std::vector<U8>); //vehiclePolyListStringCharacter
-	WRITECHECK(vehicleNullSurface, std::vector<VehicleNullSurface>); //vehicleNullSurface
+	WRITECHECK(vehicleNullSurface, std::vector<NullSurface>); //vehicleNullSurface
 	WRITECHECK(vehiclePoints, std::vector<Point3F>); //vehiclePoints
 	WRITECHECK(vehiclePlanes, std::vector<PlaneF>); //vehiclePlanes
 	WRITECHECK(vehicleWindings, std::vector<U32>); //vehicleWindings
-	WRITECHECK(vehicleWindingIndices, std::vector<VehicleWindingIndex>); //vehicleWindingIndices
+	WRITECHECK(vehicleWindingIndices, std::vector<WindingIndex>); //vehicleWindingIndices
 
 	return true;
 }
 
-bool VehicleConvexHull::read(std::istream &stream) {
+bool VehicleCollision::ConvexHull::read(std::istream &stream) {
 	READCHECK(hullStart, U32); //hullStart
 	READCHECK(hullCount, U16); //hullCount
 	READCHECK(minX, F32); //minX
@@ -90,7 +90,7 @@ bool VehicleConvexHull::read(std::istream &stream) {
 	return true;
 }
 
-bool VehicleConvexHull::write(std::ostream &stream) const {
+bool VehicleCollision::ConvexHull::write(std::ostream &stream) const {
 	WRITECHECK(hullStart, U32); //hullStart
 	WRITECHECK(hullCount, U16); //hullCount
 	WRITECHECK(minX, F32); //minX
@@ -109,7 +109,7 @@ bool VehicleConvexHull::write(std::ostream &stream) const {
 	return true;
 }
 
-bool VehicleNullSurface::read(std::istream &stream) {
+bool VehicleCollision::NullSurface::read(std::istream &stream) {
 	READCHECK(windingStart, U32); //windingStart
 	READCHECK(planeIndex, U16); //planeIndex
 	READCHECK(surfaceFlags, U8); //surfaceFlags
@@ -118,7 +118,7 @@ bool VehicleNullSurface::read(std::istream &stream) {
 	return true;
 }
 
-bool VehicleNullSurface::write(std::ostream &stream) const {
+bool VehicleCollision::NullSurface::write(std::ostream &stream) const {
 	WRITECHECK(windingStart, U32); //windingStart
 	WRITECHECK(planeIndex, U16); //planeIndex
 	WRITECHECK(surfaceFlags, U8); //surfaceFlags
@@ -127,14 +127,14 @@ bool VehicleNullSurface::write(std::ostream &stream) const {
 	return true;
 }
 
-bool VehicleWindingIndex::read(std::istream &stream) {
+bool VehicleCollision::WindingIndex::read(std::istream &stream) {
 	READCHECK(windingStart, U32); //windingStart
 	READCHECK(windingCount, U32); //windingCount
 
 	return true;
 }
 
-bool VehicleWindingIndex::write(std::ostream &stream) const {
+bool VehicleCollision::WindingIndex::write(std::ostream &stream) const {
 	WRITECHECK(windingStart, U32); //windingStart
 	WRITECHECK(windingCount, U32); //windingCount
 

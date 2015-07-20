@@ -33,40 +33,40 @@
 
 DIF_NAMESPACE
 
-struct Primitive : public Readable, public Writable {
-	U8 alpha;
-	U32 texS;
-	U32 texT;
-	S32 diffuseIndex;
-	S32 lightMapIndex;
-	U32 start;
-	U32 count;
-	PlaneF lightMapEquationX;
-	PlaneF lightMapEquationY;
-	Point2I lightMapOffset;
-	Point2I lightMapSize;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct MaterialList : public Readable, public Writable {
-	U32 materialCount;
-
-	U32 *flags;
-	U32 *reflectanceMap;
-	U32 *bumpMap;
-	U32 *detailMap;
-	U32 *lightMap;
-	U32 *detailScale;
-	U32 *reflectionAmount;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
 class StaticMesh : public Readable, public Writable {
 public:
+	struct Primitive : public Readable, public Writable {
+		U8 alpha;
+		U32 texS;
+		U32 texT;
+		S32 diffuseIndex;
+		S32 lightMapIndex;
+		U32 start;
+		U32 count;
+		PlaneF lightMapEquationX;
+		PlaneF lightMapEquationY;
+		Point2I lightMapOffset;
+		Point2I lightMapSize;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct MaterialList : public Readable, public Writable {
+		U32 materialCount;
+
+		U32 *flags;
+		U32 *reflectanceMap;
+		U32 *bumpMap;
+		U32 *detailMap;
+		U32 *lightMap;
+		U32 *detailScale;
+		U32 *reflectionAmount;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
 	std::vector<Primitive> primitive;
 	std::vector<U16> index;
 	std::vector<Point3F> vertex;

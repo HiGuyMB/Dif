@@ -51,8 +51,8 @@ bool Interior::read(std::istream &stream) {
 		READCHECK(pointVisibility, std::vector<U8>); //pointVisibility
 	}
 	READCHECK(texGenEq, std::vector<TexGenEq>); //texGenEq
-	IO::read_with<DIF::BSPNode>(stream, BSPNode, [&](DIF::BSPNode &node, std::istream &stream)->bool{return node.read(stream, this->interiorFileVersion);}, "BSPNode"); //BSPNode
-	READCHECK(BSPSolidLeaf, std::vector<DIF::BSPSolidLeaf>); //BSPSolidLeaf
+	IO::read_with<BSPNode>(stream, bspNode, [&](BSPNode &node, std::istream &stream)->bool{return node.read(stream, this->interiorFileVersion);}, "BSPNode"); //BSPNode
+	READCHECK(bspSolidLeaf, std::vector<BSPSolidLeaf>); //BSPSolidLeaf
 	//MaterialList
 	READCHECK(materialListVersion, U8); //version
 	READCHECK(materialName, std::vector<std::string>); //materialName
@@ -265,8 +265,8 @@ bool Interior::write(std::ostream &stream) const {
 	WRITECHECK(point, std::vector<Point3F>); //point
 	WRITECHECK(pointVisibility, std::vector<U8>); //pointVisibility
 	WRITECHECK(texGenEq, std::vector<TexGenEq>); //texGenEq
-	WRITECHECK(BSPNode, std::vector<DIF::BSPNode>); //BSPNode
-	WRITECHECK(BSPSolidLeaf, std::vector<DIF::BSPSolidLeaf>); //BSPSolidLeaf
+	WRITECHECK(bspNode, std::vector<BSPNode>); //BSPNode
+	WRITECHECK(bspSolidLeaf, std::vector<BSPSolidLeaf>); //BSPSolidLeaf
 	WRITECHECK(materialListVersion, U8); //materialListVersion
 	WRITECHECK(materialName, std::vector<std::string>); //material
 	WRITECHECK(index, std::vector<U32>); //index
@@ -320,31 +320,31 @@ bool Interior::write(std::ostream &stream) const {
 
 //----------------------------------------------------------------------------
 
-bool Plane::read(std::istream &stream) {
+bool Interior::Plane::read(std::istream &stream) {
 	READCHECK(normalIndex, U16); //normalIndex
 	READCHECK(planeDistance, F32); //planeDistance
 	return true;
 }
 
-bool Plane::write(std::ostream &stream) const {
+bool Interior::Plane::write(std::ostream &stream) const {
 	WRITECHECK(normalIndex, U16); //normalIndex
 	WRITECHECK(planeDistance, F32); //planeDistance
 	return true;
 }
 
-bool TexGenEq::read(std::istream &stream) {
+bool Interior::TexGenEq::read(std::istream &stream) {
 	READCHECK(planeX, PlaneF); //planeX
 	READCHECK(planeY, PlaneF); //planeY
 	return true;
 }
 
-bool TexGenEq::write(std::ostream &stream) const {
+bool Interior::TexGenEq::write(std::ostream &stream) const {
 	WRITECHECK(planeX, PlaneF); //planeX
 	WRITECHECK(planeY, PlaneF); //planeY
 	return true;
 }
 
-bool BSPNode::read(std::istream &stream, U32 interiorFileVersion) {
+bool Interior::BSPNode::read(std::istream &stream, U32 interiorFileVersion) {
 	READCHECK(planeIndex, U16); //planeIndex
 	if (interiorFileVersion >= 14) {
 		U32 tmpFront, tmpBack;
@@ -374,38 +374,38 @@ bool BSPNode::read(std::istream &stream, U32 interiorFileVersion) {
 	return true;
 }
 
-bool BSPNode::write(std::ostream &stream) const {
+bool Interior::BSPNode::write(std::ostream &stream) const {
 	WRITECHECK(planeIndex, U16); //planeIndex
 	WRITECHECK(frontIndex, U16); //frontIndex
 	WRITECHECK(backIndex, U16); //backIndex
 	return true;
 }
 
-bool BSPSolidLeaf::read(std::istream &stream) {
+bool Interior::BSPSolidLeaf::read(std::istream &stream) {
 	READCHECK(surfaceIndex, U32); //surfaceIndex
 	READCHECK(surfaceCount, U16); //surfaceCount
 	return true;
 }
 
-bool BSPSolidLeaf::write(std::ostream &stream) const {
+bool Interior::BSPSolidLeaf::write(std::ostream &stream) const {
 	WRITECHECK(surfaceIndex, U32); //surfaceIndex
 	WRITECHECK(surfaceCount, U16); //surfaceCount
 	return true;
 }
 
-bool WindingIndex::read(std::istream &stream) {
+bool Interior::WindingIndex::read(std::istream &stream) {
 	READCHECK(windingStart, U32); //windingStart
 	READCHECK(windingCount, U32); //windingCount
 	return true;
 }
 
-bool WindingIndex::write(std::ostream &stream) const {
+bool Interior::WindingIndex::write(std::ostream &stream) const {
 	WRITECHECK(windingStart, U32); //windingStart
 	WRITECHECK(windingCount, U32); //windingCount
 	return true;
 }
 
-bool Zone::read(std::istream &stream, U32 interiorFileVersion) {
+bool Interior::Zone::read(std::istream &stream, U32 interiorFileVersion) {
 	READCHECK(portalStart, U16); //portalStart
 	READCHECK(portalCount, U16); //portalCount
 	READCHECK(surfaceStart, U32); //surfaceStart
@@ -422,7 +422,7 @@ bool Zone::read(std::istream &stream, U32 interiorFileVersion) {
 	return true;
 }
 
-bool Zone::write(std::ostream &stream) const {
+bool Interior::Zone::write(std::ostream &stream) const {
 	WRITECHECK(portalStart, U16); //portalStart
 	WRITECHECK(portalCount, U16); //portalCount
 	WRITECHECK(surfaceStart, U32); //surfaceStart
@@ -430,7 +430,7 @@ bool Zone::write(std::ostream &stream) const {
 	return true;
 }
 
-bool Edge::read(std::istream &stream) {
+bool Interior::Edge::read(std::istream &stream) {
 	READCHECK(pointIndex0, S32); //pointIndex0
 	READCHECK(pointIndex1, S32); //pointIndex1
 	READCHECK(surfaceIndex0, S32); //surfaceIndex0
@@ -438,7 +438,7 @@ bool Edge::read(std::istream &stream) {
 	return true;
 }
 
-bool Edge::write(std::ostream &stream) const {
+bool Interior::Edge::write(std::ostream &stream) const {
 	WRITECHECK(pointIndex0, S32); //pointIndex0
 	WRITECHECK(pointIndex1, S32); //pointIndex1
 	WRITECHECK(surfaceIndex0, S32); //surfaceIndex0
@@ -446,7 +446,7 @@ bool Edge::write(std::ostream &stream) const {
 	return true;
 }
 
-bool Portal::read(std::istream &stream) {
+bool Interior::Portal::read(std::istream &stream) {
 	READCHECK(planeIndex, U16); //planeIndex
 	READCHECK(triFanCount, U16); //triFanCount
 	READCHECK(triFanStart, U32); //triFanStart
@@ -455,7 +455,7 @@ bool Portal::read(std::istream &stream) {
 	return true;
 }
 
-bool Portal::write(std::ostream &stream) const {
+bool Interior::Portal::write(std::ostream &stream) const {
 	WRITECHECK(planeIndex, U16); //planeIndex
 	WRITECHECK(triFanCount, U16); //triFanCount
 	WRITECHECK(triFanStart, U32); //triFanStart
@@ -464,21 +464,21 @@ bool Portal::write(std::ostream &stream) const {
 	return true;
 }
 
-bool LightMapF::read(std::istream &stream) {
+bool Interior::Surface::LightMap::read(std::istream &stream) {
 	READCHECK(finalWord, U16); //finalWord
 	READCHECK(texGenXDistance, F32); //texGenXDistance
 	READCHECK(texGenYDistance, F32); //texGenYDistance
 	return true;
 }
 
-bool LightMapF::write(std::ostream &stream) const {
+bool Interior::Surface::LightMap::write(std::ostream &stream) const {
 	WRITECHECK(finalWord, U16); //finalWord
 	WRITECHECK(texGenXDistance, F32); //texGenXDistance
 	WRITECHECK(texGenYDistance, F32); //texGenYDistance
 	return true;
 }
 
-bool Surface::read(std::istream &stream, U32 interiorFileVersion, bool isTGEInterior, U32 indexSize, U32 planeSize, U32 materialSize, U32 texGenEqSize) {
+bool Interior::Surface::read(std::istream &stream, U32 interiorFileVersion, bool isTGEInterior, U32 indexSize, U32 planeSize, U32 materialSize, U32 texGenEqSize) {
 	READCHECK(windingStart, U32); //windingStart
 	if (interiorFileVersion >= 13) {
 		READCHECK(windingCount, U32); //windingCount
@@ -508,7 +508,7 @@ bool Surface::read(std::istream &stream, U32 interiorFileVersion, bool isTGEInte
 
 	READCHECK(surfaceFlags, U8); //surfaceFlags
 	READCHECK(fanMask, U32); //fanMask
-	READCHECK(lightMap, LightMapF); //lightMap
+	READCHECK(lightMap, LightMap); //lightMap
 	READCHECK(lightCount, U16); //lightCount
 	READCHECK(lightStateInfoStart, U32); //lightStateInfoStart
 
@@ -533,7 +533,7 @@ bool Surface::read(std::istream &stream, U32 interiorFileVersion, bool isTGEInte
 	return true;
 }
 
-bool Surface::write(std::ostream &stream) const {
+bool Interior::Surface::write(std::ostream &stream) const {
 	WRITECHECK(windingStart, U32); //windingStart
 	WRITECHECK(windingCount, U8); //windingCount
 	U16 index = planeIndex;
@@ -544,7 +544,7 @@ bool Surface::write(std::ostream &stream) const {
 	WRITECHECK(texGenIndex, U32); //texGenIndex
 	WRITECHECK(surfaceFlags, U8); //surfaceFlags
 	WRITECHECK(fanMask, U32); //fanMask
-	WRITECHECK(lightMap, LightMapF); //lightMap
+	WRITECHECK(lightMap, LightMap); //lightMap
 	WRITECHECK(lightCount, U16); //lightCount
 	WRITECHECK(lightStateInfoStart, U32); //lightStateInfoStart
 	WRITECHECK(mapOffsetX, U8); //mapOffsetX
@@ -554,7 +554,7 @@ bool Surface::write(std::ostream &stream) const {
 	return true;
 }
 
-bool NullSurface::read(std::istream &stream, U32 interiorFileVersion) {
+bool Interior::NullSurface::read(std::istream &stream, U32 interiorFileVersion) {
 	READCHECK(windingStart, U32); //windingStart
 	READCHECK(planeIndex, U16); //planeIndex
 	READCHECK(surfaceFlags, U8); //surfaceFlags
@@ -566,7 +566,7 @@ bool NullSurface::read(std::istream &stream, U32 interiorFileVersion) {
 	return true;
 }
 
-bool NullSurface::write(std::ostream &stream) const {
+bool Interior::NullSurface::write(std::ostream &stream) const {
 	WRITECHECK(windingStart, U32); //windingStart
 	WRITECHECK(planeIndex, U16); //planeIndex
 	WRITECHECK(surfaceFlags, U8); //surfaceFlags
@@ -574,7 +574,7 @@ bool NullSurface::write(std::ostream &stream) const {
 	return true;
 }
 
-bool LightMap::read(std::istream &stream, bool isTGEInterior) {
+bool Interior::LightMap::read(std::istream &stream, bool isTGEInterior) {
 	READCHECK(lightMap, PNG); //lightMap
 	if (!isTGEInterior) {
 		//These aren't even used in the real game!
@@ -584,13 +584,13 @@ bool LightMap::read(std::istream &stream, bool isTGEInterior) {
 	return true;
 }
 
-bool LightMap::write(std::ostream &stream) const {
+bool Interior::LightMap::write(std::ostream &stream) const {
 	WRITECHECK(lightMap, PNG); //lightMap
 	WRITECHECK(keepLightMap, U8); //keepLightMap
 	return true;
 }
 
-bool AnimatedLight::read(std::istream &stream) {
+bool Interior::AnimatedLight::read(std::istream &stream) {
 	READCHECK(nameIndex, U32); //nameIndex
 	READCHECK(stateIndex, U32); //stateIndex
 	READCHECK(stateCount, U16); //stateCount
@@ -599,7 +599,7 @@ bool AnimatedLight::read(std::istream &stream) {
 	return true;
 }
 
-bool AnimatedLight::write(std::ostream &stream) const {
+bool Interior::AnimatedLight::write(std::ostream &stream) const {
 	WRITECHECK(nameIndex, U32); //nameIndex
 	WRITECHECK(stateIndex, U32); //stateIndex
 	WRITECHECK(stateCount, U16); //stateCount
@@ -608,7 +608,7 @@ bool AnimatedLight::write(std::ostream &stream) const {
 	return true;
 }
 
-bool LightState::read(std::istream &stream) {
+bool Interior::LightState::read(std::istream &stream) {
 	READCHECK(red, U8); //red
 	READCHECK(green, U8); //green
 	READCHECK(blue, U8); //blue
@@ -618,7 +618,7 @@ bool LightState::read(std::istream &stream) {
 	return true;
 }
 
-bool LightState::write(std::ostream &stream) const {
+bool Interior::LightState::write(std::ostream &stream) const {
 	WRITECHECK(red, U8); //red
 	WRITECHECK(green, U8); //green
 	WRITECHECK(blue, U8); //blue
@@ -628,21 +628,21 @@ bool LightState::write(std::ostream &stream) const {
 	return true;
 }
 
-bool StateData::read(std::istream &stream) {
+bool Interior::StateData::read(std::istream &stream) {
 	READCHECK(surfaceIndex, U32); //surfaceIndex
 	READCHECK(mapIndex, U32); //mapIndex
 	READCHECK(lightStateIndex, U16); //lightStateIndex
 	return true;
 }
 
-bool StateData::write(std::ostream &stream) const {
+bool Interior::StateData::write(std::ostream &stream) const {
 	WRITECHECK(surfaceIndex, U32); //surfaceIndex
 	WRITECHECK(mapIndex, U32); //mapIndex
 	WRITECHECK(lightStateIndex, U16); //lightStateIndex
 	return true;
 }
 
-bool ConvexHull::read(std::istream &stream, U32 interiorFileVersion) {
+bool Interior::ConvexHull::read(std::istream &stream, U32 interiorFileVersion) {
 	READCHECK(hullStart, U32); //hullStart
 	READCHECK(hullCount, U16); //hullCount
 	READCHECK(minX, F32); //minX
@@ -666,7 +666,7 @@ bool ConvexHull::read(std::istream &stream, U32 interiorFileVersion) {
 	return true;
 }
 
-bool ConvexHull::write(std::ostream &stream) const {
+bool Interior::ConvexHull::write(std::ostream &stream) const {
 	WRITECHECK(hullStart, U32); //hullStart
 	WRITECHECK(hullCount, U16); //hullCount
 	WRITECHECK(minX, F32); //minX
@@ -684,26 +684,26 @@ bool ConvexHull::write(std::ostream &stream) const {
 	return true;
 }
 
-bool CoordBin::read(std::istream &stream) {
+bool Interior::CoordBin::read(std::istream &stream) {
 	READCHECK(binStart, U32); //binStart
 	READCHECK(binCount, U32); //binCount
 	return true;
 }
 
-bool CoordBin::write(std::ostream &stream) const {
+bool Interior::CoordBin::write(std::ostream &stream) const {
 	WRITECHECK(binStart, U32); //binStart
 	WRITECHECK(binCount, U32); //binCount
 	return true;
 }
 
-bool TexMatrix::read(std::istream &stream) {
+bool Interior::TexMatrix::read(std::istream &stream) {
 	READCHECK(T, S32); //T
 	READCHECK(N, S32); //N
 	READCHECK(B, S32); //B
 	return true;
 }
 
-bool TexMatrix::write(std::ostream &stream) const {
+bool Interior::TexMatrix::write(std::ostream &stream) const {
 	WRITECHECK(T, S32); //T
 	WRITECHECK(N, S32); //N
 	WRITECHECK(B, S32); //B

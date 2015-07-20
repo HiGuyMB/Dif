@@ -32,49 +32,49 @@
 
 DIF_NAMESPACE
 
-struct VehicleConvexHull : public Readable, public Writable {
-	U32 hullStart;
-	U16 hullCount;
-	F32 minX;
-	F32 maxX;
-	F32 minY;
-	F32 maxY;
-	F32 minZ;
-	F32 maxZ;
-	U32 surfaceStart;
-	U16 surfaceCount;
-	U32 planeStart;
-	U32 polyListPlaneStart;
-	U32 polyListPointStart;
-	U32 polyListStringStart;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct VehicleNullSurface : public Readable, public Writable {
-	U32 windingStart;
-	U16 planeIndex;
-	U8 surfaceFlags;
-	U32 windingCount;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct VehicleWindingIndex : public Readable, public Writable {
-	U32 windingStart;
-	U32 windingCount;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
 class VehicleCollision : public Readable, public Writable {
 public:
+	struct ConvexHull : public Readable, public Writable {
+		U32 hullStart;
+		U16 hullCount;
+		F32 minX;
+		F32 maxX;
+		F32 minY;
+		F32 maxY;
+		F32 minZ;
+		F32 maxZ;
+		U32 surfaceStart;
+		U16 surfaceCount;
+		U32 planeStart;
+		U32 polyListPlaneStart;
+		U32 polyListPointStart;
+		U32 polyListStringStart;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct NullSurface : public Readable, public Writable {
+		U32 windingStart;
+		U16 planeIndex;
+		U8 surfaceFlags;
+		U32 windingCount;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct WindingIndex : public Readable, public Writable {
+		U32 windingStart;
+		U32 windingCount;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
 	U32 vehicleCollisionFileVersion;
 
-	std::vector<VehicleConvexHull> vehicleConvexHull;
+	std::vector<ConvexHull> vehicleConvexHull;
 	std::vector<U8> vehicleConvexHullEmitStringCharacter;
 	std::vector<U32> vehicleHullIndex;
 	std::vector<U16> vehicleHullPlaneIndex;
@@ -83,11 +83,11 @@ public:
 	std::vector<U16> vehiclePolyListPlaneIndex;
 	std::vector<U32> vehiclePolyListPointIndex;
 	std::vector<U8> vehiclePolyListStringCharacter;
-	std::vector<VehicleNullSurface> vehicleNullSurface;
+	std::vector<NullSurface> vehicleNullSurface;
 	std::vector<Point3F> vehiclePoints;
 	std::vector<PlaneF> vehiclePlanes;
 	std::vector<U32> vehicleWindings;
-	std::vector<VehicleWindingIndex> vehicleWindingIndices;
+	std::vector<WindingIndex> vehicleWindingIndices;
 
 	/**
 	 * Reads a VehicleCollision from a stream

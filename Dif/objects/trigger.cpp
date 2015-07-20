@@ -52,7 +52,7 @@ bool Trigger::write(std::ostream &stream) const {
 	return true;
 }
 
-bool PolyHedron::read(std::istream &stream) {
+bool Trigger::PolyHedron::read(std::istream &stream) {
 	READCHECK(pointList, std::vector<Point3F>); //point
 	READCHECK(planeList, std::vector<PlaneF>); //plane
 	READCHECK(edgeList, std::vector<PolyHedronEdge>); //polyHedronEdge
@@ -60,7 +60,7 @@ bool PolyHedron::read(std::istream &stream) {
 	return true;
 }
 
-bool PolyHedron::write(std::ostream &stream) const {
+bool Trigger::PolyHedron::write(std::ostream &stream) const {
 	WRITECHECK(pointList, std::vector<Point3F>); //polyHedronPoint
 	WRITECHECK(planeList, std::vector<PlaneF>); //polyHedronPlane
 	WRITECHECK(edgeList, std::vector<PolyHedronEdge>); //numPolyHedronEdges
@@ -68,8 +68,7 @@ bool PolyHedron::write(std::ostream &stream) const {
 	return true;
 }
 
-
-bool PolyHedronEdge::read(std::istream &stream) {
+bool Trigger::PolyHedronEdge::read(std::istream &stream) {
 	READCHECK(face[0], U32); //face0
 	READCHECK(face[1], U32); //face1
 	READCHECK(vertex[0], U32); //vertex0
@@ -78,7 +77,7 @@ bool PolyHedronEdge::read(std::istream &stream) {
 	return true;
 }
 
-bool PolyHedronEdge::write(std::ostream &stream) const {
+bool Trigger::PolyHedronEdge::write(std::ostream &stream) const {
 	WRITECHECK(face[0], U32); //face0
 	WRITECHECK(face[1], U32); //face1
 	WRITECHECK(vertex[0], U32); //vertex0

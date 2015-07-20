@@ -74,7 +74,7 @@ bool StaticMesh::write(std::ostream &stream) const {
 	return true;
 }
 
-bool Primitive::read(std::istream &stream) {
+bool StaticMesh::Primitive::read(std::istream &stream) {
 	READCHECK(alpha, U8); //alpha
 	READCHECK(texS, U32); //texS
 	READCHECK(texT, U32); //texT
@@ -90,7 +90,7 @@ bool Primitive::read(std::istream &stream) {
 	return true;
 }
 
-bool Primitive::write(std::ostream &stream) const {
+bool StaticMesh::Primitive::write(std::ostream &stream) const {
 	WRITECHECK(alpha, U8); //alpha
 	WRITECHECK(texS, U32); //texS
 	WRITECHECK(texT, U32); //texT
@@ -106,14 +106,14 @@ bool Primitive::write(std::ostream &stream) const {
 	return true;
 }
 
-bool MaterialList::read(std::istream &stream) {
+bool StaticMesh::MaterialList::read(std::istream &stream) {
 	//It's a disaster
 	assert(0);
 
 	return true;
 }
 
-bool MaterialList::write(std::ostream &stream) const {
+bool StaticMesh::MaterialList::write(std::ostream &stream) const {
 	//Not going to bother
 	assert(0);
 

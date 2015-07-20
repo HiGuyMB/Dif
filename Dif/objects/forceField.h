@@ -32,43 +32,43 @@
 
 DIF_NAMESPACE
 
-struct Plane_FF : public Readable, public Writable {
-	U32 normalIndex;
-	F32 planeDistance;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct BSPNode_FF : public Readable, public Writable {	U16 planeIndex;
-	U16 frontIndex;
-	U16 backIndex;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct BSPSolidLeaf_FF : public Readable, public Writable {
-	U32 surfaceIndex;
-	U16 surfaceCount;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
-struct Surface_FF : public Readable, public Writable {
-	U32 windingStart;
-	U8 windingCount;
-	U16 planeIndex;
-	U8 surfaceFlags;
-	U32 fanMask;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
 class ForceField : public Readable, public Writable {
 public:
+	struct Plane : public Readable, public Writable {
+		U32 normalIndex;
+		F32 planeDistance;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct BSPNode : public Readable, public Writable {	U16 planeIndex;
+		U16 frontIndex;
+		U16 backIndex;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct BSPSolidLeaf : public Readable, public Writable {
+		U32 surfaceIndex;
+		U16 surfaceCount;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
+	struct Surface : public Readable, public Writable {
+		U32 windingStart;
+		U8 windingCount;
+		U16 planeIndex;
+		U8 surfaceFlags;
+		U32 fanMask;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
 	U32 forceFieldFileVersion;
 	std::string name;
 
@@ -78,11 +78,11 @@ public:
 	SphereF boundingSphere;
 
 	std::vector<Point3F> normal;
-	std::vector<Plane_FF> plane;
-	std::vector<BSPNode_FF> BSPNode;
-	std::vector<BSPSolidLeaf_FF> BSPSolidLeaf;
+	std::vector<Plane> plane;
+	std::vector<BSPNode> bspNode;
+	std::vector<BSPSolidLeaf> bspSolidLeaf;
 	std::vector<U32> index;
-	std::vector<Surface_FF> surface;
+	std::vector<Surface> surface;
 	std::vector<U32> solidLeafSurface;
 
 	ColorI color;

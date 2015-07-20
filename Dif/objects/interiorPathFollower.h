@@ -32,19 +32,19 @@
 
 DIF_NAMESPACE
 
-class WayPoint : public Readable, public Writable {
-public:
-	Point3F position;
-	QuatF rotation;
-	U32 msToNext;
-	U32 smoothingType;
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
-};
-
 class InteriorPathFollower : public Readable, public Writable {
 public:
+	class WayPoint : public Readable, public Writable {
+	public:
+		Point3F position;
+		QuatF rotation;
+		U32 msToNext;
+		U32 smoothingType;
+
+		virtual bool read(std::istream &stream);
+		virtual bool write(std::ostream &stream) const;
+	};
+
 	std::string name;
 	std::string datablock;
 	U32 interiorResIndex;

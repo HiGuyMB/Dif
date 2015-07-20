@@ -56,7 +56,7 @@ bool InteriorPathFollower::write(std::ostream &stream) const {
 	return true;
 }
 
-bool WayPoint::read(std::istream &stream) {
+bool InteriorPathFollower::WayPoint::read(std::istream &stream) {
 	READCHECK(position, Point3F); //position
 	READCHECK(rotation, QuatF); //rotation
 	READCHECK(msToNext, U32); //msToNext
@@ -65,7 +65,7 @@ bool WayPoint::read(std::istream &stream) {
 	return true;
 }
 
-bool WayPoint::write(std::ostream &stream) const {
+bool InteriorPathFollower::WayPoint::write(std::ostream &stream) const {
 	WRITECHECK(position, Point3F); //position
 	WRITECHECK(rotation, QuatF); //rotation
 	WRITECHECK(msToNext, U32); //msToNext

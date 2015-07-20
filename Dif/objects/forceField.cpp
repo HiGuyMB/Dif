@@ -37,11 +37,11 @@ bool ForceField::read(std::istream &stream) {
 	READCHECK(boundingBox, BoxF); //boundingBox
 	READCHECK(boundingSphere, SphereF); //boundingSphere
 	READCHECK(normal, std::vector<Point3F>); //normal
-	READCHECK(plane, std::vector<Plane_FF>); //plane
-	READCHECK(BSPNode, std::vector<BSPNode_FF>); //BSPNode
-	READCHECK(BSPSolidLeaf, std::vector<BSPSolidLeaf_FF>); //BSPSolidLeaf
+	READCHECK(plane, std::vector<Plane>); //plane
+	READCHECK(bspNode, std::vector<BSPNode>); //BSPNode
+	READCHECK(bspSolidLeaf, std::vector<BSPSolidLeaf>); //BSPSolidLeaf
 	READCHECK(index, std::vector<U32>); //index
-	READCHECK(surface, std::vector<Surface_FF>); //surface
+	READCHECK(surface, std::vector<Surface>); //surface
 	READCHECK(solidLeafSurface, std::vector<U32>); //solidLeafSurface
 	READCHECK(color, ColorI); //color
 
@@ -55,60 +55,60 @@ bool ForceField::write(std::ostream &stream) const {
 	WRITECHECK(boundingBox, BoxF); //boundingBox
 	WRITECHECK(boundingSphere, SphereF); //boundingSphere
 	WRITECHECK(normal, std::vector<Point3F>); //normal
-	WRITECHECK(plane, std::vector<Plane_FF>); //plane
-	WRITECHECK(BSPNode, std::vector<BSPNode_FF>); //BSPNode
-	WRITECHECK(BSPSolidLeaf, std::vector<BSPSolidLeaf_FF>); //BSPSolidLeaf
+	WRITECHECK(plane, std::vector<Plane>); //plane
+	WRITECHECK(bspNode, std::vector<BSPNode>); //BSPNode
+	WRITECHECK(bspSolidLeaf, std::vector<BSPSolidLeaf>); //BSPSolidLeaf
 	WRITECHECK(index, std::vector<U32>); //index
-	WRITECHECK(surface, std::vector<Surface_FF>); //surface
+	WRITECHECK(surface, std::vector<Surface>); //surface
 	WRITECHECK(solidLeafSurface, std::vector<U32>); //solidLeafSurface
 	WRITECHECK(color, ColorI); //color
 
 	return true;
 }
 
-bool Plane_FF::read(std::istream &stream) {
+bool ForceField::Plane::read(std::istream &stream) {
 	READCHECK(normalIndex, U32); //normalIndex
 	READCHECK(planeDistance, F32); //planeDistance
 
 	return true;
 }
 
-bool Plane_FF::write(std::ostream &stream) const {
+bool ForceField::Plane::write(std::ostream &stream) const {
 	WRITECHECK(normalIndex, U32); //normalIndex
 	WRITECHECK(planeDistance, F32); //planeDistance
 
 	return true;
 }
 
-bool BSPNode_FF::read(std::istream &stream) {
+bool ForceField::BSPNode::read(std::istream &stream) {
 	READCHECK(frontIndex, U16); //frontIndex
 	READCHECK(backIndex, U16); //backIndex
 
 	return true;
 }
 
-bool BSPNode_FF::write(std::ostream &stream) const {
+bool ForceField::BSPNode::write(std::ostream &stream) const {
 	WRITECHECK(frontIndex, U16); //frontIndex
 	WRITECHECK(backIndex, U16); //backIndex
 
 	return true;
 }
 
-bool BSPSolidLeaf_FF::read(std::istream &stream) {
+bool ForceField::BSPSolidLeaf::read(std::istream &stream) {
 	READCHECK(surfaceIndex, U32); //surfaceIndex
 	READCHECK(surfaceCount, U16); //surfaceCount
 
 	return true;
 }
 
-bool BSPSolidLeaf_FF::write(std::ostream &stream) const {
+bool ForceField::BSPSolidLeaf::write(std::ostream &stream) const {
 	WRITECHECK(surfaceIndex, U32); //surfaceIndex
 	WRITECHECK(surfaceCount, U16); //surfaceCount
 
 	return true;
 }
 
-bool Surface_FF::read(std::istream &stream) {
+bool ForceField::Surface::read(std::istream &stream) {
 	READCHECK(windingStart, U32); //windingStart
 	READCHECK(windingCount, U8); //windingCount
 	READCHECK(planeIndex, U16); //planeIndex
@@ -118,7 +118,7 @@ bool Surface_FF::read(std::istream &stream) {
 	return true;
 }
 
-bool Surface_FF::write(std::ostream &stream) const {
+bool ForceField::Surface::write(std::ostream &stream) const {
 	WRITECHECK(windingStart, U32); //windingStart
 	WRITECHECK(windingCount, U8); //windingCount
 	WRITECHECK(planeIndex, U16); //planeIndex
