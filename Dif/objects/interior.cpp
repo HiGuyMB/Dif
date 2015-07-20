@@ -128,7 +128,9 @@ bool Interior::read(std::istream &stream) {
 			//Unlike anywhere else, these actually take the param into account.
 			// If it's read2 and param == 0, then they use U8s, if param == 1, they use U16s
 			// Not really sure why, haven't seen this anywhere else.
-			READLIST2(numSomethingElses, (readnumSomethingElses2 && readnumSomethingElsesparam == 0), U16, U8);
+
+			std::vector<U16> somethingElse;
+			IO::read_as<U16, U8>(stream, &somethingElse, [](bool useAlternate, U32 param)->bool{return (useAlternate && param == 0);}, "somethingElse");
 		}
 	}
 	if (this->interiorFileVersion == 4) { //Found in 0, 2, 3, and TGE (14)

@@ -578,23 +578,6 @@ for (U32 i = 0; i < name##_length; i ++) { \
 	READ(type); \
 }
 
-#define READLIST2(name, condition, normaltype, alternatetype) \
-bool read##name##2 = false; \
-U8 read##name##param = 0; \
-READVAR(name##_length, U32); \
-if (name##_length  & 0x80000000) { \
-	name##_length ^= 0x80000000; \
-	read##name##2 = true; \
-	READTOVAR(read##name##param, U8); \
-} \
-for (U32 i = 0; i < name##_length; i ++) { \
-	if ((condition)) { \
-		READ(alternatetype); \
-	} else { \
-		READ(normaltype); \
-	} \
-}
-
 //Macros to speed up file reading
 #ifdef DEBUG
 #define WRITE(value, type) IO::write(stream, (const type) value, #value)
