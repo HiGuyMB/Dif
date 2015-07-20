@@ -9,7 +9,7 @@ void printTriggers(DIF *dif) {
 		std::cout << "   rotation = \"1 0 0 0\";" << std::endl;
 		std::cout << "   scale = \"1 1 1 \";" << std::endl;
 		std::cout << "   datablock = \"" << trigger->datablock <<  "\";" << std::endl;
-		std::cout << "   polyhedron = \"" << (const char *)trigger->getPolyhedron() << "\";" << std::endl;
+		std::cout << "   polyhedron = \"" << trigger->getPolyhedron() << "\";" << std::endl;
 		for (int j = 0; j < trigger->properties.size; j ++) {
 			std::cout << "      " << trigger->properties.names[j] << " = \"" << trigger->properties.values[j] << "\";" << std::endl;
 		}

@@ -50,7 +50,7 @@ public:
 	//Read primitive types from a std::istream
 	template <typename T, bool=true>
 	struct read_impl {
-		static inline bool read(std::istream &stream, T *value, const String &name) {
+		static inline bool read(std::istream &stream, T *value, const std::string &name) {
 			if (stream.eof())
 				return false;
 			stream.read((char *)value, sizeof(*value));
@@ -60,7 +60,7 @@ public:
 	//Read structures from a std::istream
 	template <typename T>
 	struct read_impl<T, false> {
-		static inline bool read(std::istream &stream, T *value, const String &name) {
+		static inline bool read(std::istream &stream, T *value, const std::string &name) {
 			return value->read(stream);
 		}
 	};
@@ -73,7 +73,7 @@ public:
 	 @return If the operation was successful
 	 */
 	template <typename T>
-	static inline bool read(std::istream &stream, T *value, const String &name) {
+	static inline bool read(std::istream &stream, T *value, const std::string &name) {
 		//This will select one of the two read_impls above based on whether or not
 		// T is a struct or a primitive type.
 		return read_impl<T, std::is_fundamental<T>::value>::read(stream, value, name);
@@ -87,7 +87,7 @@ public:
 	 @return If the operation was successful
 	 */
 	template <typename T>
-	static inline bool read(std::istream &stream, std::vector<T> *value, const String &name) {
+	static inline bool read(std::istream &stream, std::vector<T> *value, const std::string &name) {
 		//Read the size of the vector
 		U32 size;
 		if (!read(stream, &size, "size"))
@@ -115,7 +115,7 @@ public:
 	 @var name - A string containing the name of the variable (for debugging)
 	 @return If the operation was successful
 	 */
-	static inline bool read(std::istream &stream, std::string *value, const String &name) {
+	static inline bool read(std::istream &stream, std::string *value, const std::string &name) {
 		//How long is the string
 		U8 length;
 		if (!read(stream, &length, "length"))
@@ -138,7 +138,7 @@ public:
 	//Write primitive types from a std::istream
 	template <typename T, bool=true>
 	struct write_impl {
-		static inline bool write(std::ostream &stream, const T &value, const String &name) {
+		static inline bool write(std::ostream &stream, const T &value, const std::string &name) {
 			stream.write((char *)&value, sizeof(value));
 			return stream.good();
 		}
@@ -146,7 +146,7 @@ public:
 	//Write structures from a std::istream
 	template <typename T>
 	struct write_impl<T, false> {
-		static inline bool write(std::ostream &stream, const T &value, const String &name) {
+		static inline bool write(std::ostream &stream, const T &value, const std::string &name) {
 			return value.write(stream);
 		}
 	};
@@ -159,7 +159,7 @@ public:
 	 @return If the operation was successful
 	 */
 	template <typename T>
-	static inline bool write(std::ostream &stream, const T &value, const String &name) {
+	static inline bool write(std::ostream &stream, const T &value, const std::string &name) {
 		//This will select one of the two write_impls above based on whether or not
 		// T is a struct or a primitive type.
 		return write_impl<T, std::is_fundamental<T>::value>::write(stream, value, name);
@@ -173,7 +173,7 @@ public:
 	 @return If the operation was successful
 	 */
 	template <typename T>
-	static inline bool write(std::ostream &stream, const std::vector<T> &value, const String &name) {
+	static inline bool write(std::ostream &stream, const std::vector<T> &value, const std::string &name) {
 		//Write the vector's size first, must be a U32 because torque
 		if (!write(stream, (U32)value.size(), "size"))
 			return false;
@@ -192,7 +192,7 @@ public:
 	 @var name - A string containing the name of the variable (for debugging)
 	 @return If the operation was successful
 	 */
-	static inline bool write(std::ostream &stream, const std::string &value, const String &name) {
+	static inline bool write(std::ostream &stream, const std::string &value, const std::string &name) {
 		//How long is the string
 		if (!write(stream, (U8)value.length(), "length"))
 			return false;
@@ -334,8 +334,8 @@ inline T __read(std::istream &stream, T *thing) {
 #ifdef DEBUG
 	#define READVAR(name, type) \
 		type name; \
-		IO::read(stream, (type *)&name, String(#name))
-	#define READTOVAR(name, type) IO::read(stream, (type *)&name, String(#name))
+		IO::read(stream, (type *)&name, #name)
+	#define READTOVAR(name, type) IO::read(stream, (type *)&name, #name)
 	#define READCHECK(type, value) { \
 		if (READ(type) != value)\
 			return;\
@@ -434,7 +434,7 @@ for (U32 i = 0; i < name##_length; i ++) { \
 
 //Macros to speed up file reading
 #ifdef DEBUG
-#define WRITE(value, type) IO::write(stream, (type) value, String(#value))
+#define WRITE(value, type) IO::write(stream, (type) value, #value)
 #else
 #define WRITE(value, type) IO::write(stream, (type) value, "")
 #endif
