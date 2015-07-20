@@ -108,10 +108,13 @@ struct Portal : public Readable, Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-struct LightMapF {
+struct LightMapF : public Readable, public Writable {
 	U16 finalWord;
 	F32 texGenXDistance;
 	F32 texGenYDistance;
+
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 struct LightMap : public Writable {

@@ -337,11 +337,7 @@ bool Surface::read(std::istream &stream, U32 interiorFileVersion, bool isTGEInte
 
 	READTOVAR(surfaceFlags, U8); //surfaceFlags
 	READTOVAR(fanMask, U32); //fanMask
-	{ //LightMap
-		READTOVAR(lightMap.finalWord, U16); //finalWord
-		READTOVAR(lightMap.texGenXDistance, F32); //texGenXDistance
-		READTOVAR(lightMap.texGenYDistance, F32); //texGenYDistance
-	}
+	READTOVAR(lightMap, LightMapF); //lightMap
 	READTOVAR(lightCount, U16); //lightCount
 	READTOVAR(lightStateInfoStart, U32); //lightStateInfoStart
 
@@ -512,6 +508,20 @@ bool Portal::write(std::ostream &stream) const {
 	return true;
 }
 
+bool LightMapF::read(std::istream &stream) {
+	READTOVAR(finalWord, U16); //finalWord
+	READTOVAR(texGenXDistance, F32); //texGenXDistance
+	READTOVAR(texGenYDistance, F32); //texGenYDistance
+	return true;
+}
+
+bool LightMapF::write(std::ostream &stream) const {
+	WRITECHECK(finalWord, U16); //finalWord
+	WRITECHECK(texGenXDistance, F32); //texGenXDistance
+	WRITECHECK(texGenYDistance, F32); //texGenYDistance
+	return true;
+}
+
 bool Surface::write(std::ostream &stream) const {
 	WRITECHECK(windingStart, U32); //windingStart
 	WRITECHECK(windingCount, U8); //windingCount
@@ -523,9 +533,7 @@ bool Surface::write(std::ostream &stream) const {
 	WRITECHECK(texGenIndex, U32); //texGenIndex
 	WRITECHECK(surfaceFlags, U8); //surfaceFlags
 	WRITECHECK(fanMask, U32); //fanMask
-	WRITECHECK(lightMap.finalWord, U16); //finalWord
-	WRITECHECK(lightMap.texGenXDistance, F32); //texGenXDistance
-	WRITECHECK(lightMap.texGenYDistance, F32); //texGenYDistance
+	WRITECHECK(lightMap, LightMapF); //lightMap
 	WRITECHECK(lightCount, U16); //lightCount
 	WRITECHECK(lightStateInfoStart, U32); //lightStateInfoStart
 	WRITECHECK(mapOffsetX, U8); //mapOffsetX
