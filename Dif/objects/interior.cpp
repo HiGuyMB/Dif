@@ -103,7 +103,9 @@ bool Interior::read(std::istream &stream) {
 
 	if (this->interiorFileVersion >= 2 && this->interiorFileVersion <= 4) {
 		//Extra data that I've seen in MBU interiors (v2, 3, 4)
-		READLOOP(numIndicesOfSomeSort) { //Some list of something
+		U32 numIndicesOfSomeSort;
+		READCHECK(numIndicesOfSomeSort, U32);
+		for (U32 i = 0; i < numIndicesOfSomeSort; i ++) { //Some list of something
 			//Potentially brush data for constructor... I don't know
 
 			//I really don't know what these are, only their size

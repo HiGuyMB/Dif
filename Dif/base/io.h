@@ -517,11 +517,6 @@ inline T __read(std::istream &stream, T *thing) {
 
 #define READCHECK(name, type) { if (!READTOVAR(name, type)) return false; }
 
-#define READLOOP(name) \
-U32 name##_length; \
-READCHECK(name##_length, U32); \
-for (U32 i = 0; i < name##_length; i ++)
-
 //Macros to speed up file writing
 #ifdef DEBUG
 #define WRITECHECK(value, type) { if (!IO::write(stream, (const type) value, #value)) return false; }
