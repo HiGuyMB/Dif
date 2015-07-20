@@ -52,34 +52,8 @@ bool Interior::read(std::istream &stream) {
 		READTOVAR(pointVisibility, std::vector<U8>); //pointVisibility
 	}
 	READTOVAR(texGenEq, std::vector<TexGenEq>); //texGenEq
-	READLOOPVAR(numBSPNodes, BSPNode, ::BSPNode) {
-		READTOVAR(BSPNode[i].planeIndex, U16); //planeIndex
-		if (this->interiorFileVersion >= 14) {
-			U32 tmpFront, tmpBack;
-			READTOVAR(tmpFront, U32); //frontIndex
-			READTOVAR(tmpBack, U32); //backIndex
-
-			//Fuckers
-			if ((tmpFront & 0x80000) != 0) {
-				tmpFront = (tmpFront & ~0x80000) | 0x8000;
-			}
-			if ((tmpFront & 0x40000) != 0) {
-				tmpFront = (tmpFront & ~0x40000) | 0x4000;
-			}
-			if ((tmpBack & 0x80000) != 0) {
-				tmpBack = (tmpBack & ~0x80000) | 0x8000;
-			}
-			if ((tmpBack & 0x40000) != 0) {
-				tmpBack = (tmpBack & ~0x40000) | 0x4000;
-			}
-
-			BSPNode[i].frontIndex = tmpFront;
-			BSPNode[i].backIndex = tmpBack;
-		} else {
-			READTOVAR(BSPNode[i].frontIndex, U16); //frontIndex
-			READTOVAR(BSPNode[i].backIndex, U16); //backIndex
-		}
-	}
+//	READLOOPVAR(numBSPNodes, BSPNode, ::BSPNode) {
+	IO::read_with<::BSPNode>(stream, &BSPNode, [=](::BSPNode *node, std::istream &stream)->bool{return node->read(stream, this->interiorFileVersion);}, "BSPNode");
 	READTOVAR(BSPSolidLeaf, std::vector<::BSPSolidLeaf>); //BSPSolidLeaf
 	//MaterialList
 	READTOVAR(materialListVersion, U8); //version
@@ -334,7 +308,7 @@ bool Interior::write(std::ostream &stream) const {
 	WRITE(point, std::vector<Point3F>); //point
 	WRITE(pointVisibility, std::vector<U8>); //pointVisibility
 	WRITE(texGenEq, std::vector<TexGenEq>); //texGenEq
-	WRITELIST(numBSPNodes, BSPNode, ::BSPNode); //BSPNode
+	WRITE(BSPNode, std::vector<::BSPNode>); //BSPNode
 	WRITE(BSPSolidLeaf, std::vector<::BSPSolidLeaf>); //BSPSolidLeaf
 	WRITECHECK(materialListVersion, U8); //materialListVersion
 	WRITE(materialName, std::vector<std::string>); //material
@@ -470,6 +444,36 @@ bool TexGenEq::read(std::istream &stream) {
 bool TexGenEq::write(std::ostream &stream) const {
 	WRITECHECK(planeX, PlaneF); //planeX
 	WRITECHECK(planeY, PlaneF); //planeY
+	return true;
+}
+
+bool BSPNode::read(std::istream &stream, U32 interiorFileVersion) {
+	READTOVAR(planeIndex, U16); //planeIndex
+	if (interiorFileVersion >= 14) {
+		U32 tmpFront, tmpBack;
+		READTOVAR(tmpFront, U32); //frontIndex
+		READTOVAR(tmpBack, U32); //backIndex
+
+		//Fuckers
+		if ((tmpFront & 0x80000) != 0) {
+			tmpFront = (tmpFront & ~0x80000) | 0x8000;
+		}
+		if ((tmpFront & 0x40000) != 0) {
+			tmpFront = (tmpFront & ~0x40000) | 0x4000;
+		}
+		if ((tmpBack & 0x80000) != 0) {
+			tmpBack = (tmpBack & ~0x80000) | 0x8000;
+		}
+		if ((tmpBack & 0x40000) != 0) {
+			tmpBack = (tmpBack & ~0x40000) | 0x4000;
+		}
+
+		frontIndex = tmpFront;
+		backIndex = tmpBack;
+	} else {
+		READTOVAR(frontIndex, U16); //frontIndex
+		READTOVAR(backIndex, U16); //backIndex
+	}
 	return true;
 }
 

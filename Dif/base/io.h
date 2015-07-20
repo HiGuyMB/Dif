@@ -230,6 +230,35 @@ public:
 		return true;
 	}
 
+	/**
+	 Read a vector from a stream
+	 @var stream - The stream from which the data is read
+	 @var value - A pointer into which the data will be read
+	 @var name - A string containing the name of the variable (for debugging)
+	 @return If the operation was successful
+	 */
+	template <typename T>
+	static inline bool read_with(std::istream &stream, std::vector<T> *value, std::function<bool(T*, std::istream &)> passed_method, const std::string &name) {
+		//Read the size of the vector
+		U32 size;
+		if (!read(stream, &size, "size"))
+			return false;
+		//Reserve some space
+		value->reserve(size);
+
+		//Read all the objects
+		for (int i = 0; i < size; i ++) {
+			T obj;
+			//Make sure the read succeeds
+			if (passed_method(&obj, stream))
+				value->push_back(obj);
+			else
+				return false;
+		}
+
+		return true;
+	}
+
 
 	//Write primitive types from a std::istream
 	template <typename T, bool=true>

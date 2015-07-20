@@ -54,6 +54,7 @@ struct BSPNode : public Writable {
 	U16 frontIndex;
 	U16 backIndex;
 
+	bool read(std::istream &stream, U32 interiorFileVersion);
 	virtual bool write(std::ostream &stream) const;
 };
 
@@ -230,10 +231,7 @@ public:
 	std::vector<Point3F> point;
 	std::vector<U8> pointVisibility;
 	std::vector<TexGenEq> texGenEq;
-
-	U32 numBSPNodes;
-	BSPNode *BSPNode;
-
+	std::vector<BSPNode> BSPNode;
 	std::vector<BSPSolidLeaf> BSPSolidLeaf;
 
 	U8 materialListVersion;
