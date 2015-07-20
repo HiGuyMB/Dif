@@ -308,62 +308,6 @@ bool Interior::write(std::ostream &stream) const {
 
 //----------------------------------------------------------------------------
 
-bool Surface::read(std::istream &stream, U32 interiorFileVersion, bool isTGEInterior, U32 indexSize, U32 planeSize, U32 materialSize, U32 texGenEqSize) {
-	READTOVAR(windingStart, U32); //windingStart
-	if (interiorFileVersion >= 13) {
-		READTOVAR(windingCount, U32); //windingCount
-	} else {
-		READTOVAR(windingCount, U8); //windingCount
-	}
-	if (windingStart + windingCount > indexSize)
-		return false;
-
-	//Fucking GarageGames. Sometimes the plane is | 0x8000 because WHY NOT
-	READVAR(plane, S16); //planeIndex
-	//Ugly hack
-	planeFlipped = (plane >> 15 != 0);
-	plane &= ~0x8000;
-	planeIndex = plane;
-	if (planeIndex > planeSize)
-		return false;
-
-	READTOVAR(textureIndex, U16); //textureIndex
-	if (textureIndex > materialSize)
-		return false;
-
-	READTOVAR(texGenIndex, U32); //texGenIndex
-	if (texGenIndex > texGenEqSize)
-		return false;
-
-	READTOVAR(surfaceFlags, U8); //surfaceFlags
-	READTOVAR(fanMask, U32); //fanMask
-	READTOVAR(lightMap, LightMapF); //lightMap
-	READTOVAR(lightCount, U16); //lightCount
-	READTOVAR(lightStateInfoStart, U32); //lightStateInfoStart
-
-	if (interiorFileVersion >= 13) {
-		READTOVAR(mapOffsetX, U32); //mapOffsetX
-		READTOVAR(mapOffsetY, U32); //mapOffsetY
-		READTOVAR(mapSizeX, U32); //mapSizeX
-		READTOVAR(mapSizeY, U32); //mapSizeY
-	} else {
-		READTOVAR(mapOffsetX, U8); //mapOffsetX
-		READTOVAR(mapOffsetY, U8); //mapOffsetY
-		READTOVAR(mapSizeX, U8); //mapSizeX
-		READTOVAR(mapSizeY, U8); //mapSizeY
-	}
-
-	if (!isTGEInterior) {
-		READ(U8); //unused
-		if (interiorFileVersion > 0 && interiorFileVersion <= 4) {
-			READ(U32); //Extra bytes used for some unknown purpose, seen in versions 2, 3, 4
-		}
-	}
-	return true;
-}
-
-//----------------------------------------------------------------------------
-
 bool Plane::read(std::istream &stream) {
 	READTOVAR(normalIndex, U16); //normalIndex
 	READTOVAR(planeDistance, F32); //planeDistance
@@ -519,6 +463,60 @@ bool LightMapF::write(std::ostream &stream) const {
 	WRITECHECK(finalWord, U16); //finalWord
 	WRITECHECK(texGenXDistance, F32); //texGenXDistance
 	WRITECHECK(texGenYDistance, F32); //texGenYDistance
+	return true;
+}
+
+bool Surface::read(std::istream &stream, U32 interiorFileVersion, bool isTGEInterior, U32 indexSize, U32 planeSize, U32 materialSize, U32 texGenEqSize) {
+	READTOVAR(windingStart, U32); //windingStart
+	if (interiorFileVersion >= 13) {
+		READTOVAR(windingCount, U32); //windingCount
+	} else {
+		READTOVAR(windingCount, U8); //windingCount
+	}
+	if (windingStart + windingCount > indexSize)
+		return false;
+
+	//Fucking GarageGames. Sometimes the plane is | 0x8000 because WHY NOT
+	READVAR(plane, S16); //planeIndex
+	//Ugly hack
+	planeFlipped = (plane >> 15 != 0);
+	plane &= ~0x8000;
+	planeIndex = plane;
+	if (planeIndex > planeSize)
+		return false;
+
+	READTOVAR(textureIndex, U16); //textureIndex
+	if (textureIndex > materialSize)
+		return false;
+
+	READTOVAR(texGenIndex, U32); //texGenIndex
+	if (texGenIndex > texGenEqSize)
+		return false;
+
+	READTOVAR(surfaceFlags, U8); //surfaceFlags
+	READTOVAR(fanMask, U32); //fanMask
+	READTOVAR(lightMap, LightMapF); //lightMap
+	READTOVAR(lightCount, U16); //lightCount
+	READTOVAR(lightStateInfoStart, U32); //lightStateInfoStart
+
+	if (interiorFileVersion >= 13) {
+		READTOVAR(mapOffsetX, U32); //mapOffsetX
+		READTOVAR(mapOffsetY, U32); //mapOffsetY
+		READTOVAR(mapSizeX, U32); //mapSizeX
+		READTOVAR(mapSizeY, U32); //mapSizeY
+	} else {
+		READTOVAR(mapOffsetX, U8); //mapOffsetX
+		READTOVAR(mapOffsetY, U8); //mapOffsetY
+		READTOVAR(mapSizeX, U8); //mapSizeX
+		READTOVAR(mapSizeY, U8); //mapSizeY
+	}
+
+	if (!isTGEInterior) {
+		READ(U8); //unused
+		if (interiorFileVersion > 0 && interiorFileVersion <= 4) {
+			READ(U32); //Extra bytes used for some unknown purpose, seen in versions 2, 3, 4
+		}
+	}
 	return true;
 }
 
