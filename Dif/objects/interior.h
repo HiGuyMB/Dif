@@ -93,6 +93,7 @@ struct Zone : public Writable {
 	U32 staticMeshCount;
 	U16 flags;
 
+	bool read(std::istream &stream, U32 interiorFileVersion);
 	virtual bool write(std::ostream &stream) const;
 };
 
@@ -118,6 +119,7 @@ struct LightMap : public Writable {
 	PNG lightDirMap;
 	U8 keepLightMap;
 
+	bool read(std::istream &stream, bool isTGEInterior);
 	virtual bool write(std::ostream &stream) const;
 };
 
@@ -147,6 +149,7 @@ struct NullSurface : public Writable {
 	U8 surfaceFlags;
 	U8 windingCount;
 
+	bool read(std::istream &stream, U32 interiorFileVersion);
 	virtual bool write(std::ostream &stream) const;
 };
 
@@ -199,6 +202,7 @@ struct ConvexHull : public Writable {
 	U32 polyListStringStart;
 	U8 staticMesh;
 
+	bool read(std::istream &stream, U32 interiorFileVersion);
 	virtual bool write(std::ostream &stream) const;
 };
 
@@ -239,14 +243,10 @@ public:
 	std::vector<U32>index;
 	std::vector<WindingIndex> windingIndex;
 	std::vector<Edge> edge;
-
-	U32 numZones;
-	Zone *zone;
-
+	std::vector<Zone>zone;
 	std::vector<U16>zoneSurface;
 	std::vector<U32> zoneStaticMesh;
 	std::vector<U16>zonePortalList;
-
 	std::vector<Portal> portal;
 
 	U32 numSurfaces;
@@ -254,13 +254,8 @@ public:
 
 	std::vector<U8> normalLMapIndex;
 	std::vector<U8> alarmLMapIndex;
-
-	U32 numNullSurfaces;
-	NullSurface *nullSurface;
-
-	U32 numLightMaps;
-	LightMap *lightMap;
-
+	std::vector<NullSurface>nullSurface;
+	std::vector<LightMap>lightMap;
 	std::vector<U32>solidLeafSurface;
 	std::vector<AnimatedLight> animatedLight;
 	std::vector<LightState> lightState;
@@ -276,9 +271,7 @@ public:
 	U32 numSubObjects;
 	//SubObject *subObject;
 
-	U32 numConvexHulls;
-	ConvexHull *convexHull;
-
+	std::vector<ConvexHull>convexHull;
 	std::vector<U8> convexHullEmitStringCharacter;
 	std::vector<U32> hullIndex;
 	std::vector<U16> hullPlaneIndex;

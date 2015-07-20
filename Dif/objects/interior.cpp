@@ -63,21 +63,7 @@ bool Interior::read(std::istream &stream) {
 	if (this->interiorFileVersion >= 12) {
 		READTOVAR(edge, std::vector<Edge>); //edge
 	}
-	READLOOPVAR(numZones, zone, Zone) {
-		READTOVAR(zone[i].portalStart, U16); //portalStart
-		READTOVAR(zone[i].portalCount, U16); //portalCount
-		READTOVAR(zone[i].surfaceStart, U32); //surfaceStart
-		READTOVAR(zone[i].surfaceCount, U32); //surfaceCount
-		if (this->interiorFileVersion >= 12) {
-			READTOVAR(zone[i].staticMeshStart, U32); //staticMeshStart
-			READTOVAR(zone[i].staticMeshCount, U32); //staticMeshCount
-//			READTOVAR(zone[i].flags, U16); //flags
-		} else {
-			zone[i].staticMeshStart = 0;
-			zone[i].staticMeshCount = 0;
-			zone[i].flags = 0;
-		}
-	}
+	IO::read_with<Zone>(stream, &zone, [=](Zone *zone, std::istream &stream)->bool{return zone->read(stream, this->interiorFileVersion);}, "zone");
 	IO::read_as<U16, U16>(stream, &zoneSurface, [](bool useAlternate, U32 param) { return false; }, "zoneSurface");
 	if (this->interiorFileVersion >= 12) {
 		READTOVAR(zoneStaticMesh, std::vector<U32>); //zoneStaticMesh
@@ -170,25 +156,9 @@ bool Interior::read(std::istream &stream) {
 		READTOVAR(normalLMapIndex, std::vector<U8>); //normalLMapIndex
 		READTOVAR(alarmLMapIndex, std::vector<U8>); //alarmLMapIndex
 	}
-	READLOOPVAR(numNullSurfaces, nullSurface, NullSurface) {
-		READTOVAR(nullSurface[i].windingStart, U32); //windingStart
-		READTOVAR(nullSurface[i].planeIndex, U16); //planeIndex
-		READTOVAR(nullSurface[i].surfaceFlags, U8); //surfaceFlags
-		if (this->interiorFileVersion >= 13) {
-			READTOVAR(nullSurface[i].windingCount, U32); //windingCount
-		} else {
-			READTOVAR(nullSurface[i].windingCount, U8); //windingCount
-		}
-	}
+	IO::read_with<NullSurface>(stream, &nullSurface, [=](NullSurface *nullSurface, std::istream &stream)->bool{return nullSurface->read(stream, this->interiorFileVersion);}, "nullSurface");
 	if (this->interiorFileVersion != 4) { //Also found in 0, 2, 3, 14
-		READLOOPVAR(numLightMaps, lightMap, LightMap) {
-			READTOVAR(lightMap[i].lightMap, PNG); //lightMap
-			if (!isTGEInterior) {
-				//These aren't even used in the real game!
-				READTOVAR(lightMap[i].lightDirMap, PNG); //lightDirMap
-			}
-			READTOVAR(lightMap[i].keepLightMap, U8); //keepLightMap
-		}
+		IO::read_with<LightMap>(stream, &lightMap, [=](LightMap *lightMap, std::istream &stream)->bool{return lightMap->read(stream, isTGEInterior);}, "lightMap");
 	}
 	IO::read_as<U32, U16>(stream, &solidLeafSurface, [](bool useAlternate, U32 param) { return useAlternate; }, "solidLeafSurface");
 	READTOVAR(animatedLight, std::vector<AnimatedLight>); //animatedLight
@@ -208,28 +178,7 @@ bool Interior::read(std::istream &stream) {
 //			//NFC
 //		}
 	}
-	READLOOPVAR(numConvexHulls, convexHull, ConvexHull) {
-		READTOVAR(convexHull[i].hullStart, U32); //hullStart
-		READTOVAR(convexHull[i].hullCount, U16); //hullCount
-		READTOVAR(convexHull[i].minX, F32); //minX
-		READTOVAR(convexHull[i].maxX, F32); //maxX
-		READTOVAR(convexHull[i].minY, F32); //minY
-		READTOVAR(convexHull[i].maxY, F32); //maxY
-		READTOVAR(convexHull[i].minZ, F32); //minZ
-		READTOVAR(convexHull[i].maxZ, F32); //maxZ
-		READTOVAR(convexHull[i].surfaceStart, U32); //surfaceStart
-		READTOVAR(convexHull[i].surfaceCount, U16); //surfaceCount
-		READTOVAR(convexHull[i].planeStart, U32); //planeStart
-		READTOVAR(convexHull[i].polyListPlaneStart, U32); //polyListPlaneStart
-		READTOVAR(convexHull[i].polyListPointStart, U32); //polyListPointStart
-		READTOVAR(convexHull[i].polyListStringStart, U32); //polyListStringStart
-
-		if (this->interiorFileVersion >= 12) {
-			READTOVAR(convexHull[i].staticMesh, U8); //staticMesh
-		} else {
-			convexHull[i].staticMesh = 0;
-		}
-	}
+	IO::read_with<ConvexHull>(stream, &convexHull, [=](ConvexHull *convexHull, std::istream &stream)->bool{return convexHull->read(stream, this->interiorFileVersion);}, "convexHull");
 	READTOVAR(convexHullEmitStringCharacter, std::vector<U8>); //convexHullEmitStringCharacter
 
 	//-------------------------------------------------------------------------
@@ -314,15 +263,15 @@ bool Interior::write(std::ostream &stream) const {
 	WRITE(materialName, std::vector<std::string>); //material
 	WRITE(index, std::vector<U32>); //index
 	WRITE(windingIndex, std::vector<WindingIndex>); //windingIndex
-	WRITELIST(numZones, zone, Zone); //zone
+	WRITE(zone, std::vector<Zone>); //zone
 	WRITE(zoneSurface, std::vector<U16>); //zoneSurface
 	WRITE(zonePortalList, std::vector<U16>); //zonePortalList
 	WRITE(portal, std::vector<Portal>); //portal
 	WRITELIST(numSurfaces, surface, Surface); //surface
 	WRITE(normalLMapIndex, std::vector<U8>); //normalLMapIndex
 	WRITE(alarmLMapIndex, std::vector<U8>); //alarmLMapIndex
-	WRITELIST(numNullSurfaces, nullSurface, NullSurface); //nullSurface
-	WRITELIST(numLightMaps, lightMap, LightMap); //lightMap
+	WRITE(nullSurface, std::vector<NullSurface>); //nullSurface
+	WRITE(lightMap, std::vector<LightMap>); //lightMap
 	WRITE(solidLeafSurface, std::vector<U32>); //solidLeafSurface
 	WRITE(animatedLight, std::vector<AnimatedLight>); //animatedLight
 	WRITE(lightState, std::vector<LightState>); //lightState
@@ -332,7 +281,7 @@ bool Interior::write(std::ostream &stream) const {
 	WRITE(nameBufferCharacter, std::vector<U8>); //nameBufferCharacter
 	WRITE(numSubObjects, U32);
 //	WRITELOOP(numSubObjects) {} //numSubObjects
-	WRITELIST(numConvexHulls, convexHull, ConvexHull); //convexHull
+	WRITE(convexHull, std::vector<ConvexHull>); //convexHull
 	WRITE(convexHullEmitStringCharacter, std::vector<U8>); //convexHullEmitStringCharacter
 	WRITE(hullIndex, std::vector<U32>); //hullIndex
 	WRITE(hullPlaneIndex, std::vector<U16>); //hullPlaneIndex
@@ -508,6 +457,23 @@ bool WindingIndex::write(std::ostream &stream) const {
 	return true;
 }
 
+bool Zone::read(std::istream &stream, U32 interiorFileVersion) {
+	READTOVAR(portalStart, U16); //portalStart
+	READTOVAR(portalCount, U16); //portalCount
+	READTOVAR(surfaceStart, U32); //surfaceStart
+	READTOVAR(surfaceCount, U32); //surfaceCount
+	if (interiorFileVersion >= 12) {
+		READTOVAR(staticMeshStart, U32); //staticMeshStart
+		READTOVAR(staticMeshCount, U32); //staticMeshCount
+//		READTOVAR(flags, U16); //flags
+	} else {
+		staticMeshStart = 0;
+		staticMeshCount = 0;
+		flags = 0;
+	}
+	return true;
+}
+
 bool Zone::write(std::ostream &stream) const {
 	WRITECHECK(portalStart, U16); //portalStart
 	WRITECHECK(portalCount, U16); //portalCount
@@ -573,11 +539,33 @@ bool Surface::write(std::ostream &stream) const {
 	return true;
 }
 
+bool NullSurface::read(std::istream &stream, U32 interiorFileVersion) {
+	READTOVAR(windingStart, U32); //windingStart
+	READTOVAR(planeIndex, U16); //planeIndex
+	READTOVAR(surfaceFlags, U8); //surfaceFlags
+	if (interiorFileVersion >= 13) {
+		READTOVAR(windingCount, U32); //windingCount
+	} else {
+		READTOVAR(windingCount, U8); //windingCount
+	}
+	return true;
+}
+
 bool NullSurface::write(std::ostream &stream) const {
 	WRITECHECK(windingStart, U32); //windingStart
 	WRITECHECK(planeIndex, U16); //planeIndex
 	WRITECHECK(surfaceFlags, U8); //surfaceFlags
 	WRITECHECK(windingCount, U8); //windingCount
+	return true;
+}
+
+bool LightMap::read(std::istream &stream, bool isTGEInterior) {
+	READTOVAR(lightMap, PNG); //lightMap
+	if (!isTGEInterior) {
+		//These aren't even used in the real game!
+		READTOVAR(lightDirMap, PNG); //lightDirMap
+	}
+	READTOVAR(keepLightMap, U8); //keepLightMap
 	return true;
 }
 
@@ -636,6 +624,30 @@ bool StateData::write(std::ostream &stream) const {
 	WRITECHECK(surfaceIndex, U32); //surfaceIndex
 	WRITECHECK(mapIndex, U32); //mapIndex
 	WRITECHECK(lightStateIndex, U16); //lightStateIndex
+	return true;
+}
+
+bool ConvexHull::read(std::istream &stream, U32 interiorFileVersion) {
+	READTOVAR(hullStart, U32); //hullStart
+	READTOVAR(hullCount, U16); //hullCount
+	READTOVAR(minX, F32); //minX
+	READTOVAR(maxX, F32); //maxX
+	READTOVAR(minY, F32); //minY
+	READTOVAR(maxY, F32); //maxY
+	READTOVAR(minZ, F32); //minZ
+	READTOVAR(maxZ, F32); //maxZ
+	READTOVAR(surfaceStart, U32); //surfaceStart
+	READTOVAR(surfaceCount, U16); //surfaceCount
+	READTOVAR(planeStart, U32); //planeStart
+	READTOVAR(polyListPlaneStart, U32); //polyListPlaneStart
+	READTOVAR(polyListPointStart, U32); //polyListPointStart
+	READTOVAR(polyListStringStart, U32); //polyListStringStart
+
+	if (interiorFileVersion >= 12) {
+		READTOVAR(staticMesh, U8); //staticMesh
+	} else {
+		staticMesh = 0;
+	}
 	return true;
 }
 
