@@ -29,17 +29,17 @@
 #include "vehicleCollision.h"
 
 bool VehicleCollision::read(std::istream &stream) {
-	READTOVAR(vehicleCollisionFileVersion, U32); //vehicleCollisionFileVersion
-	READTOVAR(vehicleConvexHull, std::vector<VehicleConvexHull>); //vehicleConvexHull
-	READTOVAR(vehicleConvexHullEmitStringCharacter, std::vector<U8>); //vehicleConvexHullEmitStringCharacter
-	READTOVAR(vehicleHullIndex, std::vector<U32>); //vehicleHullIndex
-	READTOVAR(vehicleHullPlaneIndex, std::vector<U16>); //vehicleHullPlaneIndex
-	READTOVAR(vehicleHullEmitStringIndex, std::vector<U32>); //vehicleHullEmitStringIndex
-	READTOVAR(vehicleHullSurfaceIndex, std::vector<U32>); //vehicleHullSurfaceIndex
-	READTOVAR(vehiclePolyListPlaneIndex, std::vector<U16>); //vehiclePolyListPlaneIndex
-	READTOVAR(vehiclePolyListPointIndex, std::vector<U32>); //vehiclePolyListPointIndex
-	READTOVAR(vehiclePolyListStringCharacter, std::vector<U8>); //vehiclePolyListStringCharacter
-	READTOVAR(vehicleNullSurface, std::vector<VehicleNullSurface>); //vehicleNullSurface
+	READCHECK(vehicleCollisionFileVersion, U32); //vehicleCollisionFileVersion
+	READCHECK(vehicleConvexHull, std::vector<VehicleConvexHull>); //vehicleConvexHull
+	READCHECK(vehicleConvexHullEmitStringCharacter, std::vector<U8>); //vehicleConvexHullEmitStringCharacter
+	READCHECK(vehicleHullIndex, std::vector<U32>); //vehicleHullIndex
+	READCHECK(vehicleHullPlaneIndex, std::vector<U16>); //vehicleHullPlaneIndex
+	READCHECK(vehicleHullEmitStringIndex, std::vector<U32>); //vehicleHullEmitStringIndex
+	READCHECK(vehicleHullSurfaceIndex, std::vector<U32>); //vehicleHullSurfaceIndex
+	READCHECK(vehiclePolyListPlaneIndex, std::vector<U16>); //vehiclePolyListPlaneIndex
+	READCHECK(vehiclePolyListPointIndex, std::vector<U32>); //vehiclePolyListPointIndex
+	READCHECK(vehiclePolyListStringCharacter, std::vector<U8>); //vehiclePolyListStringCharacter
+	READCHECK(vehicleNullSurface, std::vector<VehicleNullSurface>); //vehicleNullSurface
 
 	return true;
 }
@@ -61,20 +61,20 @@ bool VehicleCollision::write(std::ostream &stream) const {
 }
 
 bool VehicleConvexHull::read(std::istream &stream) {
-	READTOVAR(hullStart, U32); //hullStart
-	READTOVAR(hullCount, U16); //hullCount
-	READTOVAR(minX, F32); //minX
-	READTOVAR(maxX, F32); //maxX
-	READTOVAR(minY, F32); //minY
-	READTOVAR(maxY, F32); //maxY
-	READTOVAR(minZ, F32); //minZ
-	READTOVAR(maxZ, F32); //maxZ
-	READTOVAR(surfaceStart, U32); //surfaceStart
-	READTOVAR(surfaceCount, U16); //surfaceCount
-	READTOVAR(planeStart, U32); //planeStart
-	READTOVAR(polyListPlaneStart, U32); //polyListPlaneStart
-	READTOVAR(polyListPointStart, U32); //polyListPointStart
-	READTOVAR(polyListStringStart, U32); //polyListStringStart
+	READCHECK(hullStart, U32); //hullStart
+	READCHECK(hullCount, U16); //hullCount
+	READCHECK(minX, F32); //minX
+	READCHECK(maxX, F32); //maxX
+	READCHECK(minY, F32); //minY
+	READCHECK(maxY, F32); //maxY
+	READCHECK(minZ, F32); //minZ
+	READCHECK(maxZ, F32); //maxZ
+	READCHECK(surfaceStart, U32); //surfaceStart
+	READCHECK(surfaceCount, U16); //surfaceCount
+	READCHECK(planeStart, U32); //planeStart
+	READCHECK(polyListPlaneStart, U32); //polyListPlaneStart
+	READCHECK(polyListPointStart, U32); //polyListPointStart
+	READCHECK(polyListStringStart, U32); //polyListStringStart
 
 	return true;
 }
@@ -99,10 +99,10 @@ bool VehicleConvexHull::write(std::ostream &stream) const {
 }
 
 bool VehicleNullSurface::read(std::istream &stream) {
-	READTOVAR(windingStart, U32); //windingStart
-	READTOVAR(planeIndex, U16); //planeIndex
-	READTOVAR(surfaceFlags, U8); //surfaceFlags
-	READTOVAR(windingCount, U32); //windingCount
+	READCHECK(windingStart, U32); //windingStart
+	READCHECK(planeIndex, U16); //planeIndex
+	READCHECK(surfaceFlags, U8); //surfaceFlags
+	READCHECK(windingCount, U32); //windingCount
 
 	return true;
 }

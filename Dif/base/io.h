@@ -547,6 +547,8 @@ inline T __read(std::istream &stream, T *thing) {
 	#define READTOVAR(name, type) IO::read(stream, reinterpret_cast<type *>(&name), "")
 #endif
 
+#define READCHECK(name, type) { if (!READTOVAR(name, type)) return false; }
+
 #define READLOOP(name) \
 READVAR(name##_length, U32); \
 for (U32 i = 0; i < name##_length; i ++)

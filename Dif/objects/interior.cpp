@@ -33,39 +33,39 @@
 #include "math.h"
 
 bool Interior::read(std::istream &stream) {
-	READTOVAR(interiorFileVersion, U32); //interiorFileVersion
-	READTOVAR(detailLevel, U32); //detailLevel
-	READTOVAR(minPixels, U32); //minPixels
-	READTOVAR(boundingBox, BoxF); //boundingBox
-	READTOVAR(boundingSphere, SphereF); //boundingSphere
-	READTOVAR(hasAlarmState, U8); //hasAlarmState
-	READTOVAR(numLightStateEntries, U32); //numLightStateEntries
-	READTOVAR(normal, std::vector<Point3F>); //normal
-	READTOVAR(plane, std::vector<Plane>); //plane
-	READTOVAR(point, std::vector<Point3F>); //point
+	READCHECK(interiorFileVersion, U32); //interiorFileVersion
+	READCHECK(detailLevel, U32); //detailLevel
+	READCHECK(minPixels, U32); //minPixels
+	READCHECK(boundingBox, BoxF); //boundingBox
+	READCHECK(boundingSphere, SphereF); //boundingSphere
+	READCHECK(hasAlarmState, U8); //hasAlarmState
+	READCHECK(numLightStateEntries, U32); //numLightStateEntries
+	READCHECK(normal, std::vector<Point3F>); //normal
+	READCHECK(plane, std::vector<Plane>); //plane
+	READCHECK(point, std::vector<Point3F>); //point
 	if (this->interiorFileVersion == 4) { //They exist in 0, 2, 3 but not 4
 		//Probably defaulted to FF but uncertain
 	} else {
-		READTOVAR(pointVisibility, std::vector<U8>); //pointVisibility
+		READCHECK(pointVisibility, std::vector<U8>); //pointVisibility
 	}
-	READTOVAR(texGenEq, std::vector<TexGenEq>); //texGenEq
+	READCHECK(texGenEq, std::vector<TexGenEq>); //texGenEq
 	IO::read_with<::BSPNode>(stream, &BSPNode, [&](::BSPNode *node, std::istream &stream)->bool{return node->read(stream, this->interiorFileVersion);}, "BSPNode"); //BSPNode
-	READTOVAR(BSPSolidLeaf, std::vector<::BSPSolidLeaf>); //BSPSolidLeaf
+	READCHECK(BSPSolidLeaf, std::vector<::BSPSolidLeaf>); //BSPSolidLeaf
 	//MaterialList
-	READTOVAR(materialListVersion, U8); //version
-	READTOVAR(materialName, std::vector<std::string>); //materialName
+	READCHECK(materialListVersion, U8); //version
+	READCHECK(materialName, std::vector<std::string>); //materialName
 	IO::read_as<U32, U16>(stream, &index, [](bool useAlternate, U32 param)->bool{return param;}, "index"); //index
-	READTOVAR(windingIndex, std::vector<WindingIndex>); //windingIndex
+	READCHECK(windingIndex, std::vector<WindingIndex>); //windingIndex
 	if (this->interiorFileVersion >= 12) {
-		READTOVAR(edge, std::vector<Edge>); //edge
+		READCHECK(edge, std::vector<Edge>); //edge
 	}
 	IO::read_with<Zone>(stream, &zone, [&](Zone *zone, std::istream &stream)->bool{return zone->read(stream, this->interiorFileVersion);}, "zone"); //zone
 	IO::read_as<U16, U16>(stream, &zoneSurface, [](bool useAlternate, U32 param)->bool{return false;}, "zoneSurface");
 	if (this->interiorFileVersion >= 12) {
-		READTOVAR(zoneStaticMesh, std::vector<U32>); //zoneStaticMesh
+		READCHECK(zoneStaticMesh, std::vector<U32>); //zoneStaticMesh
 	}
 	IO::read_as<U16, U16>(stream, &zonePortalList, [](bool useAlternate, U32 param)->bool{return false;}, "zonePortalList"); //zonePortalList
-	READTOVAR(portal, std::vector<Portal>); //portal
+	READCHECK(portal, std::vector<Portal>); //portal
 
 	//Ok so Torque needs to fuck themselves in the ass, multiple times.
 	// They have two "version 0"s, one for TGE and one for TGEA. So, you
@@ -134,45 +134,45 @@ bool Interior::read(std::istream &stream) {
 		}
 	}
 	if (this->interiorFileVersion == 4) { //Found in 0, 2, 3, and TGE (14)
-		READTOVAR(normalLMapIndex, std::vector<U8>); //normalLMapIndex
+		READCHECK(normalLMapIndex, std::vector<U8>); //normalLMapIndex
 	} else if (this->interiorFileVersion >= 13) {
 		//These are 32-bit values in v13 and up
-		READTOVAR(normalLMapIndex, std::vector<U8>); //normalLMapIndex
-		READTOVAR(alarmLMapIndex, std::vector<U8>); //alarmLMapIndex
+		READCHECK(normalLMapIndex, std::vector<U8>); //normalLMapIndex
+		READCHECK(alarmLMapIndex, std::vector<U8>); //alarmLMapIndex
 	} else {
 		//Normally they're just 8
-		READTOVAR(normalLMapIndex, std::vector<U8>); //normalLMapIndex
-		READTOVAR(alarmLMapIndex, std::vector<U8>); //alarmLMapIndex
+		READCHECK(normalLMapIndex, std::vector<U8>); //normalLMapIndex
+		READCHECK(alarmLMapIndex, std::vector<U8>); //alarmLMapIndex
 	}
 	IO::read_with<NullSurface>(stream, &nullSurface, [&](NullSurface *nullSurface, std::istream &stream)->bool{return nullSurface->read(stream, this->interiorFileVersion);}, "nullSurface"); //nullSurface
 	if (this->interiorFileVersion != 4) { //Also found in 0, 2, 3, 14
 		IO::read_with<LightMap>(stream, &lightMap, [&](LightMap *lightMap, std::istream &stream)->bool{return lightMap->read(stream, isTGEInterior);}, "lightMap"); //lightMap
 	}
 	IO::read_as<U32, U16>(stream, &solidLeafSurface, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "solidLeafSurface"); //solidLeafSurface
-	READTOVAR(animatedLight, std::vector<AnimatedLight>); //animatedLight
-	READTOVAR(lightState, std::vector<LightState>); //lightState
+	READCHECK(animatedLight, std::vector<AnimatedLight>); //animatedLight
+	READCHECK(lightState, std::vector<LightState>); //lightState
 	if (this->interiorFileVersion == 4) { //Yet more things found in 0, 2, 3, 14
 		flags = 0;
 		numSubObjects = 0;
 	} else {
-		READTOVAR(stateData, std::vector<StateData>); //stateData
+		READCHECK(stateData, std::vector<StateData>); //stateData
 
 		//State datas have the flags field written right after the vector size,
 		// and THEN the data, just to make things confusing. So we need yet another
 		// read method for this.
 		IO::read_extra(stream, &stateDataBuffer, [&](std::istream &stream)->bool{
-			return READTOVAR(flags, U32); //flags
+			return IO::read(stream, &flags, "flags"); //flags
 		}, "stateDataBuffer"); //stateDataBuffer
-		READTOVAR(nameBufferCharacter, std::vector<U8>); //nameBufferCharacter
+		READCHECK(nameBufferCharacter, std::vector<U8>); //nameBufferCharacter
 
-		READTOVAR(numSubObjects, U32); //numSubObjects
+		READCHECK(numSubObjects, U32); //numSubObjects
 		assert(numSubObjects == 0); //Can't support these currently
 //		READLOOP(numSubObjects) {
 //			//NFC
 //		}
 	}
 	IO::read_with<ConvexHull>(stream, &convexHull, [&](ConvexHull *convexHull, std::istream &stream)->bool{return convexHull->read(stream, this->interiorFileVersion);}, "convexHull"); //convexHull
-	READTOVAR(convexHullEmitStringCharacter, std::vector<U8>); //convexHullEmitStringCharacter
+	READCHECK(convexHullEmitStringCharacter, std::vector<U8>); //convexHullEmitStringCharacter
 
 	//-------------------------------------------------------------------------
 	// Lots of index lists here that have U16 or U32 versions based on loop2.
@@ -193,43 +193,43 @@ bool Interior::read(std::istream &stream) {
 	IO::read_as<U32, U16>(stream, &polyListPointIndex, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "polyListPointIndex"); //polyListPointIndex
 	//Not sure if this should be a read_as, but I haven't seen any evidence
 	// of needing that for U8 lists.
-	READTOVAR(polyListStringCharacter, std::vector<U8>); //polyListStringCharacter
+	READCHECK(polyListStringCharacter, std::vector<U8>); //polyListStringCharacter
 
 	coordBin.reserve(gNumCoordBins * gNumCoordBins);
 	for (U32 i = 0; i < gNumCoordBins * gNumCoordBins; i ++) {
 		CoordBin bin;
-		if (READTOVAR(bin, CoordBin)) //coordBin
+		if (IO::read(stream, &bin, "coordBin")) //coordBin
 			coordBin.push_back(bin);
 		else
 			return false;
 	}
 
 	IO::read_as<U16, U16>(stream, &coordBinIndex, [](bool useAlternate, U32 param)->bool{return true;}, "coordBinIndex"); //coordBinIndex
-	READTOVAR(coordBinMode, U32); //coordBinMode
+	READCHECK(coordBinMode, U32); //coordBinMode
 	if (this->interiorFileVersion == 4) { //All of this is missing in v4 as well. Saves no space.
 		baseAmbientColor = ColorI(0, 0, 0, 255);
 		alarmAmbientColor = ColorI(0, 0, 0, 255);
 		extendedLightMapData = 0;
 		lightMapBorderSize = 0;
 	} else {
-		READTOVAR(baseAmbientColor, ColorI); //baseAmbientColor
-		READTOVAR(alarmAmbientColor, ColorI); //alarmAmbientColor
+		READCHECK(baseAmbientColor, ColorI); //baseAmbientColor
+		READCHECK(alarmAmbientColor, ColorI); //alarmAmbientColor
 
 		if (this->interiorFileVersion >= 10) {
-			READTOVAR(staticMesh, std::vector<StaticMesh>); //staticMesh
+			READCHECK(staticMesh, std::vector<StaticMesh>); //staticMesh
 		}
 		if (this->interiorFileVersion >= 11) {
-			READTOVAR(texNormal, std::vector<Point3F>); //texNormal
-			READTOVAR(texMatrix, std::vector<TexMatrix>); //texMatrix
-			READTOVAR(texMatIndex, std::vector<U32>); //texMatIndex
+			READCHECK(texNormal, std::vector<Point3F>); //texNormal
+			READCHECK(texMatrix, std::vector<TexMatrix>); //texMatrix
+			READCHECK(texMatIndex, std::vector<U32>); //texMatIndex
 		} else {
 			READ(U32); //numTexNormals
 			READ(U32); //numTexMatrices
 			READ(U32); //numTexMatIndices
 		}
-		READTOVAR(extendedLightMapData, U32); //extendedLightMapData
+		READCHECK(extendedLightMapData, U32); //extendedLightMapData
 		if (extendedLightMapData) {
-			READTOVAR(lightMapBorderSize, U32); //lightMapBorderSize
+			READCHECK(lightMapBorderSize, U32); //lightMapBorderSize
 			READ(U32); //dummy
 		} else {
 			lightMapBorderSize = 0;
@@ -309,8 +309,8 @@ bool Interior::write(std::ostream &stream) const {
 //----------------------------------------------------------------------------
 
 bool Plane::read(std::istream &stream) {
-	READTOVAR(normalIndex, U16); //normalIndex
-	READTOVAR(planeDistance, F32); //planeDistance
+	READCHECK(normalIndex, U16); //normalIndex
+	READCHECK(planeDistance, F32); //planeDistance
 	return true;
 }
 
@@ -321,8 +321,8 @@ bool Plane::write(std::ostream &stream) const {
 }
 
 bool TexGenEq::read(std::istream &stream) {
-	READTOVAR(planeX, PlaneF); //planeX
-	READTOVAR(planeY, PlaneF); //planeY
+	READCHECK(planeX, PlaneF); //planeX
+	READCHECK(planeY, PlaneF); //planeY
 	return true;
 }
 
@@ -333,11 +333,11 @@ bool TexGenEq::write(std::ostream &stream) const {
 }
 
 bool BSPNode::read(std::istream &stream, U32 interiorFileVersion) {
-	READTOVAR(planeIndex, U16); //planeIndex
+	READCHECK(planeIndex, U16); //planeIndex
 	if (interiorFileVersion >= 14) {
 		U32 tmpFront, tmpBack;
-		READTOVAR(tmpFront, U32); //frontIndex
-		READTOVAR(tmpBack, U32); //backIndex
+		READCHECK(tmpFront, U32); //frontIndex
+		READCHECK(tmpBack, U32); //backIndex
 
 		//Fuckers
 		if ((tmpFront & 0x80000) != 0) {
@@ -356,8 +356,8 @@ bool BSPNode::read(std::istream &stream, U32 interiorFileVersion) {
 		frontIndex = tmpFront;
 		backIndex = tmpBack;
 	} else {
-		READTOVAR(frontIndex, U16); //frontIndex
-		READTOVAR(backIndex, U16); //backIndex
+		READCHECK(frontIndex, U16); //frontIndex
+		READCHECK(backIndex, U16); //backIndex
 	}
 	return true;
 }
@@ -370,8 +370,8 @@ bool BSPNode::write(std::ostream &stream) const {
 }
 
 bool BSPSolidLeaf::read(std::istream &stream) {
-	READTOVAR(surfaceIndex, U32); //surfaceIndex
-	READTOVAR(surfaceCount, U16); //surfaceCount
+	READCHECK(surfaceIndex, U32); //surfaceIndex
+	READCHECK(surfaceCount, U16); //surfaceCount
 	return true;
 }
 
@@ -382,8 +382,8 @@ bool BSPSolidLeaf::write(std::ostream &stream) const {
 }
 
 bool WindingIndex::read(std::istream &stream) {
-	READTOVAR(windingStart, U32); //windingStart
-	READTOVAR(windingCount, U32); //windingCount
+	READCHECK(windingStart, U32); //windingStart
+	READCHECK(windingCount, U32); //windingCount
 	return true;
 }
 
@@ -394,14 +394,14 @@ bool WindingIndex::write(std::ostream &stream) const {
 }
 
 bool Zone::read(std::istream &stream, U32 interiorFileVersion) {
-	READTOVAR(portalStart, U16); //portalStart
-	READTOVAR(portalCount, U16); //portalCount
-	READTOVAR(surfaceStart, U32); //surfaceStart
-	READTOVAR(surfaceCount, U32); //surfaceCount
+	READCHECK(portalStart, U16); //portalStart
+	READCHECK(portalCount, U16); //portalCount
+	READCHECK(surfaceStart, U32); //surfaceStart
+	READCHECK(surfaceCount, U32); //surfaceCount
 	if (interiorFileVersion >= 12) {
-		READTOVAR(staticMeshStart, U32); //staticMeshStart
-		READTOVAR(staticMeshCount, U32); //staticMeshCount
-//		READTOVAR(flags, U16); //flags
+		READCHECK(staticMeshStart, U32); //staticMeshStart
+		READCHECK(staticMeshCount, U32); //staticMeshCount
+//		READCHECK(flags, U16); //flags
 	} else {
 		staticMeshStart = 0;
 		staticMeshCount = 0;
@@ -419,10 +419,10 @@ bool Zone::write(std::ostream &stream) const {
 }
 
 bool Edge::read(std::istream &stream) {
-	READTOVAR(pointIndex0, S32); //pointIndex0
-	READTOVAR(pointIndex1, S32); //pointIndex1
-	READTOVAR(surfaceIndex0, S32); //surfaceIndex0
-	READTOVAR(surfaceIndex1, S32); //surfaceIndex1
+	READCHECK(pointIndex0, S32); //pointIndex0
+	READCHECK(pointIndex1, S32); //pointIndex1
+	READCHECK(surfaceIndex0, S32); //surfaceIndex0
+	READCHECK(surfaceIndex1, S32); //surfaceIndex1
 	return true;
 }
 
@@ -435,11 +435,11 @@ bool Edge::write(std::ostream &stream) const {
 }
 
 bool Portal::read(std::istream &stream) {
-	READTOVAR(planeIndex, U16); //planeIndex
-	READTOVAR(triFanCount, U16); //triFanCount
-	READTOVAR(triFanStart, U32); //triFanStart
-	READTOVAR(zoneFront, U16); //zoneFront
-	READTOVAR(zoneBack, U16); //zoneBack
+	READCHECK(planeIndex, U16); //planeIndex
+	READCHECK(triFanCount, U16); //triFanCount
+	READCHECK(triFanStart, U32); //triFanStart
+	READCHECK(zoneFront, U16); //zoneFront
+	READCHECK(zoneBack, U16); //zoneBack
 	return true;
 }
 
@@ -453,9 +453,9 @@ bool Portal::write(std::ostream &stream) const {
 }
 
 bool LightMapF::read(std::istream &stream) {
-	READTOVAR(finalWord, U16); //finalWord
-	READTOVAR(texGenXDistance, F32); //texGenXDistance
-	READTOVAR(texGenYDistance, F32); //texGenYDistance
+	READCHECK(finalWord, U16); //finalWord
+	READCHECK(texGenXDistance, F32); //texGenXDistance
+	READCHECK(texGenYDistance, F32); //texGenYDistance
 	return true;
 }
 
@@ -467,11 +467,11 @@ bool LightMapF::write(std::ostream &stream) const {
 }
 
 bool Surface::read(std::istream &stream, U32 interiorFileVersion, bool isTGEInterior, U32 indexSize, U32 planeSize, U32 materialSize, U32 texGenEqSize) {
-	READTOVAR(windingStart, U32); //windingStart
+	READCHECK(windingStart, U32); //windingStart
 	if (interiorFileVersion >= 13) {
-		READTOVAR(windingCount, U32); //windingCount
+		READCHECK(windingCount, U32); //windingCount
 	} else {
-		READTOVAR(windingCount, U8); //windingCount
+		READCHECK(windingCount, U8); //windingCount
 	}
 	if (windingStart + windingCount > indexSize)
 		return false;
@@ -485,30 +485,30 @@ bool Surface::read(std::istream &stream, U32 interiorFileVersion, bool isTGEInte
 	if (planeIndex > planeSize)
 		return false;
 
-	READTOVAR(textureIndex, U16); //textureIndex
+	READCHECK(textureIndex, U16); //textureIndex
 	if (textureIndex > materialSize)
 		return false;
 
-	READTOVAR(texGenIndex, U32); //texGenIndex
+	READCHECK(texGenIndex, U32); //texGenIndex
 	if (texGenIndex > texGenEqSize)
 		return false;
 
-	READTOVAR(surfaceFlags, U8); //surfaceFlags
-	READTOVAR(fanMask, U32); //fanMask
-	READTOVAR(lightMap, LightMapF); //lightMap
-	READTOVAR(lightCount, U16); //lightCount
-	READTOVAR(lightStateInfoStart, U32); //lightStateInfoStart
+	READCHECK(surfaceFlags, U8); //surfaceFlags
+	READCHECK(fanMask, U32); //fanMask
+	READCHECK(lightMap, LightMapF); //lightMap
+	READCHECK(lightCount, U16); //lightCount
+	READCHECK(lightStateInfoStart, U32); //lightStateInfoStart
 
 	if (interiorFileVersion >= 13) {
-		READTOVAR(mapOffsetX, U32); //mapOffsetX
-		READTOVAR(mapOffsetY, U32); //mapOffsetY
-		READTOVAR(mapSizeX, U32); //mapSizeX
-		READTOVAR(mapSizeY, U32); //mapSizeY
+		READCHECK(mapOffsetX, U32); //mapOffsetX
+		READCHECK(mapOffsetY, U32); //mapOffsetY
+		READCHECK(mapSizeX, U32); //mapSizeX
+		READCHECK(mapSizeY, U32); //mapSizeY
 	} else {
-		READTOVAR(mapOffsetX, U8); //mapOffsetX
-		READTOVAR(mapOffsetY, U8); //mapOffsetY
-		READTOVAR(mapSizeX, U8); //mapSizeX
-		READTOVAR(mapSizeY, U8); //mapSizeY
+		READCHECK(mapOffsetX, U8); //mapOffsetX
+		READCHECK(mapOffsetY, U8); //mapOffsetY
+		READCHECK(mapSizeX, U8); //mapSizeX
+		READCHECK(mapSizeY, U8); //mapSizeY
 	}
 
 	if (!isTGEInterior) {
@@ -542,13 +542,13 @@ bool Surface::write(std::ostream &stream) const {
 }
 
 bool NullSurface::read(std::istream &stream, U32 interiorFileVersion) {
-	READTOVAR(windingStart, U32); //windingStart
-	READTOVAR(planeIndex, U16); //planeIndex
-	READTOVAR(surfaceFlags, U8); //surfaceFlags
+	READCHECK(windingStart, U32); //windingStart
+	READCHECK(planeIndex, U16); //planeIndex
+	READCHECK(surfaceFlags, U8); //surfaceFlags
 	if (interiorFileVersion >= 13) {
-		READTOVAR(windingCount, U32); //windingCount
+		READCHECK(windingCount, U32); //windingCount
 	} else {
-		READTOVAR(windingCount, U8); //windingCount
+		READCHECK(windingCount, U8); //windingCount
 	}
 	return true;
 }
@@ -562,12 +562,12 @@ bool NullSurface::write(std::ostream &stream) const {
 }
 
 bool LightMap::read(std::istream &stream, bool isTGEInterior) {
-	READTOVAR(lightMap, PNG); //lightMap
+	READCHECK(lightMap, PNG); //lightMap
 	if (!isTGEInterior) {
 		//These aren't even used in the real game!
-		READTOVAR(lightDirMap, PNG); //lightDirMap
+		READCHECK(lightDirMap, PNG); //lightDirMap
 	}
-	READTOVAR(keepLightMap, U8); //keepLightMap
+	READCHECK(keepLightMap, U8); //keepLightMap
 	return true;
 }
 
@@ -578,11 +578,11 @@ bool LightMap::write(std::ostream &stream) const {
 }
 
 bool AnimatedLight::read(std::istream &stream) {
-	READTOVAR(nameIndex, U32); //nameIndex
-	READTOVAR(stateIndex, U32); //stateIndex
-	READTOVAR(stateCount, U16); //stateCount
-	READTOVAR(flags, U16); //flags
-	READTOVAR(duration, U32); //duration
+	READCHECK(nameIndex, U32); //nameIndex
+	READCHECK(stateIndex, U32); //stateIndex
+	READCHECK(stateCount, U16); //stateCount
+	READCHECK(flags, U16); //flags
+	READCHECK(duration, U32); //duration
 	return true;
 }
 
@@ -596,12 +596,12 @@ bool AnimatedLight::write(std::ostream &stream) const {
 }
 
 bool LightState::read(std::istream &stream) {
-	READTOVAR(red, U8); //red
-	READTOVAR(green, U8); //green
-	READTOVAR(blue, U8); //blue
-	READTOVAR(activeTime, U32); //activeTime
-	READTOVAR(dataIndex, U32); //dataIndex
-	READTOVAR(dataCount, U16); //dataCount
+	READCHECK(red, U8); //red
+	READCHECK(green, U8); //green
+	READCHECK(blue, U8); //blue
+	READCHECK(activeTime, U32); //activeTime
+	READCHECK(dataIndex, U32); //dataIndex
+	READCHECK(dataCount, U16); //dataCount
 	return true;
 }
 
@@ -616,9 +616,9 @@ bool LightState::write(std::ostream &stream) const {
 }
 
 bool StateData::read(std::istream &stream) {
-	READTOVAR(surfaceIndex, U32); //surfaceIndex
-	READTOVAR(mapIndex, U32); //mapIndex
-	READTOVAR(lightStateIndex, U16); //lightStateIndex
+	READCHECK(surfaceIndex, U32); //surfaceIndex
+	READCHECK(mapIndex, U32); //mapIndex
+	READCHECK(lightStateIndex, U16); //lightStateIndex
 	return true;
 }
 
@@ -630,23 +630,23 @@ bool StateData::write(std::ostream &stream) const {
 }
 
 bool ConvexHull::read(std::istream &stream, U32 interiorFileVersion) {
-	READTOVAR(hullStart, U32); //hullStart
-	READTOVAR(hullCount, U16); //hullCount
-	READTOVAR(minX, F32); //minX
-	READTOVAR(maxX, F32); //maxX
-	READTOVAR(minY, F32); //minY
-	READTOVAR(maxY, F32); //maxY
-	READTOVAR(minZ, F32); //minZ
-	READTOVAR(maxZ, F32); //maxZ
-	READTOVAR(surfaceStart, U32); //surfaceStart
-	READTOVAR(surfaceCount, U16); //surfaceCount
-	READTOVAR(planeStart, U32); //planeStart
-	READTOVAR(polyListPlaneStart, U32); //polyListPlaneStart
-	READTOVAR(polyListPointStart, U32); //polyListPointStart
-	READTOVAR(polyListStringStart, U32); //polyListStringStart
+	READCHECK(hullStart, U32); //hullStart
+	READCHECK(hullCount, U16); //hullCount
+	READCHECK(minX, F32); //minX
+	READCHECK(maxX, F32); //maxX
+	READCHECK(minY, F32); //minY
+	READCHECK(maxY, F32); //maxY
+	READCHECK(minZ, F32); //minZ
+	READCHECK(maxZ, F32); //maxZ
+	READCHECK(surfaceStart, U32); //surfaceStart
+	READCHECK(surfaceCount, U16); //surfaceCount
+	READCHECK(planeStart, U32); //planeStart
+	READCHECK(polyListPlaneStart, U32); //polyListPlaneStart
+	READCHECK(polyListPointStart, U32); //polyListPointStart
+	READCHECK(polyListStringStart, U32); //polyListStringStart
 
 	if (interiorFileVersion >= 12) {
-		READTOVAR(staticMesh, U8); //staticMesh
+		READCHECK(staticMesh, U8); //staticMesh
 	} else {
 		staticMesh = 0;
 	}
@@ -672,8 +672,8 @@ bool ConvexHull::write(std::ostream &stream) const {
 }
 
 bool CoordBin::read(std::istream &stream) {
-	READTOVAR(binStart, U32); //binStart
-	READTOVAR(binCount, U32); //binCount
+	READCHECK(binStart, U32); //binStart
+	READCHECK(binCount, U32); //binCount
 	return true;
 }
 
@@ -684,9 +684,9 @@ bool CoordBin::write(std::ostream &stream) const {
 }
 
 bool TexMatrix::read(std::istream &stream) {
-	READTOVAR(T, S32); //T
-	READTOVAR(N, S32); //N
-	READTOVAR(B, S32); //B
+	READCHECK(T, S32); //T
+	READCHECK(N, S32); //N
+	READCHECK(B, S32); //B
 	return true;
 }
 

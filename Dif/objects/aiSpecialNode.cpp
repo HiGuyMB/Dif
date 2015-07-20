@@ -29,8 +29,8 @@
 #include "aiSpecialNode.h"
 
 bool AISpecialNode::read(std::istream &stream) {
-	READTOVAR(name, std::string); //name
-	READTOVAR(position, Point3F); //position
+	READCHECK(name, std::string); //name
+	READCHECK(position, Point3F); //position
 
 	return true;
 }

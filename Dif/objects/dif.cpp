@@ -42,12 +42,12 @@ bool DIF::read(std::istream &stream) {
 		READ(PNG); //previewBitmap
 	}
 
-	READTOVAR(interior, std::vector<Interior>); //interior
-	READTOVAR(subObject, std::vector<Interior>); //subObject
-	READTOVAR(trigger, std::vector<Trigger>); //trigger
-	READTOVAR(interiorPathFollower, std::vector<InteriorPathFollower>); //interiorPathFollower
-	READTOVAR(forceField, std::vector<ForceField>); //forceField
-	READTOVAR(aiSpecialNode, std::vector<AISpecialNode>); //aiSpecialNode
+	READCHECK(interior, std::vector<Interior>); //interior
+	READCHECK(subObject, std::vector<Interior>); //subObject
+	READCHECK(trigger, std::vector<Trigger>); //trigger
+	READCHECK(interiorPathFollower, std::vector<InteriorPathFollower>); //interiorPathFollower
+	READCHECK(forceField, std::vector<ForceField>); //forceField
+	READCHECK(aiSpecialNode, std::vector<AISpecialNode>); //aiSpecialNode
 	if (READ(U32) == 1) { //readVehicleCollision
 		vehicleCollision.read(stream); //vehicleCollision
 	}
@@ -56,7 +56,7 @@ bool DIF::read(std::istream &stream) {
 	READ(U32); //unknown
 	READ(U32); //unknown
 	if (READ(U32) == 2) { //readGameEntities
-		READTOVAR(gameEntity, std::vector<GameEntity>); //gameEntity
+		READCHECK(gameEntity, std::vector<GameEntity>); //gameEntity
 	}
 	READ(U32); //dummy
 

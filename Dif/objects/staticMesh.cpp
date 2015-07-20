@@ -29,23 +29,23 @@
 #include <assert.h>
 
 bool StaticMesh::read(std::istream &stream) {
-	READTOVAR(primitive, std::vector<Primitive>); //primitive
-	READTOVAR(index, std::vector<U16>); //index
-	READTOVAR(vertex, std::vector<Point3F>); //vertex
-	READTOVAR(normal, std::vector<Point3F>); //normal
-	READTOVAR(diffuseUV, std::vector<Point2F>); //diffuseUV
-	READTOVAR(lightmapUV, std::vector<Point2F>); //lightmapUV
+	READCHECK(primitive, std::vector<Primitive>); //primitive
+	READCHECK(index, std::vector<U16>); //index
+	READCHECK(vertex, std::vector<Point3F>); //vertex
+	READCHECK(normal, std::vector<Point3F>); //normal
+	READCHECK(diffuseUV, std::vector<Point2F>); //diffuseUV
+	READCHECK(lightmapUV, std::vector<Point2F>); //lightmapUV
 
-	READTOVAR(hasMaterialList, U8); //hasMaterialList
+	READCHECK(hasMaterialList, U8); //hasMaterialList
 	if (hasMaterialList) {
 		baseMaterialList.read(stream); //baseMaterialList
 	}
 
-	READTOVAR(hasSolid, U8); //hasSolid
-	READTOVAR(hasTranslucency, U8); //hasTranslucency
-	READTOVAR(bounds, BoxF); //bounds
-	READTOVAR(transform, MatrixF); //transform
-	READTOVAR(scale, Point3F); //scale
+	READCHECK(hasSolid, U8); //hasSolid
+	READCHECK(hasTranslucency, U8); //hasTranslucency
+	READCHECK(bounds, BoxF); //bounds
+	READCHECK(transform, MatrixF); //transform
+	READCHECK(scale, Point3F); //scale
 
 	return true;
 }
@@ -73,17 +73,17 @@ bool StaticMesh::write(std::ostream &stream) const {
 }
 
 bool Primitive::read(std::istream &stream) {
-	READTOVAR(alpha, U8); //alpha
-	READTOVAR(texS, U32); //texS
-	READTOVAR(texT, U32); //texT
-	READTOVAR(diffuseIndex, S32); //diffuseIndex
-	READTOVAR(lightMapIndex, S32); //lightMapIndex
-	READTOVAR(start, U32); //start
-	READTOVAR(count, U32); //count
-	READTOVAR(lightMapEquationX, PlaneF); //lightMapEquationX
-	READTOVAR(lightMapEquationY, PlaneF); //lightMapEquationY
-	READTOVAR(lightMapOffset, Point2I); //lightMapOffset
-	READTOVAR(lightMapSize, Point2I); //lightMapSize
+	READCHECK(alpha, U8); //alpha
+	READCHECK(texS, U32); //texS
+	READCHECK(texT, U32); //texT
+	READCHECK(diffuseIndex, S32); //diffuseIndex
+	READCHECK(lightMapIndex, S32); //lightMapIndex
+	READCHECK(start, U32); //start
+	READCHECK(count, U32); //count
+	READCHECK(lightMapEquationX, PlaneF); //lightMapEquationX
+	READCHECK(lightMapEquationY, PlaneF); //lightMapEquationY
+	READCHECK(lightMapOffset, Point2I); //lightMapOffset
+	READCHECK(lightMapSize, Point2I); //lightMapSize
 
 	return true;
 }

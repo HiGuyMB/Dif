@@ -29,19 +29,19 @@
 #include "forceField.h"
 
 bool ForceField::read(std::istream &stream) {
-	READTOVAR(forceFieldFileVersion, U32); //forceFieldFileVersion
-	READTOVAR(name, std::string); //name
-	READTOVAR(trigger, std::vector<std::string>); //trigger
-	READTOVAR(boundingBox, BoxF); //boundingBox
-	READTOVAR(boundingSphere, SphereF); //boundingSphere
-	READTOVAR(normal, std::vector<Point3F>); //normal
-	READTOVAR(plane, std::vector<Plane_FF>); //plane
-	READTOVAR(BSPNode, std::vector<BSPNode_FF>); //BSPNode
-	READTOVAR(BSPSolidLeaf, std::vector<BSPSolidLeaf_FF>); //BSPSolidLeaf
-	READTOVAR(index, std::vector<U32>); //index
-	READTOVAR(surface, std::vector<Surface_FF>); //surface
-	READTOVAR(solidLeafSurface, std::vector<U32>); //solidLeafSurface
-	READTOVAR(color, ColorI); //color
+	READCHECK(forceFieldFileVersion, U32); //forceFieldFileVersion
+	READCHECK(name, std::string); //name
+	READCHECK(trigger, std::vector<std::string>); //trigger
+	READCHECK(boundingBox, BoxF); //boundingBox
+	READCHECK(boundingSphere, SphereF); //boundingSphere
+	READCHECK(normal, std::vector<Point3F>); //normal
+	READCHECK(plane, std::vector<Plane_FF>); //plane
+	READCHECK(BSPNode, std::vector<BSPNode_FF>); //BSPNode
+	READCHECK(BSPSolidLeaf, std::vector<BSPSolidLeaf_FF>); //BSPSolidLeaf
+	READCHECK(index, std::vector<U32>); //index
+	READCHECK(surface, std::vector<Surface_FF>); //surface
+	READCHECK(solidLeafSurface, std::vector<U32>); //solidLeafSurface
+	READCHECK(color, ColorI); //color
 
 	return true;
 }
@@ -65,8 +65,8 @@ bool ForceField::write(std::ostream &stream) const {
 }
 
 bool Plane_FF::read(std::istream &stream) {
-	READTOVAR(normalIndex, U32); //normalIndex
-	READTOVAR(planeDistance, F32); //planeDistance
+	READCHECK(normalIndex, U32); //normalIndex
+	READCHECK(planeDistance, F32); //planeDistance
 
 	return true;
 }
@@ -79,8 +79,8 @@ bool Plane_FF::write(std::ostream &stream) const {
 }
 
 bool BSPNode_FF::read(std::istream &stream) {
-	READTOVAR(frontIndex, U16); //frontIndex
-	READTOVAR(backIndex, U16); //backIndex
+	READCHECK(frontIndex, U16); //frontIndex
+	READCHECK(backIndex, U16); //backIndex
 
 	return true;
 }
@@ -93,8 +93,8 @@ bool BSPNode_FF::write(std::ostream &stream) const {
 }
 
 bool BSPSolidLeaf_FF::read(std::istream &stream) {
-	READTOVAR(surfaceIndex, U32); //surfaceIndex
-	READTOVAR(surfaceCount, U16); //surfaceCount
+	READCHECK(surfaceIndex, U32); //surfaceIndex
+	READCHECK(surfaceCount, U16); //surfaceCount
 
 	return true;
 }
@@ -107,11 +107,11 @@ bool BSPSolidLeaf_FF::write(std::ostream &stream) const {
 }
 
 bool Surface_FF::read(std::istream &stream) {
-	READTOVAR(windingStart, U32); //windingStart
-	READTOVAR(windingCount, U8); //windingCount
-	READTOVAR(planeIndex, U16); //planeIndex
-	READTOVAR(surfaceFlags, U8); //surfaceFlags
-	READTOVAR(fanMask, U32); //fanMask
+	READCHECK(windingStart, U32); //windingStart
+	READCHECK(windingCount, U8); //windingCount
+	READCHECK(planeIndex, U16); //planeIndex
+	READCHECK(surfaceFlags, U8); //surfaceFlags
+	READCHECK(fanMask, U32); //fanMask
 
 	return true;
 }

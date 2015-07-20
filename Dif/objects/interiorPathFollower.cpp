@@ -29,14 +29,14 @@
 #include "interiorPathFollower.h"
 
 bool InteriorPathFollower::read(std::istream &stream) {
-	READTOVAR(name, std::string); //name
-	READTOVAR(datablock, std::string); //datablock
-	READTOVAR(interiorResIndex, U32); //interiorResIndex
-	READTOVAR(offset, Point3F); //offset
-	READTOVAR(properties, Dictionary); //properties
-	READTOVAR(triggerId, std::vector<U32>); //triggerId
-	READTOVAR(wayPoint, std::vector<WayPoint>); //wayPoint
-	READTOVAR(totalMS, U32); //totalMS
+	READCHECK(name, std::string); //name
+	READCHECK(datablock, std::string); //datablock
+	READCHECK(interiorResIndex, U32); //interiorResIndex
+	READCHECK(offset, Point3F); //offset
+	READCHECK(properties, Dictionary); //properties
+	READCHECK(triggerId, std::vector<U32>); //triggerId
+	READCHECK(wayPoint, std::vector<WayPoint>); //wayPoint
+	READCHECK(totalMS, U32); //totalMS
 
 	return true;
 }
@@ -55,10 +55,10 @@ bool InteriorPathFollower::write(std::ostream &stream) const {
 }
 
 bool WayPoint::read(std::istream &stream) {
-	READTOVAR(position, Point3F); //position
-	READTOVAR(rotation, QuatF); //rotation
-	READTOVAR(msToNext, U32); //msToNext
-	READTOVAR(smoothingType, U32); //smoothingType
+	READCHECK(position, Point3F); //position
+	READCHECK(rotation, QuatF); //rotation
+	READCHECK(msToNext, U32); //msToNext
+	READCHECK(smoothingType, U32); //smoothingType
 
 	return true;
 }

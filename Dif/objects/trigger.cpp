@@ -31,11 +31,11 @@
 #include "trigger.h"
 
 bool Trigger::read(std::istream &stream) {
-	READTOVAR(name, std::string); //name
-	READTOVAR(datablock, std::string); //datablock
-	READTOVAR(properties, Dictionary); //properties
-	READTOVAR(polyhedron, PolyHedron); //polyhedron
-	READTOVAR(offset, Point3F); //offset
+	READCHECK(name, std::string); //name
+	READCHECK(datablock, std::string); //datablock
+	READCHECK(properties, Dictionary); //properties
+	READCHECK(polyhedron, PolyHedron); //polyhedron
+	READCHECK(offset, Point3F); //offset
 
 	return true;
 }
@@ -51,9 +51,9 @@ bool Trigger::write(std::ostream &stream) const {
 }
 
 bool PolyHedron::read(std::istream &stream) {
-	READTOVAR(pointList, std::vector<Point3F>); //point
-	READTOVAR(planeList, std::vector<PlaneF>); //plane
-	READTOVAR(edgeList, std::vector<PolyHedronEdge>); //polyHedronEdge
+	READCHECK(pointList, std::vector<Point3F>); //point
+	READCHECK(planeList, std::vector<PlaneF>); //plane
+	READCHECK(edgeList, std::vector<PolyHedronEdge>); //polyHedronEdge
 
 	return true;
 }
@@ -68,10 +68,10 @@ bool PolyHedron::write(std::ostream &stream) const {
 
 
 bool PolyHedronEdge::read(std::istream &stream) {
-	READTOVAR(face[0], U32); //face0
-	READTOVAR(face[1], U32); //face1
-	READTOVAR(vertex[0], U32); //vertex0
-	READTOVAR(vertex[1], U32); //vertex1
+	READCHECK(face[0], U32); //face0
+	READCHECK(face[1], U32); //face1
+	READCHECK(vertex[0], U32); //vertex0
+	READCHECK(vertex[1], U32); //vertex1
 
 	return true;
 }

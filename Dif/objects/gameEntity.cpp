@@ -29,10 +29,10 @@
 #include "gameEntity.h"
 
 bool GameEntity::read(std::istream &stream) {
-	READTOVAR(datablock, std::string); //datablock
-	READTOVAR(gameClass, std::string); //gameClass
-	READTOVAR(position, Point3F); //position
-	READTOVAR(properties, Dictionary); //properties
+	READCHECK(datablock, std::string); //datablock
+	READCHECK(gameClass, std::string); //gameClass
+	READCHECK(position, Point3F); //position
+	READCHECK(properties, Dictionary); //properties
 
 	return true;
 }
