@@ -27,6 +27,7 @@
 
 //Warning: This is the scary file.
 
+#include <assert.h>
 #include "io.h"
 #include "interior.h"
 #include "math.h"
@@ -163,6 +164,7 @@ bool Interior::read(std::istream &stream) {
 		READTOVAR(nameBufferCharacter, std::vector<U8>); //nameBufferCharacter
 
 		READTOVAR(numSubObjects, U32);
+		assert(numSubObjects == 0); //Can't support these currently
 //		READLOOP(numSubObjects) {
 //			//NFC
 //		}
