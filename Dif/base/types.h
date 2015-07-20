@@ -82,15 +82,6 @@ typedef std::vector<std::pair<std::string, std::string>> Dictionary;
 
 //More names stolen from TGE
 
-class AngAxisF {
-public:
-	Point3F axis;
-	F32 angle;
-
-	AngAxisF(const Point3F &axis, const F32 &angle) : axis(axis), angle(angle) {};
-	AngAxisF(const F32 &angle, const Point3F &axis) : axis(axis), angle(angle) {};
-};
-
 class QuatF : public Readable, public Writable {
 public:
 	F32 w;
