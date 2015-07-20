@@ -170,9 +170,12 @@ public:
 	}
 
 	/**
-	 Read a vector from a stream
+	 Read a vector from a stream, with the option to read as a secondary type if
+	 a given condition passes.
 	 @var stream - The stream from which the data is read
 	 @var value - A pointer into which the data will be read
+	 @var condition - A function that determines whether the second type should be used.
+	                  Arguments are (bool isSigned, U32 param).
 	 @var name - A string containing the name of the variable (for debugging)
 	 @return If the operation was successful
 	 */
@@ -189,14 +192,14 @@ public:
 		// save ~50KB/interior, but was it worth the pain?
 
 		//Params to use for the condition
-		bool useAlternate = false;
+		bool isSigned = false;
 		U8 param = 0;
 
 		//Should we use the alternate version?
 		if (size & 0x80000000) {
 			//Flip the sign bit
 			size ^= 0x80000000;
-			useAlternate = true;
+			isSigned = true;
 
 			//Extra U8 of data in each of these, almost never used but still there
 			if (!read(stream, param, "param"))
@@ -209,7 +212,7 @@ public:
 		//Read all the objects
 		for (int i = 0; i < size; i ++) {
 			//Should we use the alternate type? Lambda functions to the rescue!
-			if (condition(useAlternate, param)) {
+			if (condition(isSigned, param)) {
 				type2 obj;
 				//Make sure the read succeeds
 				if (read(stream, obj, "obj"))
@@ -231,9 +234,12 @@ public:
 	}
 
 	/**
-	 Read a vector from a stream
+	 Read a vector from a stream, but use a given method for reading instead of 
+	 the standard call to read().
 	 @var stream - The stream from which the data is read
 	 @var value - A pointer into which the data will be read
+	 @var passed_method - A function which will read the object's fields from the stream.
+	                      Arguments are (T &object, std::istream &stream)
 	 @var name - A string containing the name of the variable (for debugging)
 	 @return If the operation was successful
 	 */
@@ -260,9 +266,12 @@ public:
 	}
 
 	/**
-	 Read a vector from a stream
+	 Read a vector from a stream, but call an extra method after the size is read,
+	 before the actual contents are read.
 	 @var stream - The stream from which the data is read
 	 @var value - A pointer into which the data will be read
+	 @var extra_method - A function that will be called before the contents are read.
+	                     Arguments are (std::istream &stream)
 	 @var name - A string containing the name of the variable (for debugging)
 	 @return If the operation was successful
 	 */
@@ -386,9 +395,12 @@ public:
 	}
 
 	/**
-	 Write a vector to a stream
+	 Write a vector to a stream, but call an extra method after the size is written,
+	 before the actual contents are written.
 	 @var stream - The stream to which the data is written
 	 @var value - The vector to write
+	 @var extra_method - A function that will be called before the contents are written.
+	                     Arguments are (std::ostream &stream)
 	 @var name - A string containing the name of the variable (for debugging)
 	 @return If the operation was successful
 	 */
