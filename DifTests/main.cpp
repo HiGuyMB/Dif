@@ -18,6 +18,17 @@ void printTriggers(DIF *dif) {
 		std::cout << "};" << std::endl;
 	}
 }
+
+void printEntities(DIF *dif) {
+	for (int i = 0; i < dif->numGameEntities; i ++) {
+		GameEntity *entity = dif->gameEntity[i];
+		std::cout << "new " << entity->gameClass << "() {" << std::endl;
+		std::cout << "   position = \"" << entity->position.x << " " << entity->position.y << " " << entity->position.z << "\";" << std::endl;
+		std::cout << "   rotation = \"1 0 0 0\";" << std::endl;
+		std::cout << "   scale = \"1 1 1 \";" << std::endl;
+		std::cout << "   datablock = \"" << entity->datablock <<  "\";" << std::endl;
+		for (auto it : entity->properties) {
+			std::cout << "      " << it.first << " = \"" << it.second << "\";" << std::endl;
 		}
 		std::cout << "};" << std::endl;
 	}
@@ -51,5 +62,16 @@ bool testEquality(const char *file) {
 }
 
 int main(int argc, const char * argv[]) {
+	//Read it into the dif
+	std::filebuf fb;
+	if (fb.open(argv[1], std::ios::in)) {
+		std::istream stream(&fb);
+		DIF *dif = new DIF(stream);
+		fb.close();
+
+		printTriggers(dif);
+		printEntities(dif);
+		delete dif;
+	}
 	return testEquality(argv[1]) ? 0 : 1;
 }
