@@ -448,34 +448,6 @@ public:
 		}
 		return true;
 	}
-
-	/**
-	 * Get the path of a file up to but not including the file name
-	 * @param file The file whose path to get
-	 * @param separator The directory separator to use (platform-specific by default)
-	 * @return The file's path
-	 */
-	static const std::string getPath(const std::string &file, const char &separator = DIR_SEP);
-	/**
-	 * Get the name of a file inluding the directory but not the path
-	 * @param file The file whose name to get
-	 * @param separator The directory separator to use (platform-specific by default)
-	 * @return The file's name
-	 */
-	static const std::string getName(const std::string &file, const char &separator = DIR_SEP);
-	/**
-	 * Get the extension of a file
-	 * @param file The file whose extension to get
-	 * @return The file's extension
-	 */
-	static const std::string getExtension(const std::string &file);
-	/**
-	 * Get the base name of a file including neither directory nor path
-	 * @param file The file whose base name to get
-	 * @param separator The directory separator to use (platform-specific by default)
-	 * @return The file's base name
-	 */
-	static const std::string getBase(const std::string &file, const char &separator = DIR_SEP);
 };
 
 template <typename T>

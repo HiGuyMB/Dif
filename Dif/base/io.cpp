@@ -164,34 +164,4 @@ bool PNG::write(std::ostream &stream) const {
 	return true;
 }
 
-const std::string IO::getPath(const std::string &file, const char &seperator) {
-	std::string::size_type last = file.find_last_of(seperator);
-	if (last != std::string::npos)
-		return file.substr(0, last);
-	return "";
-}
-const std::string IO::getName(const std::string &file, const char &seperator) {
-	std::string::size_type last = file.find_last_of(seperator) + 1;
-	if (last != std::string::npos)
-		return file.substr(last);
-	return file;
-}
-const std::string IO::getExtension(const std::string &file) {
-	std::string::size_type last = file.find_last_of('.') + 1;
-	if (last != std::string::npos)
-		return file.substr(0, last);
-	return "";
-}
-const std::string IO::getBase(const std::string &file, const char &seperator) {
-	std::string::size_type slash = file.find_last_of(seperator) + 1;
-	std::string::size_type dot = file.find_last_of('.');
-	if (slash != std::string::npos) {
-		if (dot != std::string::npos)
-			return file.substr(slash, dot - slash);
-		else
-			return file.substr(slash);
-	}
-	return file;
-}
-
 DIF_NAMESPACE_END
