@@ -547,18 +547,6 @@ inline T __read(std::istream &stream, T *thing) {
 	#define READTOVAR(name, type) IO::read(stream, reinterpret_cast<type *>(&name), "")
 #endif
 
-#define READLOOPVAR(countvar, listvar, type) \
-READTOVAR(countvar, U32); \
-listvar = new type[countvar]; \
-for (U32 i = 0; i < countvar; i ++)
-
-#define READLISTVAR(countvar, listvar, type) \
-READTOVAR(countvar, U32); \
-listvar = new type[countvar]; \
-for (U32 i = 0; i < countvar; i ++) { \
-	READTOVAR(listvar[i], type); \
-}
-
 #define READLOOP(name) \
 READVAR(name##_length, U32); \
 for (U32 i = 0; i < name##_length; i ++)
@@ -577,15 +565,5 @@ for (U32 i = 0; i < name##_length; i ++) { \
 #endif
 
 #define WRITECHECK(value, type) { if (!WRITE(value, type)) return false; }
-
-#define WRITELIST(countvar, listvar, type) \
-WRITECHECK(countvar, U32);\
-for (U32 i = 0; i < countvar; i ++) { \
-	WRITE(listvar[i], type); \
-}
-
-#define WRITELOOP(countvar) \
-WRITECHECK(countvar, U32);\
-for (U32 i = 0; i < countvar; i ++)\
 
 #endif
