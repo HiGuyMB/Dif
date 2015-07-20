@@ -299,13 +299,13 @@ public:
 
 	/**
 	 * Reads an Interior from a stream
-	 * @param 1 The stream to read from
+	 * @param stream The stream to read from
 	 * @return If the operation was successful
 	 */
 	bool read(std::istream &stream);
 	/**
 	 * Writes a Interior to a stream
-	 * @param 1 The stream to write to
+	 * @param stream The stream to write to
 	 * @return If the operation was successful
 	 */
 	bool write(std::ostream &stream) const;
