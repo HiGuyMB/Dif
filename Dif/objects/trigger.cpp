@@ -88,7 +88,7 @@ bool PolyHedronEdge::write(std::ostream &stream) const {
 }
 
 std::string Trigger::getPolyhedron() {
-	// First point is corner, need to find the three vectors...`
+	// First point is corner, need to find the three vectors...
 	Point3F origin = polyhedron.pointList[0];
 	U32 currVec = 0;
 	Point3F vecs[3];
