@@ -169,6 +169,55 @@ public:
 		return true;
 	}
 
+	/**
+	 Read a vector from a stream
+	 @var stream - The stream from which the data is read
+	 @var value - A pointer into which the data will be read
+	 @var name - A string containing the name of the variable (for debugging)
+	 @return If the operation was successful
+	 */
+	template <typename type1, typename type2>
+	static inline bool read_as(std::istream &stream, std::vector<type1> *value, std::function<bool(bool,U32)> condition, const std::string &name) {
+		//Read the size of the vector
+		U32 size;
+		if (!read(stream, &size, "size"))
+			return false;
+
+		bool useAlternate = false;
+		U8 param = 0;
+		if (size & 0x80000000) {
+			size ^= 0x80000000;
+			useAlternate = true;
+			if (!read(stream, &param, "param"))
+				return false;
+		}
+
+		//Reserve some space
+		value->reserve(size);
+
+		//Read all the objects
+		for (int i = 0; i < size; i ++) {
+			if (condition(useAlternate, param)) {
+				type2 obj;
+				//Make sure the read succeeds
+				if (read(stream, &obj, "obj"))
+					value->push_back(static_cast<type1>(obj));
+				else
+					return false;
+			} else {
+				type1 obj;
+				//Make sure the read succeeds
+				if (read(stream, &obj, "obj"))
+					value->push_back(obj);
+				else
+					return false;
+			}
+		}
+
+		return true;
+	}
+
+
 	//Write primitive types from a std::istream
 	template <typename T, bool=true>
 	struct write_impl {
@@ -428,24 +477,6 @@ for (U32 i = 0; i < name##_length; i ++)
 READVAR(name##_length, U32); \
 for (U32 i = 0; i < name##_length; i ++) { \
 	READ(type); \
-}
-
-#define READLISTVAR2(countvar, listvar, condition, normaltype, alternatetype) \
-bool read##countvar##2 = false; \
-U8 read##countvar##param = 0; \
-READTOVAR(countvar, U32); \
-if (countvar  & 0x80000000) { \
-	countvar ^= 0x80000000; \
-	read##countvar##2 = true; \
-	READTOVAR(read##countvar##param, U8); \
-} \
-listvar = new normaltype[countvar]; \
-for (U32 i = 0; i < countvar; i ++) { \
-	if ((condition)) { \
-		READTOVAR(listvar[i], alternatetype); \
-	} else { \
-		READTOVAR(listvar[i], normaltype); \
-	} \
 }
 
 #define READLIST2(name, condition, normaltype, alternatetype) \

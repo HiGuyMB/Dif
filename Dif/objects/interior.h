@@ -238,23 +238,16 @@ public:
 
 	U8 materialListVersion;
 	std::vector<std::string> materialName;
-
-	U32 numWindings;
-	U32 *index;
-
+	std::vector<U32>index;
 	std::vector<WindingIndex> windingIndex;
 	std::vector<Edge> edge;
 
 	U32 numZones;
 	Zone *zone;
 
-	U32 numZoneSurfaces;
-	U16 *zoneSurface;
-
+	std::vector<U16>zoneSurface;
 	std::vector<U32> zoneStaticMesh;
-
-	U32 numZonePortalList;
-	U16 *zonePortalList;
+	std::vector<U16>zonePortalList;
 
 	std::vector<Portal> portal;
 
@@ -270,9 +263,7 @@ public:
 	U32 numLightMaps;
 	LightMap *lightMap;
 
-	U32 numSolidLeafSurfaces;
-	U32 *solidLeafSurface;
-
+	std::vector<U32>solidLeafSurface;
 	std::vector<AnimatedLight> animatedLight;
 	std::vector<LightState> lightState;
 	std::vector<StateData> stateData;
@@ -291,31 +282,17 @@ public:
 	ConvexHull *convexHull;
 
 	std::vector<U8> convexHullEmitStringCharacter;
-
-	U32 numHullIndices;
-	U32 *hullIndex;
-
-	U32 numHullPlaneIndices;
-	U16 *hullPlaneIndex;
-
-	U32 numHullEmitStringIndices;
-	U32 *hullEmitStringIndex;
-
-	U32 numHullSurfaceIndices;
-	U32 *hullSurfaceIndex;
-
-	U32 numPolyListPlanes;
-	U16 *polyListPlaneIndex;
-
-	U32 numPolyListPoints;
-	U32 *polyListPointIndex;
-
+	std::vector<U32> hullIndex;
+	std::vector<U16> hullPlaneIndex;
+	std::vector<U32> hullEmitStringIndex;
+	std::vector<U32> hullSurfaceIndex;
+	std::vector<U16> polyListPlaneIndex;
+	std::vector<U32> polyListPointIndex;
 	std::vector<U8> polyListStringCharacter;
 
 	CoordBin *coordBin;
 
-	U32 numCoordBinIndices;
-	U16 *coordBinIndex;
+	std::vector<U16>coordBinIndex;
 
 	U32 coordBinMode;
 	ColorI baseAmbientColor;

@@ -84,7 +84,7 @@ bool Interior::read(std::istream &stream) {
 	//MaterialList
 	READTOVAR(materialListVersion, U8); //version
 	READTOVAR(materialName, std::vector<std::string>); //materialName
-	READLISTVAR2(numWindings, index, readnumWindings2, U32, U16);
+	IO::read_as<U32, U16>(stream, &index, [](bool useAlternate, U32 param){ return param; }, "index");
 	READTOVAR(windingIndex, std::vector<WindingIndex>); //windingIndex
 	if (this->interiorFileVersion >= 12) {
 		READTOVAR(edge, std::vector<Edge>); //edge
@@ -104,11 +104,11 @@ bool Interior::read(std::istream &stream) {
 			zone[i].flags = 0;
 		}
 	}
-	READLISTVAR2(numZoneSurfaces, zoneSurface, 0, U16, U16);
+	IO::read_as<U16, U16>(stream, &zoneSurface, [](bool useAlternate, U32 param) { return false; }, "zoneSurface");
 	if (this->interiorFileVersion >= 12) {
 		READTOVAR(zoneStaticMesh, std::vector<U32>); //zoneStaticMesh
 	}
-	READLISTVAR2(numZonePortalList, zonePortalList, 0, U16, U16);
+	IO::read_as<U16, U16>(stream, &zonePortalList, [](bool useAlternate, U32 param) { return false; }, "zonePortalList");
 	READTOVAR(portal, std::vector<Portal>); //portal
 
 	//Ok so Torque needs to fuck themselves in the ass, multiple times.
@@ -216,7 +216,7 @@ bool Interior::read(std::istream &stream) {
 			READTOVAR(lightMap[i].keepLightMap, U8); //keepLightMap
 		}
 	}
-	READLISTVAR2(numSolidLeafSurfaces, solidLeafSurface, (readnumSolidLeafSurfaces2), U32, U16);
+	IO::read_as<U32, U16>(stream, &solidLeafSurface, [](bool useAlternate, U32 param) { return useAlternate; }, "solidLeafSurface");
 	READTOVAR(animatedLight, std::vector<AnimatedLight>); //animatedLight
 	READTOVAR(lightState, std::vector<LightState>); //lightState
 	if (this->interiorFileVersion == 4) { //Yet more things found in 0, 2, 3, 14
@@ -269,13 +269,13 @@ bool Interior::read(std::istream &stream) {
 	// fuck, GarageGames?
 	//-------------------------------------------------------------------------
 
-	READLISTVAR2(numHullIndices, hullIndex, (readnumHullIndices2), U32, U16);
-	READLISTVAR2(numHullPlaneIndices, hullPlaneIndex, 0, U16, U16);
-	READLISTVAR2(numHullEmitStringIndices, hullEmitStringIndex, (readnumHullEmitStringIndices2), U32, U16);
-	READLISTVAR2(numHullSurfaceIndices, hullSurfaceIndex, (readnumHullSurfaceIndices2), U32, U16);
-	READLISTVAR2(numPolyListPlanes, polyListPlaneIndex, 0, U16, U16);
-	READLISTVAR2(numPolyListPoints, polyListPointIndex, (readnumPolyListPoints2), U32, U16);
-	//Not sure if this should be a READLISTVAR2, but I haven't seen any evidence
+	IO::read_as<U32, U16>(stream, &hullIndex, [](bool useAlternate, U32 param) { return useAlternate; }, "hullIndex");
+	IO::read_as<U16, U16>(stream, &hullPlaneIndex, [](bool useAlternate, U32 param) { return true; }, "hullPlaneIndex");
+	IO::read_as<U32, U16>(stream, &hullEmitStringIndex, [](bool useAlternate, U32 param) { return useAlternate; }, "hullEmitStringIndex");
+	IO::read_as<U32, U16>(stream, &hullSurfaceIndex, [](bool useAlternate, U32 param) { return useAlternate; }, "hullSurfaceIndex");
+	IO::read_as<U16, U16>(stream, &polyListPlaneIndex, [](bool useAlternate, U32 param) { return true; }, "polyListPlaneIndex");
+	IO::read_as<U32, U16>(stream, &polyListPointIndex, [](bool useAlternate, U32 param) { return useAlternate; }, "polyListPointIndex");
+	//Not sure if this should be a read_as, but I haven't seen any evidence
 	// of needing that for U8 lists.
 	READTOVAR(polyListStringCharacter, std::vector<U8>); //polyListStringCharacter
 
@@ -285,7 +285,7 @@ bool Interior::read(std::istream &stream) {
 		READTOVAR(coordBin[i].binCount, U32); //binCount
 	}
 
-	READLISTVAR2(numCoordBinIndices, coordBinIndex, 0, U16, U16);
+	IO::read_as<U16, U16>(stream, &coordBinIndex, [](bool useAlternate, U32 param) { return true; }, "coordBinIndex");
 	READTOVAR(coordBinMode, U32); //coordBinMode
 	if (this->interiorFileVersion == 4) { //All of this is missing in v4 as well. Saves no space.
 		baseAmbientColor = ColorI(0, 0, 0, 255);
@@ -338,18 +338,18 @@ bool Interior::write(std::ostream &stream) const {
 	WRITE(BSPSolidLeaf, std::vector<::BSPSolidLeaf>); //BSPSolidLeaf
 	WRITECHECK(materialListVersion, U8); //materialListVersion
 	WRITE(materialName, std::vector<std::string>); //material
-	WRITELIST(numWindings, index, U32); //index
+	WRITE(index, std::vector<U32>); //index
 	WRITE(windingIndex, std::vector<WindingIndex>); //windingIndex
 	WRITELIST(numZones, zone, Zone); //zone
-	WRITELIST(numZoneSurfaces, zoneSurface, U16); //zoneSurface
-	WRITELIST(numZonePortalList, zonePortalList, U16); //zonePortalList
+	WRITE(zoneSurface, std::vector<U16>); //zoneSurface
+	WRITE(zonePortalList, std::vector<U16>); //zonePortalList
 	WRITE(portal, std::vector<Portal>); //portal
 	WRITELIST(numSurfaces, surface, Surface); //surface
 	WRITE(normalLMapIndex, std::vector<U8>); //normalLMapIndex
 	WRITE(alarmLMapIndex, std::vector<U8>); //alarmLMapIndex
 	WRITELIST(numNullSurfaces, nullSurface, NullSurface); //nullSurface
 	WRITELIST(numLightMaps, lightMap, LightMap); //lightMap
-	WRITELIST(numSolidLeafSurfaces, solidLeafSurface, U32); //solidLeafSurface
+	WRITE(solidLeafSurface, std::vector<U32>); //solidLeafSurface
 	WRITE(animatedLight, std::vector<AnimatedLight>); //animatedLight
 	WRITE(lightState, std::vector<LightState>); //lightState
 	WRITE(stateData, std::vector<StateData>); //stateData
@@ -360,18 +360,18 @@ bool Interior::write(std::ostream &stream) const {
 //	WRITELOOP(numSubObjects) {} //numSubObjects
 	WRITELIST(numConvexHulls, convexHull, ConvexHull); //convexHull
 	WRITE(convexHullEmitStringCharacter, std::vector<U8>); //convexHullEmitStringCharacter
-	WRITELIST(numHullIndices, hullIndex, U32); //hullIndex
-	WRITELIST(numHullPlaneIndices, hullPlaneIndex, U16); //hullPlaneIndex
-	WRITELIST(numHullEmitStringIndices, hullEmitStringIndex, U32); //hullEmitStringIndex
-	WRITELIST(numHullSurfaceIndices, hullSurfaceIndex, U32); //hullSurfaceIndex
-	WRITELIST(numPolyListPlanes, polyListPlaneIndex, U16); //polyListPlaneIndex
-	WRITELIST(numPolyListPoints, polyListPointIndex, U32); //polyListPointIndex
+	WRITE(hullIndex, std::vector<U32>); //hullIndex
+	WRITE(hullPlaneIndex, std::vector<U16>); //hullPlaneIndex
+	WRITE(hullEmitStringIndex, std::vector<U32>); //hullEmitStringIndex
+	WRITE(hullSurfaceIndex, std::vector<U32>); //hullSurfaceIndex
+	WRITE(polyListPlaneIndex, std::vector<U16>); //polyListPlaneIndex
+	WRITE(polyListPointIndex, std::vector<U32>); //polyListPointIndex
 	WRITE(polyListStringCharacter, std::vector<U8>); //polyListStringCharacter
 	for (U32 i = 0; i < gNumCoordBins * gNumCoordBins; i ++) {
 		WRITECHECK(coordBin[i].binStart, U32); //binStart
 		WRITECHECK(coordBin[i].binCount, U32); //binCount
 	}
-	WRITELIST(numCoordBinIndices, coordBinIndex, U16); //coordBinIndex
+	WRITE(coordBinIndex, std::vector<U16>); //coordBinIndex
 	WRITECHECK(coordBinMode, U32); //coordBinMode
 	WRITECHECK(baseAmbientColor, ColorI); //baseAmbientColor
 	WRITECHECK(alarmAmbientColor, ColorI); //alarmAmbientColor
@@ -396,7 +396,7 @@ bool Interior::readSurface(std::istream &stream, Surface *surface, bool isTGEInt
 	} else {
 		READTOVAR(surface->windingCount, U8); //windingCount
 	}
-	if (surface->windingStart + surface->windingCount > numWindings)
+	if (surface->windingStart + surface->windingCount > index.size())
 		return false;
 
 	//Fucking GarageGames. Sometimes the plane is | 0x8000 because WHY NOT
