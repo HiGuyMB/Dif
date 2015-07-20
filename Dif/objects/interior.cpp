@@ -165,12 +165,16 @@ bool Interior::read(std::istream &stream) {
 	READTOVAR(lightState, std::vector<LightState>); //lightState
 	if (this->interiorFileVersion == 4) { //Yet more things found in 0, 2, 3, 14
 		flags = 0;
-		numStateDataBuffers = 0;
 		numSubObjects = 0;
 	} else {
 		READTOVAR(stateData, std::vector<StateData>); //stateData
-		READLISTVAR(numStateDataBuffers, stateDataBuffer, U8); //stateDataBuffer
-		READTOVAR(flags, U32); //flags
+
+		//State datas have the flags field written right after the vector size,
+		// and THEN the data, just to make things confusing. So we need yet another
+		// read method for this.
+		IO::read_extra(stream, &stateDataBuffer, [=](std::istream &stream)->bool{
+			return READTOVAR(flags, U32); //flags
+		}, "stateDataBuffer"); //stateDataBuffer
 		READTOVAR(nameBufferCharacter, std::vector<U8>); //nameBufferCharacter
 
 		READTOVAR(numSubObjects, U32);
@@ -276,8 +280,9 @@ bool Interior::write(std::ostream &stream) const {
 	WRITE(animatedLight, std::vector<AnimatedLight>); //animatedLight
 	WRITE(lightState, std::vector<LightState>); //lightState
 	WRITE(stateData, std::vector<StateData>); //stateData
-	WRITELIST(numStateDataBuffers, stateDataBuffer, U32); //stateDataBuffer
-	WRITECHECK(flags, U32); //flags
+	IO::write_extra(stream, stateDataBuffer, [=](std::ostream &stream)->bool {
+		return WRITE(flags, U32); //flags
+	}, "stateDataBuffer"); //stateDataBuffer
 	WRITE(nameBufferCharacter, std::vector<U8>); //nameBufferCharacter
 	WRITE(numSubObjects, U32);
 //	WRITELOOP(numSubObjects) {} //numSubObjects

@@ -260,9 +260,7 @@ public:
 	std::vector<AnimatedLight> animatedLight;
 	std::vector<LightState> lightState;
 	std::vector<StateData> stateData;
-
-	U32 numStateDataBuffers;
-	U8 *stateDataBuffer;
+	std::vector<U8>stateDataBuffer;
 
 	U32 flags;
 

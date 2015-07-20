@@ -259,6 +259,39 @@ public:
 		return true;
 	}
 
+	/**
+	 Read a vector from a stream
+	 @var stream - The stream from which the data is read
+	 @var value - A pointer into which the data will be read
+	 @var name - A string containing the name of the variable (for debugging)
+	 @return If the operation was successful
+	 */
+	template <typename T>
+	static inline bool read_extra(std::istream &stream, std::vector<T> *value, std::function<bool(std::istream &)> extra_method, const std::string &name) {
+		//Read the size of the vector
+		U32 size;
+		if (!read(stream, &size, "size"))
+			return false;
+		//Reserve some space
+		value->reserve(size);
+
+		//Do the extra method
+		if (!extra_method(stream))
+			return false;
+
+		//Read all the objects
+		for (int i = 0; i < size; i ++) {
+			T obj;
+			//Make sure the read succeeds
+			if (read(stream, &obj, "obj"))
+				value->push_back(obj);
+			else
+				return false;
+		}
+
+		return true;
+	}
+
 
 	//Write primitive types from a std::istream
 	template <typename T, bool=true>
@@ -349,6 +382,30 @@ public:
 				return false;
 		}
 
+		return true;
+	}
+
+	/**
+	 Write a vector to a stream
+	 @var stream - The stream to which the data is written
+	 @var value - The vector to write
+	 @var name - A string containing the name of the variable (for debugging)
+	 @return If the operation was successful
+	 */
+	template <typename T>
+	static inline bool write_extra(std::ostream &stream, const std::vector<T> &value, std::function<bool(std::ostream &)> extra_method, const std::string &name) {
+		//Write the vector's size first, must be a U32 because torque
+		if (!write(stream, static_cast<U32>(value.size()), "size"))
+			return false;
+		//Use the extra method... which happens to come before the value
+		if (!extra_method(stream))
+			return false;
+
+		//Write all of the objects in the vector
+		for (int i = 0; i < value.size(); i ++) {
+			if (!write(stream, value[i], "value"))
+				return false;
+		}
 		return true;
 	}
 
