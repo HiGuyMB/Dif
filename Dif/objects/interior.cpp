@@ -101,7 +101,7 @@ bool Interior::read(std::istream &stream) {
 
 		//Third, re-read
 		if (!IO::read_with<Surface>(stream, surface, [&](Surface &surface, std::istream &stream)->bool{
-			return surface.read(stream, interiorFileVersion, false, static_cast<U32>(index.size()), static_cast<U32>(plane.size()), static_cast<U32>(materialName.size()), static_cast<U32>(texGenEq.size()));
+			return surface.read(stream, interiorFileVersion, true, static_cast<U32>(index.size()), static_cast<U32>(plane.size()), static_cast<U32>(materialName.size()), static_cast<U32>(texGenEq.size()));
 		}, "surface")) { //surface
 			//Ok this surface failed too. Bail.
 			return false;
