@@ -38,7 +38,6 @@ bool StaticMesh::read(std::istream &stream) {
 
 	READTOVAR(hasMaterialList, U8);
 	if (hasMaterialList) {
-		baseMaterialList = MaterialList();
 		baseMaterialList.read(stream);
 	}
 
