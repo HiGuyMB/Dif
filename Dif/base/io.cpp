@@ -195,8 +195,8 @@ bool Dictionary::write(std::ostream &stream) const {
 	return true;
 }
 
-bool IO::isfile(const String &file) {
-	FILE *stream = fopen((const char *)file.data, "r");
+bool IO::isfile(const std::string &file) {
+	FILE *stream = fopen(file.c_str(), "r");
 	if (stream) {
 		fclose(stream);
 		return true;
@@ -204,8 +204,8 @@ bool IO::isfile(const String &file) {
 	return false;
 }
 
-U8 *IO::readFile(const String &file, U32 *length) {
-	FILE *stream = fopen((const char *)file.data, "rb");
+U8 *IO::readFile(const std::string &file, U32 *length) {
+	FILE *stream = fopen(file.c_str(), "rb");
 
 	if (!stream)
 		return NULL;
@@ -224,29 +224,32 @@ U8 *IO::readFile(const String &file, U32 *length) {
 	return data;
 }
 
-#ifdef _WIN32
-#define DIR_SEP '\\'
-#else
-#define DIR_SEP '/'
-#endif
-
-
-String IO::getPath(const String &file) {
-	S64 last = (S64)((U8 *)strrchr((const char *)file.data, DIR_SEP) - file.data);
-	if (last > 0)
-		return String(file, (S32)last);
-	return String("");
+const std::string IO::getPath(const std::string &file, const char &seperator) {
+	std::string::size_type last = file.find_last_of(seperator);
+	if (last != std::string::npos)
+		return file.substr(0, last);
+	return "";
 }
-String IO::getName(const String &file) {
-	S64 last = (S64)((U8 *)strrchr((const char *)file.data, DIR_SEP) - file.data) + 1;
-	printf("Last is %lld\n", last);
-	if (last > 0)
-		return String(file.data + last, file.length - (S32)last);
+const std::string IO::getName(const std::string &file, const char &seperator) {
+	std::string::size_type last = file.find_last_of(seperator) + 1;
+	if (last != std::string::npos)
+		return file.substr(last);
 	return file;
 }
-String IO::getExtension(const String &file) {
-	S64 last = (S64)((U8 *)strrchr((const char *)file.data, '.') - file.data) + 1;
-	if (last > 0)
-		return String(file.data + last, file.length - (S32)last);
-	return String("");
+const std::string IO::getExtension(const std::string &file) {
+	std::string::size_type last = file.find_last_of('.') + 1;
+	if (last != std::string::npos)
+		return file.substr(0, last);
+	return "";
+}
+const std::string IO::getBase(const std::string &file, const char &seperator) {
+	std::string::size_type slash = file.find_last_of(seperator) + 1;
+	std::string::size_type dot = file.find_last_of('.');
+	if (slash != std::string::npos) {
+		if (dot != std::string::npos)
+			return file.substr(slash, dot - slash);
+		else
+			return file.substr(slash);
+	}
+	return file;
 }
