@@ -534,24 +534,29 @@ inline T __read(std::istream &stream, T *thing) {
 // the type and let the template work
 #define READ(type) __read(stream, reinterpret_cast<type *>(NULL))
 
+//Magical casts so we can read and write the types which we want.
 template <typename T, typename F>
 inline T& __magic_cast(F &thing) {
+	//This is so gross but apparently better than C-style casts. At least so says
+	// Jeff. We can't do this inline because temporary variables. So maybe this will
+	// work as a method instead?
 	return reinterpret_cast<T&>(thing);
 }
 
+//Same thing as above but with 100% more const
 template <typename T, typename F>
 inline const T& __magic_const_cast(const F &thing) {
+	//Don't even need a const_cast... That's cool.
 	return reinterpret_cast<const T&>(thing);
 }
 
 //Macros to speed up file reading/writing
 #ifdef DEBUG
-	#define READCHECK(name, type)  { if (!IO::read(stream, __magic_cast<type>(name),        #name " as " #type)) return false; }
+	#define READCHECK(name, type)  { if (!IO::read (stream, __magic_cast<type>(name),       #name " as " #type)) return false; }
 	#define WRITECHECK(name, type) { if (!IO::write(stream, __magic_const_cast<type>(name), #name " as " #type)) return false; }
 #else
-	#define READCHECK(name, type)  { if (!IO::read(stream, __magic_cast<type>(name),        "")) return false; }
+	#define READCHECK(name, type)  { if (!IO::read (stream, __magic_cast<type>(name),       "")) return false; }
 	#define WRITECHECK(name, type) { if (!IO::write(stream, __magic_const_cast<type>(name), "")) return false; }
 #endif
-
 
 #endif
