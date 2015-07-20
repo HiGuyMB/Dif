@@ -52,7 +52,15 @@ bool testEquality(const char *file) {
 			std::string fileStr = inString.str();
 			std::string difStr = out.str();
 
-			return fileStr.compare(difStr) == 0;
+			for (auto i = 0; i < fileStr.size(); i ++) {
+				if (fileStr[i] != difStr[i]) {
+					//Inconsistency
+					std::cout << "DIF output inconsistency starting at offset " << i << " (0x" << std::hex << i << std::dec << ")" << std::endl;
+					return false;
+				}
+			}
+
+			return true;
 		}
 	}
 	return false;
