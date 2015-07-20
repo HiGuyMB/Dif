@@ -103,9 +103,9 @@ std::string Trigger::getPolyhedron() {
 
 	// Build output string.
 	std::stringstream ss;
-	ss << origin.x << ' ' << origin.y << ' ' << origin.z <<
-	      vecs[0].x << ' ' << vecs[0].y << ' ' << vecs[0].z <<
-	      vecs[1].x << ' ' << vecs[1].y << ' ' << vecs[1].z <<
+	ss << origin.x << ' ' << origin.y << ' ' << origin.z << ' ' <<
+	      vecs[0].x << ' ' << vecs[0].y << ' ' << vecs[0].z << ' ' <<
+	      vecs[1].x << ' ' << vecs[1].y << ' ' << vecs[1].z << ' ' <<
 	      vecs[2].x << ' ' << vecs[2].y << ' ' << vecs[2].z;
 	return ss.str();
 }
