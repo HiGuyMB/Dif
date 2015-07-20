@@ -88,7 +88,7 @@ public:
 	AngAxisF(const F32 &angle, const Point3F &axis) : axis(axis), angle(angle) {};
 };
 
-class QuatF : public Readable, Writable {
+class QuatF : public Readable, public Writable {
 public:
 	F32 w;
 	F32 x;
@@ -102,7 +102,7 @@ public:
 	virtual bool write(std::ostream &stream) const;
 };
 
-class PlaneF : public Readable, Writable {
+class PlaneF : public Readable, public Writable {
 public:
 	F32 x;
 	F32 y;
@@ -113,7 +113,7 @@ public:
 	virtual bool write(std::ostream &stream) const;
 };
 
-class BoxF : public Readable, Writable {
+class BoxF : public Readable, public Writable {
 public:
 	F32 minX;
 	F32 minY;
@@ -136,7 +136,7 @@ public:
 	virtual bool write(std::ostream &stream) const;
 };
 
-class SphereF : public Readable, Writable {
+class SphereF : public Readable, public Writable {
 public:
 	F32 x;
 	F32 y;
@@ -147,7 +147,7 @@ public:
 	virtual bool write(std::ostream &stream) const;
 };
 
-class PNG : public Readable, Writable {
+class PNG : public Readable, public Writable {
 public:
 	U32 size;
 	U8 *data;
@@ -160,7 +160,7 @@ public:
 	}
 };
 
-class MatrixF : public Readable, Writable {
+class MatrixF : public Readable, public Writable {
 public:
 	F32 m[16];
 

@@ -32,7 +32,7 @@
 #include "types.h"
 #include "io.h"
 
-struct Primitive : public Readable, Writable {
+struct Primitive : public Readable, public Writable {
 	U8 alpha;
 	U32 texS;
 	U32 texT;
@@ -49,7 +49,7 @@ struct Primitive : public Readable, Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-struct MaterialList : public Readable, Writable {
+struct MaterialList : public Readable, public Writable {
 	U32 materialCount;
 
 	U32 *flags;

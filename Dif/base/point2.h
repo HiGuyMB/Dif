@@ -32,7 +32,7 @@
 #include <limits>
 
 template <typename T>
-class Point2 : public Readable, Writable {
+class Point2 : public Readable, public Writable {
 public:
 	T x;
 	T y;

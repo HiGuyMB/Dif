@@ -29,7 +29,7 @@
 #define color_h
 
 template <typename T>
-class Color : public Readable, Writable {
+class Color : public Readable, public Writable {
 public:
 	T red;
 	T green;

@@ -33,7 +33,7 @@
 
 static U32 gNumCoordBins = 16;
 
-struct Plane : public Readable, Writable {
+struct Plane : public Readable, public Writable {
 	U16 normalIndex;
 	F32 planeDistance;
 
@@ -41,7 +41,7 @@ struct Plane : public Readable, Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-struct TexGenEq : public Readable, Writable {
+struct TexGenEq : public Readable, public Writable {
 	PlaneF planeX;
 	PlaneF planeY;
 
@@ -58,7 +58,7 @@ struct BSPNode : public Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-struct BSPSolidLeaf : public Readable, Writable {
+struct BSPSolidLeaf : public Readable, public Writable {
 	U32 surfaceIndex;
 	U16 surfaceCount;
 
@@ -66,7 +66,7 @@ struct BSPSolidLeaf : public Readable, Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-struct WindingIndex : public Readable, Writable {
+struct WindingIndex : public Readable, public Writable {
 	U32 windingStart;
 	U32 windingCount;
 
@@ -74,7 +74,7 @@ struct WindingIndex : public Readable, Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-struct Edge : public Readable, Writable {
+struct Edge : public Readable, public Writable {
 	S32 pointIndex0;
 	S32 pointIndex1;
 	S32 surfaceIndex0;
@@ -97,7 +97,7 @@ struct Zone : public Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-struct Portal : public Readable, Writable {
+struct Portal : public Readable, public Writable {
 	U16 planeIndex;
 	U16 triFanCount;
 	U32 triFanStart;
@@ -157,7 +157,7 @@ struct NullSurface : public Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-struct AnimatedLight : public Readable, Writable {
+struct AnimatedLight : public Readable, public Writable {
 	U32 nameIndex;
 	U32 stateIndex;
 	U16 stateCount;
@@ -168,7 +168,7 @@ struct AnimatedLight : public Readable, Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-struct LightState : public Readable, Writable {
+struct LightState : public Readable, public Writable {
 	U8 red;
 	U8 green;
 	U8 blue;
@@ -180,7 +180,7 @@ struct LightState : public Readable, Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-struct StateData : public Readable, Writable {
+struct StateData : public Readable, public Writable {
 	U32 surfaceIndex;
 	U32 mapIndex;
 	U16 lightStateIndex;
@@ -210,7 +210,7 @@ struct ConvexHull : public Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-struct CoordBin : public Readable, Writable {
+struct CoordBin : public Readable, public Writable {
 	U32 binStart;
 	U32 binCount;
 
@@ -218,7 +218,7 @@ struct CoordBin : public Readable, Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-struct TexMatrix : public Readable, Writable {
+struct TexMatrix : public Readable, public Writable {
 	S32 T;
 	S32 N;
 	S32 B;
@@ -227,7 +227,7 @@ struct TexMatrix : public Readable, Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-class Interior : public Readable, Writable {
+class Interior : public Readable, public Writable {
 public:
 	U32 interiorFileVersion;
 	U32 detailLevel;
