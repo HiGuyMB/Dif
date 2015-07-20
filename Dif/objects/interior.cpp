@@ -49,7 +49,7 @@ bool Interior::read(std::istream &stream) {
 		READCHECK(pointVisibility, std::vector<U8>); //pointVisibility
 	}
 	READCHECK(texGenEq, std::vector<TexGenEq>); //texGenEq
-	IO::read_with<::BSPNode>(stream, BSPNode, [&](::BSPNode *node, std::istream &stream)->bool{return node->read(stream, this->interiorFileVersion);}, "BSPNode"); //BSPNode
+	IO::read_with<::BSPNode>(stream, BSPNode, [&](::BSPNode &node, std::istream &stream)->bool{return node.read(stream, this->interiorFileVersion);}, "BSPNode"); //BSPNode
 	READCHECK(BSPSolidLeaf, std::vector<::BSPSolidLeaf>); //BSPSolidLeaf
 	//MaterialList
 	READCHECK(materialListVersion, U8); //version
@@ -59,7 +59,7 @@ bool Interior::read(std::istream &stream) {
 	if (this->interiorFileVersion >= 12) {
 		READCHECK(edge, std::vector<Edge>); //edge
 	}
-	IO::read_with<Zone>(stream, zone, [&](Zone *zone, std::istream &stream)->bool{return zone->read(stream, this->interiorFileVersion);}, "zone"); //zone
+	IO::read_with<Zone>(stream, zone, [&](Zone &zone, std::istream &stream)->bool{return zone.read(stream, this->interiorFileVersion);}, "zone"); //zone
 	IO::read_as<U16, U16>(stream, zoneSurface, [](bool useAlternate, U32 param)->bool{return false;}, "zoneSurface");
 	if (this->interiorFileVersion >= 12) {
 		READCHECK(zoneStaticMesh, std::vector<U32>); //zoneStaticMesh
@@ -78,7 +78,7 @@ bool Interior::read(std::istream &stream) {
 
 	bool isTGEInterior = false;
 
-	if (!IO::read_with<Surface>(stream, surface, [&](Surface *surface, std::istream &stream)->bool{return surface->read(stream, interiorFileVersion, false, index.size(), plane.size(), materialName.size(), texGenEq.size());}, "surface")) { //surface
+	if (!IO::read_with<Surface>(stream, surface, [&](Surface &surface, std::istream &stream)->bool{return surface.read(stream, interiorFileVersion, false, index.size(), plane.size(), materialName.size(), texGenEq.size());}, "surface")) { //surface
 		isTGEInterior = true;
 
 		if (interiorFileVersion != 0) {
@@ -95,7 +95,7 @@ bool Interior::read(std::istream &stream) {
 		stream.seekg(pos);
 
 		//Second, re-read
-		if (!IO::read_with<Surface>(stream, surface, [&](Surface *surface, std::istream &stream)->bool{return surface->read(stream, interiorFileVersion, true, index.size(), plane.size(), materialName.size(), texGenEq.size());}, "surface")) { //surface
+		if (!IO::read_with<Surface>(stream, surface, [&](Surface &surface, std::istream &stream)->bool{return surface.read(stream, interiorFileVersion, true, index.size(), plane.size(), materialName.size(), texGenEq.size());}, "surface")) { //surface
 			//Ok this surface failed too. Bail.
 			//TODO: Blow up here
 			return false;
@@ -144,9 +144,9 @@ bool Interior::read(std::istream &stream) {
 		READCHECK(normalLMapIndex, std::vector<U8>); //normalLMapIndex
 		READCHECK(alarmLMapIndex, std::vector<U8>); //alarmLMapIndex
 	}
-	IO::read_with<NullSurface>(stream, nullSurface, [&](NullSurface *nullSurface, std::istream &stream)->bool{return nullSurface->read(stream, this->interiorFileVersion);}, "nullSurface"); //nullSurface
+	IO::read_with<NullSurface>(stream, nullSurface, [&](NullSurface &nullSurface, std::istream &stream)->bool{return nullSurface.read(stream, this->interiorFileVersion);}, "nullSurface"); //nullSurface
 	if (this->interiorFileVersion != 4) { //Also found in 0, 2, 3, 14
-		IO::read_with<LightMap>(stream, lightMap, [&](LightMap *lightMap, std::istream &stream)->bool{return lightMap->read(stream, isTGEInterior);}, "lightMap"); //lightMap
+		IO::read_with<LightMap>(stream, lightMap, [&](LightMap &lightMap, std::istream &stream)->bool{return lightMap.read(stream, isTGEInterior);}, "lightMap"); //lightMap
 	}
 	IO::read_as<U32, U16>(stream, solidLeafSurface, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "solidLeafSurface"); //solidLeafSurface
 	READCHECK(animatedLight, std::vector<AnimatedLight>); //animatedLight
@@ -171,7 +171,7 @@ bool Interior::read(std::istream &stream) {
 //			//NFC
 //		}
 	}
-	IO::read_with<ConvexHull>(stream, convexHull, [&](ConvexHull *convexHull, std::istream &stream)->bool{return convexHull->read(stream, this->interiorFileVersion);}, "convexHull"); //convexHull
+	IO::read_with<ConvexHull>(stream, convexHull, [&](ConvexHull &convexHull, std::istream &stream)->bool{return convexHull.read(stream, this->interiorFileVersion);}, "convexHull"); //convexHull
 	READCHECK(convexHullEmitStringCharacter, std::vector<U8>); //convexHullEmitStringCharacter
 
 	//-------------------------------------------------------------------------

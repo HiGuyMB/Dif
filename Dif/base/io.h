@@ -238,7 +238,7 @@ public:
 	 @return If the operation was successful
 	 */
 	template <typename T>
-	static inline bool read_with(std::istream &stream, std::vector<T> &value, std::function<bool(T*, std::istream &)> passed_method, const std::string &name) {
+	static inline bool read_with(std::istream &stream, std::vector<T> &value, std::function<bool(T&, std::istream &)> passed_method, const std::string &name) {
 		//Read the size of the vector
 		U32 size;
 		if (!read(stream, size, "size"))
@@ -250,7 +250,7 @@ public:
 		for (int i = 0; i < size; i ++) {
 			T obj;
 			//Make sure the read succeeds
-			if (passed_method(&obj, stream))
+			if (passed_method(obj, stream))
 				value.push_back(obj);
 			else
 				return false;
