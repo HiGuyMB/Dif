@@ -54,7 +54,7 @@ public:
 		static inline bool read(std::istream &stream, T *value, const std::string &name) {
 			if (stream.eof())
 				return false;
-			stream.read((char *)value, sizeof(*value));
+			stream.read(reinterpret_cast<char *>(value), sizeof(*value));
 			return stream.good();
 		}
 	};
@@ -173,7 +173,7 @@ public:
 	template <typename T, bool=true>
 	struct write_impl {
 		static inline bool write(std::ostream &stream, const T &value, const std::string &name) {
-			stream.write((char *)&value, sizeof(value));
+			stream.write(reinterpret_cast<const char *>(&value), sizeof(value));
 			return stream.good();
 		}
 	};
@@ -209,11 +209,11 @@ public:
 	template <typename T>
 	static inline bool write(std::ostream &stream, const std::vector<T> &value, const std::string &name) {
 		//Write the vector's size first, must be a U32 because torque
-		if (!write(stream, (U32)value.size(), "size"))
+		if (!write(stream, static_cast<U32>(value.size()), "size"))
 			return false;
 		//Write all of the objects in the vector
 		for (int i = 0; i < value.size(); i ++) {
-			if (!write(stream, (T)value[i], "value"))
+			if (!write(stream, value[i], "value"))
 				return false;
 		}
 		return true;
@@ -228,7 +228,7 @@ public:
 	 */
 	static inline bool write(std::ostream &stream, const std::string &value, const std::string &name) {
 		//How long is the string
-		if (!write(stream, (U8)value.length(), "length"))
+		if (!write(stream, static_cast<U8>(value.length()), "length"))
 			return false;
 		//Write each byte of the string
 		for (U32 i = 0; i < value.length(); i ++) {
@@ -248,7 +248,7 @@ public:
 	 */
 	static inline bool write(std::ostream &stream, const Dictionary &value, const std::string &name) {
 		//How long is the map
-		if (!write(stream, (U32)value.size(), "length"))
+		if (!write(stream, static_cast<U32>(value.size()), "length"))
 			return false;
 		
 		//Write each string in the map
@@ -383,9 +383,9 @@ inline T __read(std::istream &stream, T *thing) {
 #endif
 	return __garbage;
 }
-//I'm so sorry about (type *)NULL, but that's the only way to get C++ to interpret
+//I'm so sorry about reinterpret_cast<type *>(NULL), but that's the only way to get C++ to interpret
 // the type and let the template work
-#define READ(type) __read(stream, (type *)NULL)
+#define READ(type) __read(stream, reinterpret_cast<type *>(NULL))
 
 #ifdef DEBUG
 	#define READVAR(name, type) \
@@ -467,9 +467,9 @@ for (U32 i = 0; i < name##_length; i ++) { \
 
 //Macros to speed up file reading
 #ifdef DEBUG
-#define WRITE(value, type) IO::write(stream, (type) value, #value)
+#define WRITE(value, type) IO::write(stream, (const type) value, #value)
 #else
-#define WRITE(value, type) IO::write(stream, (type) value, "")
+#define WRITE(value, type) IO::write(stream, (const type) value, "")
 #endif
 
 #define WRITECHECK(value, type) { if (!WRITE(value, type)) return false; }
