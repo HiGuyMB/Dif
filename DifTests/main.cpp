@@ -42,8 +42,10 @@ bool testEquality(const char *file) {
 			std::string fileStr = inString.str();
 			std::string difStr = out.str();
 
+			delete dif;
 			return fileStr.compare(difStr) == 0;
 		}
+		delete dif;
 	}
 	return false;
 }
