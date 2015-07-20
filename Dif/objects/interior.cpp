@@ -88,8 +88,6 @@ bool Interior::read(std::istream &stream) {
 	READTOVAR(windingIndex, std::vector<WindingIndex>); //windingIndex
 	if (this->interiorFileVersion >= 12) {
 		READTOVAR(edge, std::vector<Edge>); //edge
-	} else {
-
 	}
 	READLOOPVAR(numZones, zone, Zone) {
 		READTOVAR(zone[i].portalStart, U16); //portalStart
@@ -109,8 +107,6 @@ bool Interior::read(std::istream &stream) {
 	READLISTVAR2(numZoneSurfaces, zoneSurface, 0, U16, U16);
 	if (this->interiorFileVersion >= 12) {
 		READTOVAR(zoneStaticMesh, std::vector<U32>); //zoneStaticMesh
-	} else {
-
 	}
 	READLISTVAR2(numZonePortalList, zonePortalList, 0, U16, U16);
 	READTOVAR(portal, std::vector<Portal>); //portal
@@ -210,9 +206,7 @@ bool Interior::read(std::istream &stream) {
 			READTOVAR(nullSurface[i].windingCount, U8); //windingCount
 		}
 	}
-	if (this->interiorFileVersion == 4) { //Also found in 0, 2, 3, 14
-
-	} else {
+	if (this->interiorFileVersion != 4) { //Also found in 0, 2, 3, 14
 		READLOOPVAR(numLightMaps, lightMap, LightMap) {
 			READTOVAR(lightMap[i].lightMap, PNG); //lightMap
 			if (!isTGEInterior) {
