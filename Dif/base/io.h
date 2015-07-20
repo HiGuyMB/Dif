@@ -453,25 +453,25 @@ public:
 template <typename T>
 bool Point2<T>::read(std::istream &stream) {
 	return
-	IO::read(stream, x, "x") &&
-	IO::read(stream, y, "y");
+		IO::read(stream, x, "x") &&
+		IO::read(stream, y, "y");
 }
 
 template <typename T>
 bool Point3<T>::read(std::istream &stream) {
 	return
-	IO::read(stream, x, "x") &&
-	IO::read(stream, y, "y") &&
-	IO::read(stream, z, "z");
+		IO::read(stream, x, "x") &&
+		IO::read(stream, y, "y") &&
+		IO::read(stream, z, "z");
 }
 
 template <typename T>
 bool Color<T>::read(std::istream &stream) {
 	return
-	IO::read(stream, red, "red") &&
-	IO::read(stream, green, "green") &&
-	IO::read(stream, blue, "blue") &&
-	IO::read(stream, alpha, "alpha");
+		IO::read(stream, red, "red") &&
+		IO::read(stream, green, "green") &&
+		IO::read(stream, blue, "blue") &&
+		IO::read(stream, alpha, "alpha");
 }
 
 template <typename T>
@@ -484,18 +484,18 @@ bool Point2<T>::write(std::ostream &stream) const {
 template <typename T>
 bool Point3<T>::write(std::ostream &stream) const {
 	return
-	IO::write(stream, x, "x") &&
-	IO::write(stream, y, "y") &&
-	IO::write(stream, z, "z");
+		IO::write(stream, x, "x") &&
+		IO::write(stream, y, "y") &&
+		IO::write(stream, z, "z");
 }
 
 template <typename T>
 bool Color<T>::write(std::ostream &stream) const {
 	return
-	IO::write(stream, red, "red") &&
-	IO::write(stream, green, "green") &&
-	IO::write(stream, blue, "blue") &&
-	IO::write(stream, alpha, "alpha");
+		IO::write(stream, red, "red") &&
+		IO::write(stream, green, "green") &&
+		IO::write(stream, blue, "blue") &&
+		IO::write(stream, alpha, "alpha");
 }
 
 
