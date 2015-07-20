@@ -59,15 +59,15 @@ public:
 	U32 dummy;
 
 	/**
-	 Reads a DIF from a stream
-	 @arg stream - The stream to read from
-	 @return If the operation was successful
+	 * Reads a DIF from a stream
+	 * @param 1 The stream to read from
+	 * @return If the operation was successful
 	 */
 	bool read(std::istream &stream);
 	/**
-	 Writes a DIF to a stream
-	 @arg stream - The stream to write to
-	 @return If the operation was successful
+	 * Writes a DIF to a stream
+	 * @param 1 The stream to write to
+	 * @return If the operation was successful
 	 */
 	bool write(std::ostream &stream) const;
 };

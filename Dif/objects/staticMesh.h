@@ -84,15 +84,15 @@ public:
 	Point3F scale;
 
 	/**
-	 Reads a StaticMesh from a stream
-	 @arg stream - The stream to read from
-	 @return If the operation was successful
+	 * Reads a StaticMesh from a stream
+	 * @param 1 The stream to read from
+	 * @return If the operation was successful
 	 */
 	virtual bool read(std::istream &stream);
 	/**
-	 Writes a StaticMesh to a stream
-	 @arg stream - The stream to write to
-	 @return If the operation was successful
+	 * Writes a StaticMesh to a stream
+	 * @param 1 The stream to write to
+	 * @return If the operation was successful
 	 */
 	virtual bool write(std::ostream &stream) const;
 };

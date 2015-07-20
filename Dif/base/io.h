@@ -41,11 +41,6 @@
 #define DIR_SEP '/'
 #endif
 
-/*
- Read number types from a file
- @var file - The FILE to read from (updates position)
- @return The number data at that position in the FILE
- */
 class IO {
 public:
 	//Read primitive types from a std::istream
@@ -67,11 +62,11 @@ public:
 	};
 
 	/**
-	 Read types from a stream
-	 @var stream - The stream from which the data is read
-	 @var value - A reference into which the data will be read
-	 @var name - A string containing the name of the variable (for debugging)
-	 @return If the operation was successful
+	 * Read types from a stream
+	 * @param stream The stream from which the data is read
+	 * @param value A reference into which the data will be read
+	 * @param name A string containing the name of the variable (for debugging)
+	 * @return If the operation was successful
 	 */
 	template <typename T>
 	static inline bool read(std::istream &stream, T &value, const std::string &name) {
@@ -81,11 +76,11 @@ public:
 	}
 
 	/**
-	 Read a vector from a stream
-	 @var stream - The stream from which the data is read
-	 @var value - A reference into which the data will be read
-	 @var name - A string containing the name of the variable (for debugging)
-	 @return If the operation was successful
+	 * Read a vector from a stream
+	 * @param stream The stream from which the data is read
+	 * @param value A reference into which the data will be read
+	 * @param name A string containing the name of the variable (for debugging)
+	 * @return If the operation was successful
 	 */
 	template <typename T>
 	static inline bool read(std::istream &stream, std::vector<T> &value, const std::string &name) {
@@ -110,11 +105,11 @@ public:
 	}
 
 	/**
-	 Read a string from a stream
-	 @var stream - The stream from which the data is read
-	 @var value - A reference into which the data will be read
-	 @var name - A string containing the name of the variable (for debugging)
-	 @return If the operation was successful
+	 * Read a string from a stream
+	 * @param stream The stream from which the data is read
+	 * @param value A reference into which the data will be read
+	 * @param name A string containing the name of the variable (for debugging)
+	 * @return If the operation was successful
 	 */
 	static inline bool read(std::istream &stream, std::string &value, const std::string &name) {
 		//How long is the string
@@ -137,11 +132,11 @@ public:
 	}
 
 	/**
-	 Read a dictionary from a stream
-	 @var stream - The stream from which the data is read
-	 @var value - A reference into which the data will be read
-	 @var name - A string containing the name of the variable (for debugging)
-	 @return If the operation was successful
+	 * Read a dictionary from a stream
+	 * @param stream The stream from which the data is read
+	 * @param value A reference into which the data will be read
+	 * @param name A string containing the name of the variable (for debugging)
+	 * @return If the operation was successful
 	 */
 	static inline bool read(std::istream &stream, Dictionary &value, const std::string &name) {
 		//How long is the map
@@ -170,14 +165,14 @@ public:
 	}
 
 	/**
-	 Read a vector from a stream, with the option to read as a secondary type if
-	 a given condition passes.
-	 @var stream - The stream from which the data is read
-	 @var value - A reference into which the data will be read
-	 @var condition - A function that determines whether the second type should be used.
-	                  Arguments are (bool isSigned, U32 param).
-	 @var name - A string containing the name of the variable (for debugging)
-	 @return If the operation was successful
+	 * Read a vector from a stream, with the option to read as a secondary type if
+	 * a given condition passes.
+	 * @param stream The stream from which the data is read
+	 * @param value A reference into which the data will be read
+	 * @param condition A function that determines whether the second type should be used.
+	 *                    Arguments are (bool isSigned, U32 param).
+	 * @param name A string containing the name of the variable (for debugging)
+	 * @return If the operation was successful
 	 */
 	template <typename type1, typename type2>
 	static inline bool read_as(std::istream &stream, std::vector<type1> &value, std::function<bool(bool,U32)> condition, const std::string &name) {
@@ -234,14 +229,14 @@ public:
 	}
 
 	/**
-	 Read a vector from a stream, but use a given method for reading instead of 
-	 the standard call to read().
-	 @var stream - The stream from which the data is read
-	 @var value - A reference into which the data will be read
-	 @var passed_method - A function which will read the object's fields from the stream.
-	                      Arguments are (T &object, std::istream &stream)
-	 @var name - A string containing the name of the variable (for debugging)
-	 @return If the operation was successful
+	 * Read a vector from a stream, but use a given method for reading instead of 
+	 * the standard call to read().
+	 * @param stream The stream from which the data is read
+	 * @param value A reference into which the data will be read
+	 * @param passed_method A function which will read the object's fields from the stream.
+	 *                        Arguments are (T &object, std::istream &stream)
+	 * @param name A string containing the name of the variable (for debugging)
+	 * @return If the operation was successful
 	 */
 	template <typename T>
 	static inline bool read_with(std::istream &stream, std::vector<T> &value, std::function<bool(T&, std::istream &)> passed_method, const std::string &name) {
@@ -266,14 +261,14 @@ public:
 	}
 
 	/**
-	 Read a vector from a stream, but call an extra method after the size is read,
-	 before the actual contents are read.
-	 @var stream - The stream from which the data is read
-	 @var value - A reference into which the data will be read
-	 @var extra_method - A function that will be called before the contents are read.
-	                     Arguments are (std::istream &stream)
-	 @var name - A string containing the name of the variable (for debugging)
-	 @return If the operation was successful
+	 * Read a vector from a stream, but call an extra method after the size is read,
+	 * before the actual contents are read.
+	 * @param stream The stream from which the data is read
+	 * @param value A reference into which the data will be read
+	 * @param extra_method A function that will be called before the contents are read.
+	 *                       Arguments are (std::istream &stream)
+	 * @param name A string containing the name of the variable (for debugging)
+	 * @return If the operation was successful
 	 */
 	template <typename T>
 	static inline bool read_extra(std::istream &stream, std::vector<T> &value, std::function<bool(std::istream &)> extra_method, const std::string &name) {
@@ -319,11 +314,11 @@ public:
 	};
 
 	/**
-	 Write types to a stream
-	 @var stream - The stream to which the data is written
-	 @var value - The value of the data to write
-	 @var name - A string containing the name of the variable (for debugging)
-	 @return If the operation was successful
+	 * Write types to a stream
+	 * @param stream The stream to which the data is written
+	 * @param value The value of the data to write
+	 * @param name A string containing the name of the variable (for debugging)
+	 * @return If the operation was successful
 	 */
 	template <typename T>
 	static inline bool write(std::ostream &stream, const T &value, const std::string &name) {
@@ -333,11 +328,11 @@ public:
 	}
 
 	/**
-	 Write a vector to a stream
-	 @var stream - The stream to which the data is written
-	 @var value - The vector to write
-	 @var name - A string containing the name of the variable (for debugging)
-	 @return If the operation was successful
+	 * Write a vector to a stream
+	 * @param stream The stream to which the data is written
+	 * @param value The vector to write
+	 * @param name A string containing the name of the variable (for debugging)
+	 * @return If the operation was successful
 	 */
 	template <typename T>
 	static inline bool write(std::ostream &stream, const std::vector<T> &value, const std::string &name) {
@@ -353,11 +348,11 @@ public:
 	}
 
 	/**
-	 Write a string to a stream
-	 @var stream - The stream to which the data is written
-	 @var value - The string to write
-	 @var name - A string containing the name of the variable (for debugging)
-	 @return If the operation was successful
+	 * Write a string to a stream
+	 * @param stream The stream to which the data is written
+	 * @param value The string to write
+	 * @param name A string containing the name of the variable (for debugging)
+	 * @return If the operation was successful
 	 */
 	static inline bool write(std::ostream &stream, const std::string &value, const std::string &name) {
 		//How long is the string
@@ -373,11 +368,11 @@ public:
 	}
 
 	/**
-	 Write a dictionary to a stream
-	 @var stream - The stream to which the data is written
-	 @var value - The map to write
-	 @var name - A string containing the name of the variable (for debugging)
-	 @return If the operation was successful
+	 * Write a dictionary to a stream
+	 * @param stream The stream to which the data is written
+	 * @param value The map to write
+	 * @param name A string containing the name of the variable (for debugging)
+	 * @return If the operation was successful
 	 */
 	static inline bool write(std::ostream &stream, const Dictionary &value, const std::string &name) {
 		//How long is the map
@@ -395,14 +390,14 @@ public:
 	}
 
 	/**
-	 Write a vector to a stream, but call an extra method after the size is written,
-	 before the actual contents are written.
-	 @var stream - The stream to which the data is written
-	 @var value - The vector to write
-	 @var extra_method - A function that will be called before the contents are written.
-	                     Arguments are (std::ostream &stream)
-	 @var name - A string containing the name of the variable (for debugging)
-	 @return If the operation was successful
+	 * Write a vector to a stream, but call an extra method after the size is written,
+	 * before the actual contents are written.
+	 * @param stream The stream to which the data is written
+	 * @param value The vector to write
+	 * @param extra_method A function that will be called before the contents are written.
+	 *                       Arguments are (std::ostream &stream)
+	 * @param name A string containing the name of the variable (for debugging)
+	 * @return If the operation was successful
 	 */
 	template <typename T>
 	static inline bool write_extra(std::ostream &stream, const std::vector<T> &value, std::function<bool(std::ostream &)> extra_method, const std::string &name) {

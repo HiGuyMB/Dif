@@ -36,15 +36,15 @@ public:
 	Point3F position;
 
 	/**
-	 Reads an AISpecialNode from a stream
-	 @arg stream - The stream to read from
-	 @return If the operation was successful
+	 * Reads an AISpecialNode from a stream
+	 * @param 1 The stream to read from
+	 * @return If the operation was successful
 	 */
 	virtual bool read(std::istream &stream);
 	/**
-	 Writes an AISpecialNode to a stream
-	 @arg stream - The stream to write to
-	 @return If the operation was successful
+	 * Writes an AISpecialNode to a stream
+	 * @param 1 The stream to write to
+	 * @return If the operation was successful
 	 */
 	virtual bool write(std::ostream &stream) const;
 };

@@ -63,13 +63,13 @@ public:
 
 	/**
 	 Reads a Point2 from a stream
-	 @arg stream - The stream to read from
+	 @param 1 The stream to read from
 	 @return If the operation was successful
 	 */
 	virtual bool read(std::istream &stream);
 	/**
 	 Writes a Point2 to a stream
-	 @arg stream - The stream to write to
+	 @param 1 The stream to write to
 	 @return If the operation was successful
 	 */
 	virtual bool write(std::ostream &stream) const;
