@@ -50,17 +50,23 @@
 class IO {
 public:
 #ifdef PRINT_DEBUG_INFO
+	//Print out information about the data being read / written to streams.
+	// READCHECK and WRITECHECK will automatically append the type to name, normal
+	// raw IO::read/write methods won't.
 	template <typename T>
 	static inline void debug_print(std::istream &stream, T &value, const std::string &name) {
 		std::istream::pos_type pos = stream.tellg();
+		//Basic information about the data's name / offset
 		std::cout << "Read " << name << " at offset " << pos << " (0x" << std::hex << pos << ")" << std::dec << std::endl;
 	}
 	template <typename T>
 	static inline void debug_print(std::ostream &stream, const T &value, const std::string &name) {
 		std::istream::pos_type pos = stream.tellp();
+		//Basic information about the data's name / offset
 		std::cout << "Write " << name << " at offset " << pos << " (0x" << std::hex << pos << ")" << std::dec << std::endl;
 	}
 #else
+	//Use a macro here so that absolutely no code is generated.
 #define debug_print(stream, value, name)
 #endif
 
