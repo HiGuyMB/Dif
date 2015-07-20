@@ -273,7 +273,7 @@ bool Interior::write(std::ostream &stream) const {
 	WRITECHECK(lightState, std::vector<LightState>); //lightState
 	WRITECHECK(stateData, std::vector<StateData>); //stateData
 	IO::write_extra(stream, stateDataBuffer, [&](std::ostream &stream)->bool {
-		return WRITE(flags, U32); //flags
+		return IO::write(stream, flags, "flags"); //flags
 	}, "stateDataBuffer"); //stateDataBuffer
 	WRITECHECK(nameBufferCharacter, std::vector<U8>); //nameBufferCharacter
 	WRITECHECK(numSubObjects, U32); //numSubObjects

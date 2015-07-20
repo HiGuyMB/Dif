@@ -557,13 +557,12 @@ for (U32 i = 0; i < name##_length; i ++) { \
 	READ(type); \
 }
 
-//Macros to speed up file reading
+//Macros to speed up file writing
 #ifdef DEBUG
-#define WRITE(value, type) IO::write(stream, (const type) value, #value)
+#define WRITECHECK(value, type) { if (!IO::write(stream, (const type) value, #value)) return false; }
 #else
-#define WRITE(value, type) IO::write(stream, (const type) value, "")
+#define WRITECHECK(value, type) { if (!IO::write(stream, (const type) value, "")) return false; }
 #endif
 
-#define WRITECHECK(value, type) { if (!WRITE(value, type)) return false; }
 
 #endif
