@@ -206,10 +206,13 @@ bool Interior::read(std::istream &stream) {
 	// of needing that for U8 lists.
 	READTOVAR(polyListStringCharacter, std::vector<U8>); //polyListStringCharacter
 
-	coordBin = new CoordBin[gNumCoordBins * gNumCoordBins];
+	coordBin.reserve(gNumCoordBins * gNumCoordBins);
 	for (U32 i = 0; i < gNumCoordBins * gNumCoordBins; i ++) {
-		READTOVAR(coordBin[i].binStart, U32); //binStart
-		READTOVAR(coordBin[i].binCount, U32); //binCount
+		CoordBin bin;
+		if (READTOVAR(bin, CoordBin))
+			coordBin.push_back(bin);
+		else
+			return false;
 	}
 
 	IO::read_as<U16, U16>(stream, &coordBinIndex, [](bool useAlternate, U32 param) { return true; }, "coordBinIndex");
@@ -296,8 +299,7 @@ bool Interior::write(std::ostream &stream) const {
 	WRITE(polyListPointIndex, std::vector<U32>); //polyListPointIndex
 	WRITE(polyListStringCharacter, std::vector<U8>); //polyListStringCharacter
 	for (U32 i = 0; i < gNumCoordBins * gNumCoordBins; i ++) {
-		WRITECHECK(coordBin[i].binStart, U32); //binStart
-		WRITECHECK(coordBin[i].binCount, U32); //binCount
+		WRITE(coordBin[i], CoordBin);
 	}
 	WRITE(coordBinIndex, std::vector<U16>); //coordBinIndex
 	WRITECHECK(coordBinMode, U32); //coordBinMode
@@ -671,6 +673,18 @@ bool ConvexHull::write(std::ostream &stream) const {
 	WRITECHECK(polyListPlaneStart, U32); //polyListPlaneStart
 	WRITECHECK(polyListPointStart, U32); //polyListPointStart
 	WRITECHECK(polyListStringStart, U32); //polyListStringStart
+	return true;
+}
+
+bool CoordBin::read(std::istream &stream) {
+	READTOVAR(binStart, U32); //binStart
+	READTOVAR(binCount, U32); //binCount
+	return true;
+}
+
+bool CoordBin::write(std::ostream &stream) const {
+	WRITECHECK(binStart, U32); //binStart
+	WRITECHECK(binCount, U32); //binCount
 	return true;
 }
 

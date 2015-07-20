@@ -206,9 +206,12 @@ struct ConvexHull : public Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-struct CoordBin {
+struct CoordBin : public Readable, Writable {
 	U32 binStart;
 	U32 binCount;
+
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 struct TexMatrix : public Readable, Writable {
@@ -278,9 +281,7 @@ public:
 	std::vector<U16> polyListPlaneIndex;
 	std::vector<U32> polyListPointIndex;
 	std::vector<U8> polyListStringCharacter;
-
-	CoordBin *coordBin;
-
+	std::vector<CoordBin>coordBin;
 	std::vector<U16>coordBinIndex;
 
 	U32 coordBinMode;
