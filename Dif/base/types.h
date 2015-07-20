@@ -75,7 +75,7 @@ typedef Point4<F32> Point4F;
 typedef Color<U8>  ColorI;
 typedef Color<F32> ColorF;
 
-typedef std::map<std::string, std::string> Dictionary;
+typedef std::vector<std::pair<std::string, std::string>> Dictionary;
 
 //More names stolen from TGE
 

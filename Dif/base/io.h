@@ -163,7 +163,7 @@ public:
 			}
 
 			//Insert the pair
-			(*value)[name] = val;
+			(*value).push_back(Dictionary::value_type(name, val));
 		}
 
 		return true;
