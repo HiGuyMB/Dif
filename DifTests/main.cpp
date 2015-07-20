@@ -3,8 +3,8 @@
 #include <fstream>
 #include "objects/dif.h"
 
-void printTriggers(DIF *dif) {
-	for (Trigger trigger : dif->trigger) {
+void printTriggers(DIF dif) {
+	for (Trigger trigger : dif.trigger) {
 		std::cout << "new Trigger(" << trigger.name << ") {" << std::endl;
 		std::cout << "   position = \"" << trigger.offset.x << " " << trigger.offset.y << " " << trigger.offset.z << "\";" << std::endl;
 		std::cout << "   rotation = \"1 0 0 0\";" << std::endl;
@@ -18,8 +18,8 @@ void printTriggers(DIF *dif) {
 	}
 }
 
-void printEntities(DIF *dif) {
-	for (GameEntity entity : dif->gameEntity) {
+void printEntities(DIF dif) {
+	for (GameEntity entity : dif.gameEntity) {
 		std::cout << "new " << entity.gameClass << "() {" << std::endl;
 		std::cout << "   position = \"" << entity.position.x << " " << entity.position.y << " " << entity.position.z << "\";" << std::endl;
 		std::cout << "   rotation = \"1 0 0 0\";" << std::endl;
@@ -42,19 +42,18 @@ bool testEquality(const char *file) {
 	std::filebuf fb;
 	if (fb.open(file, std::ios::in)) {
 		std::istream stream(&fb);
-		DIF *dif = new DIF(stream);
+		DIF dif;
+		dif.read(stream);
 		fb.close();
 
 		std::ostringstream out;
-		if (dif->write(out)) {
+		if (dif.write(out)) {
 			//Check the two
 			std::string fileStr = inString.str();
 			std::string difStr = out.str();
 
-			delete dif;
 			return fileStr.compare(difStr) == 0;
 		}
-		delete dif;
 	}
 	return false;
 }
@@ -64,12 +63,12 @@ int main(int argc, const char * argv[]) {
 	std::filebuf fb;
 	if (fb.open(argv[1], std::ios::in)) {
 		std::istream stream(&fb);
-		DIF *dif = new DIF(stream);
+		DIF dif;
+		dif.read(stream);
 		fb.close();
 
 		printTriggers(dif);
 		printEntities(dif);
-		delete dif;
 	}
 	return testEquality(argv[1]) ? 0 : 1;
 }

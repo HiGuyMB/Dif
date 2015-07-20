@@ -394,7 +394,7 @@ inline T __read(std::istream &stream, T *thing) {
 	#define READTOVAR(name, type) IO::read(stream, reinterpret_cast<type *>(&name), #name)
 	#define READCHECK(type, value) { \
 		if (READ(type) != value)\
-			return;\
+			return false;\
 	}
 #else
 	#define READVAR(name, type) \
@@ -404,7 +404,7 @@ inline T __read(std::istream &stream, T *thing) {
 	#define READCHECK(type, value) { \
 	READVAR(check, type); \
 	if (check != value)\
-		return;\
+		return false;\
 	}
 #endif
 

@@ -37,7 +37,7 @@
 #include "vehicleCollision.h"
 #include "gameEntity.h"
 
-class DIF {
+class DIF : public Readable, public Writable {
 public:
 	std::vector<Interior> interior;
 	std::vector<Interior> subObject;
@@ -63,8 +63,7 @@ public:
 	 @arg file - The FILE to read from (updates position)
 	 @return A DIF
 	 */
-	DIF(std::istream &stream);
-
+	bool read(std::istream &stream);
 	bool write(std::ostream &stream) const;
 };
 

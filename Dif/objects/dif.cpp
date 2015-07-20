@@ -30,7 +30,7 @@
 #include "io.h"
 #include "dif.h"
 
-DIF::DIF(std::istream &stream) {
+bool DIF::read(std::istream &stream) {
 	//http://rustycode.com/tutorials/DIF_File_Format_44_14.html
 	// Someone give that guy all the cookies.
 
@@ -56,6 +56,8 @@ DIF::DIF(std::istream &stream) {
 		READTOVAR(gameEntity, std::vector<GameEntity>);
 	}
 	READ(U32); //dummy
+
+	return true;
 }
 
 bool DIF::write(std::ostream &stream) const {
