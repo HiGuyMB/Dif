@@ -52,7 +52,7 @@ bool Interior::read(std::istream &stream) {
 		READTOVAR(pointVisibility, std::vector<U8>); //pointVisibility
 	}
 	READTOVAR(texGenEq, std::vector<TexGenEq>); //texGenEq
-	IO::read_with<::BSPNode>(stream, &BSPNode, [=](::BSPNode *node, std::istream &stream)->bool{return node->read(stream, this->interiorFileVersion);}, "BSPNode");
+	IO::read_with<::BSPNode>(stream, &BSPNode, [&](::BSPNode *node, std::istream &stream)->bool{return node->read(stream, this->interiorFileVersion);}, "BSPNode");
 	READTOVAR(BSPSolidLeaf, std::vector<::BSPSolidLeaf>); //BSPSolidLeaf
 	//MaterialList
 	READTOVAR(materialListVersion, U8); //version
@@ -62,7 +62,7 @@ bool Interior::read(std::istream &stream) {
 	if (this->interiorFileVersion >= 12) {
 		READTOVAR(edge, std::vector<Edge>); //edge
 	}
-	IO::read_with<Zone>(stream, &zone, [=](Zone *zone, std::istream &stream)->bool{return zone->read(stream, this->interiorFileVersion);}, "zone");
+	IO::read_with<Zone>(stream, &zone, [&](Zone *zone, std::istream &stream)->bool{return zone->read(stream, this->interiorFileVersion);}, "zone");
 	IO::read_as<U16, U16>(stream, &zoneSurface, [](bool useAlternate, U32 param)->bool{return false;}, "zoneSurface");
 	if (this->interiorFileVersion >= 12) {
 		READTOVAR(zoneStaticMesh, std::vector<U32>); //zoneStaticMesh
@@ -81,7 +81,7 @@ bool Interior::read(std::istream &stream) {
 
 	bool isTGEInterior = false;
 
-	if (!IO::read_with<Surface>(stream, &surface, [=](Surface *surface, std::istream &stream)->bool{return surface->read(stream, interiorFileVersion, false, index.size(), plane.size(), materialName.size(), texGenEq.size());}, "surface")) {
+	if (!IO::read_with<Surface>(stream, &surface, [&](Surface *surface, std::istream &stream)->bool{return surface->read(stream, interiorFileVersion, false, index.size(), plane.size(), materialName.size(), texGenEq.size());}, "surface")) {
 		isTGEInterior = true;
 
 		if (interiorFileVersion != 0) {
@@ -98,7 +98,7 @@ bool Interior::read(std::istream &stream) {
 		stream.seekg(pos);
 
 		//Second, re-read
-		if (!IO::read_with<Surface>(stream, &surface, [=](Surface *surface, std::istream &stream)->bool{return surface->read(stream, interiorFileVersion, true, index.size(), plane.size(), materialName.size(), texGenEq.size());}, "surface")) {
+		if (!IO::read_with<Surface>(stream, &surface, [&](Surface *surface, std::istream &stream)->bool{return surface->read(stream, interiorFileVersion, true, index.size(), plane.size(), materialName.size(), texGenEq.size());}, "surface")) {
 			//Ok this surface failed too. Bail.
 			//TODO: Blow up here
 			return false;
@@ -145,9 +145,9 @@ bool Interior::read(std::istream &stream) {
 		READTOVAR(normalLMapIndex, std::vector<U8>); //normalLMapIndex
 		READTOVAR(alarmLMapIndex, std::vector<U8>); //alarmLMapIndex
 	}
-	IO::read_with<NullSurface>(stream, &nullSurface, [=](NullSurface *nullSurface, std::istream &stream)->bool{return nullSurface->read(stream, this->interiorFileVersion);}, "nullSurface");
+	IO::read_with<NullSurface>(stream, &nullSurface, [&](NullSurface *nullSurface, std::istream &stream)->bool{return nullSurface->read(stream, this->interiorFileVersion);}, "nullSurface");
 	if (this->interiorFileVersion != 4) { //Also found in 0, 2, 3, 14
-		IO::read_with<LightMap>(stream, &lightMap, [=](LightMap *lightMap, std::istream &stream)->bool{return lightMap->read(stream, isTGEInterior);}, "lightMap");
+		IO::read_with<LightMap>(stream, &lightMap, [&](LightMap *lightMap, std::istream &stream)->bool{return lightMap->read(stream, isTGEInterior);}, "lightMap");
 	}
 	IO::read_as<U32, U16>(stream, &solidLeafSurface, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "solidLeafSurface");
 	READTOVAR(animatedLight, std::vector<AnimatedLight>); //animatedLight
@@ -161,7 +161,7 @@ bool Interior::read(std::istream &stream) {
 		//State datas have the flags field written right after the vector size,
 		// and THEN the data, just to make things confusing. So we need yet another
 		// read method for this.
-		IO::read_extra(stream, &stateDataBuffer, [=](std::istream &stream)->bool{
+		IO::read_extra(stream, &stateDataBuffer, [&](std::istream &stream)->bool{
 			return READTOVAR(flags, U32); //flags
 		}, "stateDataBuffer"); //stateDataBuffer
 		READTOVAR(nameBufferCharacter, std::vector<U8>); //nameBufferCharacter
@@ -171,7 +171,7 @@ bool Interior::read(std::istream &stream) {
 //			//NFC
 //		}
 	}
-	IO::read_with<ConvexHull>(stream, &convexHull, [=](ConvexHull *convexHull, std::istream &stream)->bool{return convexHull->read(stream, this->interiorFileVersion);}, "convexHull");
+	IO::read_with<ConvexHull>(stream, &convexHull, [&](ConvexHull *convexHull, std::istream &stream)->bool{return convexHull->read(stream, this->interiorFileVersion);}, "convexHull");
 	READTOVAR(convexHullEmitStringCharacter, std::vector<U8>); //convexHullEmitStringCharacter
 
 	//-------------------------------------------------------------------------
@@ -272,7 +272,7 @@ bool Interior::write(std::ostream &stream) const {
 	WRITE(animatedLight, std::vector<AnimatedLight>); //animatedLight
 	WRITE(lightState, std::vector<LightState>); //lightState
 	WRITE(stateData, std::vector<StateData>); //stateData
-	IO::write_extra(stream, stateDataBuffer, [=](std::ostream &stream)->bool {
+	IO::write_extra(stream, stateDataBuffer, [&](std::ostream &stream)->bool {
 		return WRITE(flags, U32); //flags
 	}, "stateDataBuffer"); //stateDataBuffer
 	WRITE(nameBufferCharacter, std::vector<U8>); //nameBufferCharacter
