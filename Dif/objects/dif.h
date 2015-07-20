@@ -39,26 +39,14 @@
 
 class DIF {
 public:
-	U32 numDetailLevels;
-	Interior **interior;
+	std::vector<Interior> interior;
+	std::vector<Interior> subObject;
 
-	U32 numSubObjects;
-	Interior **subObject;
-
-	U32 numTriggers;
-	Trigger **trigger;
-
-	U32 numInteriorPathFollowers;
-	InteriorPathFollower **interiorPathFollower;
-
-	U32 numForceFields;
-	ForceField **forceField;
-
-	U32 numAISpecialNodes;
-	AISpecialNode **aiSpecialNode;
-
-	U32 readVehicleCollision;
-	VehicleCollision *vehicleCollision;
+	std::vector<Trigger> trigger;
+	std::vector<InteriorPathFollower> interiorPathFollower;
+	std::vector<ForceField> forceField;
+	std::vector<AISpecialNode> aiSpecialNode;
+	VehicleCollision vehicleCollision;
 
 	U32 unknown0;
 	U32 unknown1;
@@ -66,8 +54,7 @@ public:
 	U32 unknown3;
 
 	U32 readGameEntities;
-	U32 numGameEntities;
-	GameEntity **gameEntity;
+	std::vector<GameEntity> gameEntity;
 
 	U32 dummy;
 
@@ -79,12 +66,6 @@ public:
 	DIF(std::istream &stream);
 
 	bool write(std::ostream &stream) const;
-
-	/**
-	 Frees the DIF and all memory contained within it
-	 @arg dif - The DIF to release
-	 */
-	~DIF();
 };
 
 #endif

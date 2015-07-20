@@ -4,15 +4,14 @@
 #include "objects/dif.h"
 
 void printTriggers(DIF *dif) {
-	for (int i = 0; i < dif->numTriggers; i ++) {
-		Trigger *trigger = dif->trigger[i];
-		std::cout << "new Trigger(" << trigger->name << ") {" << std::endl;
-		std::cout << "   position = \"" << trigger->offset.x << " " << trigger->offset.y << " " << trigger->offset.z << "\";" << std::endl;
+	for (Trigger trigger : dif->trigger) {
+		std::cout << "new Trigger(" << trigger.name << ") {" << std::endl;
+		std::cout << "   position = \"" << trigger.offset.x << " " << trigger.offset.y << " " << trigger.offset.z << "\";" << std::endl;
 		std::cout << "   rotation = \"1 0 0 0\";" << std::endl;
 		std::cout << "   scale = \"1 1 1 \";" << std::endl;
-		std::cout << "   datablock = \"" << trigger->datablock <<  "\";" << std::endl;
-		std::cout << "   polyhedron = \"" << trigger->getPolyhedron() << "\";" << std::endl;
-		for (auto it : trigger->properties) {
+		std::cout << "   datablock = \"" << trigger.datablock <<  "\";" << std::endl;
+		std::cout << "   polyhedron = \"" << trigger.getPolyhedron() << "\";" << std::endl;
+		for (auto it : trigger.properties) {
 			std::cout << "      " << it.first << " = \"" << it.second << "\";" << std::endl;
 		}
 		std::cout << "};" << std::endl;
@@ -20,14 +19,13 @@ void printTriggers(DIF *dif) {
 }
 
 void printEntities(DIF *dif) {
-	for (int i = 0; i < dif->numGameEntities; i ++) {
-		GameEntity *entity = dif->gameEntity[i];
-		std::cout << "new " << entity->gameClass << "() {" << std::endl;
-		std::cout << "   position = \"" << entity->position.x << " " << entity->position.y << " " << entity->position.z << "\";" << std::endl;
+	for (GameEntity entity : dif->gameEntity) {
+		std::cout << "new " << entity.gameClass << "() {" << std::endl;
+		std::cout << "   position = \"" << entity.position.x << " " << entity.position.y << " " << entity.position.z << "\";" << std::endl;
 		std::cout << "   rotation = \"1 0 0 0\";" << std::endl;
 		std::cout << "   scale = \"1 1 1 \";" << std::endl;
-		std::cout << "   datablock = \"" << entity->datablock <<  "\";" << std::endl;
-		for (auto it : entity->properties) {
+		std::cout << "   datablock = \"" << entity.datablock <<  "\";" << std::endl;
+		for (auto it : entity.properties) {
 			std::cout << "      " << it.first << " = \"" << it.second << "\";" << std::endl;
 		}
 		std::cout << "};" << std::endl;

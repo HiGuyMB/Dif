@@ -39,46 +39,21 @@ DIF::DIF(std::istream &stream) {
 		READ(PNG); //previewBitmap
 	}
 
-	READLOOPVAR(numDetailLevels, interior, Interior *) {
-		interior[i] = new Interior();
-		interior[i]->read(stream);
-	}
-	READLOOPVAR(numSubObjects, subObject, Interior *) {
-		subObject[i] = new Interior();
-		subObject[i]->read(stream);
-	}
-	READLOOPVAR(numTriggers, trigger, Trigger *) {
-		trigger[i] = new Trigger();
-		trigger[i]->read(stream);
-	}
-	READLOOPVAR(numInteriorPathFollowers, interiorPathFollower, InteriorPathFollower *) {
-		interiorPathFollower[i] = new InteriorPathFollower();
-		interiorPathFollower[i]->read(stream);
-	}
-	READLOOPVAR(numForceFields, forceField, ForceField *) {
-		forceField[i] = new ForceField();
-		forceField[i]->read(stream);
-	}
-	READLOOPVAR(numAISpecialNodes, aiSpecialNode, AISpecialNode *) {
-		aiSpecialNode[i] = new AISpecialNode();
-		aiSpecialNode[i]->read(stream);
-	}
+	READTOVAR(interior, std::vector<Interior>);
+	READTOVAR(subObject, std::vector<Interior>);
+	READTOVAR(trigger, std::vector<Trigger>);
+	READTOVAR(interiorPathFollower, std::vector<InteriorPathFollower>);
+	READTOVAR(forceField, std::vector<ForceField>);
+	READTOVAR(aiSpecialNode, std::vector<AISpecialNode>);
 	if (READ(U32) == 1) { //readVehicleCollision
-		vehicleCollision = new VehicleCollision();
-		vehicleCollision->read(stream);
+		vehicleCollision.read(stream);
 	}
 	READ(U32); //unknown
 	READ(U32); //unknown
 	READ(U32); //unknown
 	READ(U32); //unknown
 	if (READ(U32) == 2) { //readGameEntities
-		READLOOPVAR(numGameEntities, gameEntity, GameEntity *) {
-			gameEntity[i] = new GameEntity();
-			gameEntity[i]->read(stream);
-		}
-	} else {
-		numGameEntities = 0;
-		gameEntity = NULL;
+		READTOVAR(gameEntity, std::vector<GameEntity>);
 	}
 	READ(U32); //dummy
 }
@@ -87,36 +62,22 @@ bool DIF::write(std::ostream &stream) const {
 	WRITECHECK(44, U32); //interiorResourceFileVersion
 	WRITECHECK(0, U8); //previewIncluded
 
-	WRITELOOP(numDetailLevels) {
-		if (!interior[i]->write(stream)) return false;
-	}
-	WRITELOOP(numSubObjects) {
-		if (!subObject[i]->write(stream)) return false;
-	}
-	WRITELOOP(numTriggers) {
-		if (!trigger[i]->write(stream)) return false;
-	}
-	WRITELOOP(numInteriorPathFollowers) {
-		if (!interiorPathFollower[i]->write(stream)) return false;
-	}
-	WRITELOOP(numForceFields) {
-		if (!forceField[i]->write(stream)) return false;
-	}
-	WRITELOOP(numAISpecialNodes) {
-		if (!aiSpecialNode[i]->write(stream)) return false;
-	}
+	WRITECHECK(interior, std::vector<Interior>);
+	WRITECHECK(subObject, std::vector<Interior>);
+	WRITECHECK(trigger, std::vector<Trigger>);
+	WRITECHECK(interiorPathFollower, std::vector<InteriorPathFollower>);
+	WRITECHECK(forceField, std::vector<ForceField>);
+	WRITECHECK(aiSpecialNode, std::vector<AISpecialNode>);
 	WRITECHECK(1, U32);
-	vehicleCollision->write(stream);
+	vehicleCollision.write(stream);
 
 	WRITECHECK(0, U32);
 	WRITECHECK(0, U32);
 	WRITECHECK(0, U32);
 	WRITECHECK(0, U32);
-	if (gameEntity){
+	if (gameEntity.size()) {
 		WRITECHECK(2, U32);
-		WRITELOOP(numGameEntities) {
-			gameEntity[i]->write(stream);
-		}
+		WRITECHECK(gameEntity, std::vector<GameEntity>);
 	} else {
 		WRITECHECK(0, U32);
 	}
@@ -124,36 +85,4 @@ bool DIF::write(std::ostream &stream) const {
 	WRITECHECK(0, U32);
 
 	return true;
-}
-
-DIF::~DIF() {
-	for (int i = 0; i < numDetailLevels; i ++) {
-		delete interior[i];
-	}
-	delete [] interior;
-	for (int i = 0; i < numSubObjects; i ++) {
-		delete subObject[i];
-	}
-	delete [] subObject;
-	for (int i = 0; i < numTriggers; i ++) {
-		delete trigger[i];
-	}
-	delete [] trigger;
-	for (int i = 0; i < numInteriorPathFollowers; i ++) {
-		delete interiorPathFollower[i];
-	}
-	delete [] interiorPathFollower;
-	for (int i = 0; i < numForceFields; i ++) {
-		delete forceField[i];
-	}
-	delete [] forceField;
-	for (int i = 0; i < numAISpecialNodes; i ++) {
-		delete aiSpecialNode[i];
-	}
-	delete [] aiSpecialNode;
-	delete vehicleCollision;
-	for (int i = 0; i < numGameEntities; i ++) {
-		delete gameEntity[i];
-	}
-	delete [] gameEntity;
 }
