@@ -69,7 +69,7 @@ public:
 	/**
 	 Read types from a stream
 	 @var stream - The stream from which the data is read
-	 @var value - A pointer into which the data will be read
+	 @var value - A reference into which the data will be read
 	 @var name - A string containing the name of the variable (for debugging)
 	 @return If the operation was successful
 	 */
@@ -83,7 +83,7 @@ public:
 	/**
 	 Read a vector from a stream
 	 @var stream - The stream from which the data is read
-	 @var value - A pointer into which the data will be read
+	 @var value - A reference into which the data will be read
 	 @var name - A string containing the name of the variable (for debugging)
 	 @return If the operation was successful
 	 */
@@ -112,7 +112,7 @@ public:
 	/**
 	 Read a string from a stream
 	 @var stream - The stream from which the data is read
-	 @var value - A pointer into which the data will be read
+	 @var value - A reference into which the data will be read
 	 @var name - A string containing the name of the variable (for debugging)
 	 @return If the operation was successful
 	 */
@@ -139,7 +139,7 @@ public:
 	/**
 	 Read a dictionary from a stream
 	 @var stream - The stream from which the data is read
-	 @var value - A pointer into which the data will be read
+	 @var value - A reference into which the data will be read
 	 @var name - A string containing the name of the variable (for debugging)
 	 @return If the operation was successful
 	 */
@@ -173,7 +173,7 @@ public:
 	 Read a vector from a stream, with the option to read as a secondary type if
 	 a given condition passes.
 	 @var stream - The stream from which the data is read
-	 @var value - A pointer into which the data will be read
+	 @var value - A reference into which the data will be read
 	 @var condition - A function that determines whether the second type should be used.
 	                  Arguments are (bool isSigned, U32 param).
 	 @var name - A string containing the name of the variable (for debugging)
@@ -186,7 +186,7 @@ public:
 		if (!read(stream, size, "size"))
 			return false;
 
-		//Lots of index lists here that have U16 or U32 versions based on loop2.
+		//Lots of index lists here that have U16 or U32 versions based on the sign bit.
 		// The actual bytes of the interior have 0x80s at the ends (negative bit)
 		// which seems to specify that these take a smaller type. They managed to
 		// save ~50KB/interior, but was it worth the pain?
@@ -237,7 +237,7 @@ public:
 	 Read a vector from a stream, but use a given method for reading instead of 
 	 the standard call to read().
 	 @var stream - The stream from which the data is read
-	 @var value - A pointer into which the data will be read
+	 @var value - A reference into which the data will be read
 	 @var passed_method - A function which will read the object's fields from the stream.
 	                      Arguments are (T &object, std::istream &stream)
 	 @var name - A string containing the name of the variable (for debugging)
@@ -269,7 +269,7 @@ public:
 	 Read a vector from a stream, but call an extra method after the size is read,
 	 before the actual contents are read.
 	 @var stream - The stream from which the data is read
-	 @var value - A pointer into which the data will be read
+	 @var value - A reference into which the data will be read
 	 @var extra_method - A function that will be called before the contents are read.
 	                     Arguments are (std::istream &stream)
 	 @var name - A string containing the name of the variable (for debugging)
@@ -302,7 +302,7 @@ public:
 	}
 
 
-	//Write primitive types from a std::istream
+	//Write primitive types to a std::ostream
 	template <typename T, bool=true>
 	struct write_impl {
 		static inline bool write(std::ostream &stream, const T &value, const std::string &name) {
@@ -310,7 +310,7 @@ public:
 			return stream.good();
 		}
 	};
-	//Write structures from a std::istream
+	//Write structures to a std::ostream
 	template <typename T>
 	struct write_impl<T, false> {
 		static inline bool write(std::ostream &stream, const T &value, const std::string &name) {
