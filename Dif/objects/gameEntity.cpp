@@ -30,10 +30,6 @@
 #include "io.h"
 #include "gameEntity.h"
 
-GameEntity::GameEntity() {
-
-}
-
 bool GameEntity::read(std::istream &stream) {
 	READTOVAR(datablock, std::string); //datablock
 	READTOVAR(gameClass, std::string); //gameClass
@@ -50,8 +46,4 @@ bool GameEntity::write(std::ostream &stream) const {
 	WRITE(properties, Dictionary); //properties
 
 	return true;
-}
-
-GameEntity::~GameEntity() {
-
 }

@@ -331,7 +331,6 @@ public:
 	U32 extendedLightMapData;
 	U32 lightMapBorderSize;
 
-	Interior() {};
 	~Interior();
 
 	/**

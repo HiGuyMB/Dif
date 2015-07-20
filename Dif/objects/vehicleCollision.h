@@ -60,7 +60,7 @@ struct VehicleNullSurface : public Readable, public Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-class VehicleCollision {
+class VehicleCollision : public Readable, public Writable {
 public:
 	U32 vehicleCollisionFileVersion;
 
@@ -79,9 +79,8 @@ public:
 	 Reads a VehicleCollision from a FILE
 	 @arg file - The FILE to read from (updates position)
 	 */
-	VehicleCollision(std::istream &stream);
-
-	bool write(std::ostream &stream) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 #endif

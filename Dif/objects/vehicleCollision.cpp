@@ -30,7 +30,7 @@
 #include "io.h"
 #include "vehicleCollision.h"
 
-VehicleCollision::VehicleCollision(std::istream &stream) {
+bool VehicleCollision::read(std::istream &stream) {
 	READTOVAR(vehicleCollisionFileVersion, U32); //vehicleCollisionFileVersion
 	READTOVAR(vehicleConvexHull, std::vector<VehicleConvexHull>); //vehicleConvexHull
 	READTOVAR(vehicleConvexHullEmitStringCharacter, std::vector<U8>); //vehicleConvexHullEmitStringCharacter
@@ -42,6 +42,8 @@ VehicleCollision::VehicleCollision(std::istream &stream) {
 	READTOVAR(vehiclePolyListPointIndex, std::vector<U32>); //vehiclePolyListPointIndex
 	READTOVAR(vehiclePolyListStringCharacter, std::vector<U8>); //vehiclePolyListStringCharacter
 	READTOVAR(vehicleNullSurface, std::vector<VehicleNullSurface>); //vehicleNullSurface
+
+	return true;
 }
 
 bool VehicleCollision::write(std::ostream &stream) const {

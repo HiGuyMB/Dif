@@ -30,7 +30,7 @@
 
 #include "types.h"
 
-class GameEntity {
+class GameEntity : public Readable, public Writable {
 public:
 	std::string datablock;
 	std::string gameClass;
@@ -42,16 +42,8 @@ public:
 	 @arg file - The FILE to read from (updates position)
 	 @return A GameEntity
 	 */
-	GameEntity();
-
-	bool read(std::istream &stream);
-	bool write(std::ostream &stream) const;
-
-	/**
-	 Frees the GameEntity and all memory contained within it
-	 @arg gameEntity - The GameEntity to release
-	 */
-	~GameEntity();
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 #endif

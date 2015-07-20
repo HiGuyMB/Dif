@@ -30,7 +30,7 @@
 
 #include "types.h"
 
-class AISpecialNode {
+class AISpecialNode : public Readable, public Writable {
 public:
 	std::string name;
 	Point3F position;
@@ -39,14 +39,8 @@ public:
 	 Reads an AISpecialNode from a FILE
 	 @arg file - The FILE to read from (updates position)
 	 */
-	AISpecialNode(std::istream &stream);
-
-	bool write(std::ostream &stream) const;
-
-	/**
-	 Frees the AISpecialNode and all memory contained within it
-	 */
-	~AISpecialNode();
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 #endif

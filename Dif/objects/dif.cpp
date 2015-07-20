@@ -48,19 +48,24 @@ DIF::DIF(std::istream &stream) {
 		subObject[i]->read(stream);
 	}
 	READLOOPVAR(numTriggers, trigger, Trigger *) {
-		trigger[i] = new Trigger(stream);
+		trigger[i] = new Trigger();
+		trigger[i]->read(stream);
 	}
 	READLOOPVAR(numInteriorPathFollowers, interiorPathFollower, InteriorPathFollower *) {
-		interiorPathFollower[i] = new InteriorPathFollower(stream);
+		interiorPathFollower[i] = new InteriorPathFollower();
+		interiorPathFollower[i]->read(stream);
 	}
 	READLOOPVAR(numForceFields, forceField, ForceField *) {
-		forceField[i] = new ForceField(stream);
+		forceField[i] = new ForceField();
+		forceField[i]->read(stream);
 	}
 	READLOOPVAR(numAISpecialNodes, aiSpecialNode, AISpecialNode *) {
-		aiSpecialNode[i] = new AISpecialNode(stream);
+		aiSpecialNode[i] = new AISpecialNode();
+		aiSpecialNode[i]->read(stream);
 	}
 	if (READ(U32) == 1) { //readVehicleCollision
-		vehicleCollision = new VehicleCollision(stream);
+		vehicleCollision = new VehicleCollision();
+		vehicleCollision->read(stream);
 	}
 	READ(U32); //unknown
 	READ(U32); //unknown

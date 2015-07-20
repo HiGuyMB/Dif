@@ -41,7 +41,7 @@ public:
 	virtual bool write(std::ostream &stream) const;
 };
 
-class InteriorPathFollower {
+class InteriorPathFollower : public Readable, public Writable {
 public:
 	std::string name;
 	std::string datablock;
@@ -59,9 +59,8 @@ public:
 	 @arg file - The FILE to read from (updates position)
 	 @return An InteriorPathFollower
 	 */
-	InteriorPathFollower(std::istream &stream);
-
-	bool write(std::ostream &stream) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 #endif

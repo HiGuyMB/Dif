@@ -28,7 +28,7 @@
 #include "staticMesh.h"
 #include <assert.h>
 
-StaticMesh::StaticMesh(std::istream &stream) {
+bool StaticMesh::read(std::istream &stream) {
 	READTOVAR(primitive, std::vector<Primitive>); //primitive
 	READTOVAR(index, std::vector<U16>); //index
 	READTOVAR(vertex, std::vector<Point3F>); //vertex
@@ -47,6 +47,8 @@ StaticMesh::StaticMesh(std::istream &stream) {
 	READTOVAR(bounds, BoxF);
 	READTOVAR(transform, MatrixF);
 	READTOVAR(scale, Point3F);
+
+	return true;
 }
 
 bool StaticMesh::write(std::ostream &stream) const {

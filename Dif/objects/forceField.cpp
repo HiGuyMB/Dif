@@ -30,7 +30,7 @@
 #include "io.h"
 #include "forceField.h"
 
-ForceField::ForceField(std::istream &stream) {
+bool ForceField::read(std::istream &stream) {
 	READTOVAR(forceFieldFileVersion, U32); //forceFieldFileVersion
 	READTOVAR(name, std::string); //name
 	READTOVAR(trigger, std::vector<std::string>); //trigger
@@ -44,6 +44,8 @@ ForceField::ForceField(std::istream &stream) {
 	READTOVAR(surface, std::vector<Surface_FF>); //surface
 	READTOVAR(solidLeafSurface, std::vector<U32>); //solidLeafSurface
 	READTOVAR(color, ColorI); //color
+
+	return true;
 }
 
 bool ForceField::write(std::ostream &stream) const {

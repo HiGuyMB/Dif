@@ -304,7 +304,8 @@ bool Interior::read(std::istream &stream) {
 
 		if (this->interiorFileVersion >= 10) {
 			READLOOPVAR(numStaticMeshes, staticMesh, StaticMesh *) {
-				staticMesh[i] = new StaticMesh(stream);
+				staticMesh[i] = new StaticMesh();
+				staticMesh[i]->read(stream);
 			}
 		} else {
 			numStaticMeshes = 0;

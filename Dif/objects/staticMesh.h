@@ -64,7 +64,8 @@ struct MaterialList : public Readable, Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-class StaticMesh {
+class StaticMesh : public Readable, public Writable {
+public:
 	std::vector<Primitive> primitive;
 	std::vector<U16> index;
 	std::vector<Point3F> vertex;
@@ -82,16 +83,14 @@ class StaticMesh {
 	BoxF bounds;
 	MatrixF transform;
 	Point3F scale;
-public:
-	
+
 	/**
 	 Reads a StaticMesh from a FILE
 	 @arg file - The FILE to read from (updates position)
 	 @return A StaticMesh
 	 */
-	StaticMesh(std::istream &stream);
-
-	bool write(std::ostream &stream) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 };
 
 #endif

@@ -47,7 +47,7 @@ struct PolyHedron : public Readable, public Writable {
 	virtual bool write(std::ostream &stream) const;
 };
 
-class Trigger {
+class Trigger : public Readable, public Writable {
 public:
 	std::string name;
 	std::string datablock;
@@ -60,9 +60,8 @@ public:
 	 Reads a Trigger from a FILE
 	 @arg file - The FILE to read from (updates position)
 	 */
-	Trigger(std::istream &stream);
-
-	bool write(std::ostream &stream) const;
+	virtual bool read(std::istream &stream);
+	virtual bool write(std::ostream &stream) const;
 
 	std::string getPolyhedron();
 };
