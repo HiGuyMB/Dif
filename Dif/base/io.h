@@ -183,11 +183,22 @@ public:
 		if (!read(stream, &size, "size"))
 			return false;
 
+		//Lots of index lists here that have U16 or U32 versions based on loop2.
+		// The actual bytes of the interior have 0x80s at the ends (negative bit)
+		// which seems to specify that these take a smaller type. They managed to
+		// save ~50KB/interior, but was it worth the pain?
+
+		//Params to use for the condition
 		bool useAlternate = false;
 		U8 param = 0;
+
+		//Should we use the alternate version?
 		if (size & 0x80000000) {
+			//Flip the sign bit
 			size ^= 0x80000000;
 			useAlternate = true;
+
+			//Extra U8 of data in each of these, almost never used but still there
 			if (!read(stream, &param, "param"))
 				return false;
 		}
@@ -197,10 +208,12 @@ public:
 
 		//Read all the objects
 		for (int i = 0; i < size; i ++) {
+			//Should we use the alternate type? Lambda functions to the rescue!
 			if (condition(useAlternate, param)) {
 				type2 obj;
 				//Make sure the read succeeds
 				if (read(stream, &obj, "obj"))
+					//Cast it back to what we want
 					value->push_back(static_cast<type1>(obj));
 				else
 					return false;
