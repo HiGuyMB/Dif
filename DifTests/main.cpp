@@ -1,4 +1,6 @@
 #include <iostream>
+#include <sstream>
+#include <fstream>
 #include "objects/dif.h"
 
 void printTriggers(DIF *dif) {
@@ -17,18 +19,31 @@ void printTriggers(DIF *dif) {
 	}
 }
 
-int main(int argc, const char * argv[]) {
-	std::filebuf fb;
+bool testEquality(const char *file) {
+	//Read the file to a stream
+	std::ifstream inFile(file);
+	std::stringstream inString;
+	inString << inFile.rdbuf();
 
-	if (fb.open(argv[1], std::ios::in)) {
+	//Read it into the dif
+	std::filebuf fb;
+	if (fb.open(file, std::ios::in)) {
 		std::istream stream(&fb);
-		DIF *dif = new DIF(stream, IO::getPath(argv[1]));
+		DIF *dif = new DIF(stream);
 		fb.close();
 
-		printTriggers(dif);
+		std::ostringstream out;
+		if (dif->write(out)) {
+			//Check the two
+			std::string fileStr = inString.str();
+			std::string difStr = out.str();
 
-		delete dif;
+			return fileStr.compare(difStr) == 0;
+		}
 	}
+	return false;
+}
 
-	return 0;
+int main(int argc, const char * argv[]) {
+	return testEquality(argv[1]) ? 0 : 1;
 }
