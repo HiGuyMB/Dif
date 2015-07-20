@@ -28,6 +28,8 @@
 #include "io.h"
 #include "interiorPathFollower.h"
 
+DIF_NAMESPACE
+
 bool InteriorPathFollower::read(std::istream &stream) {
 	READCHECK(name, std::string); //name
 	READCHECK(datablock, std::string); //datablock
@@ -71,3 +73,5 @@ bool WayPoint::write(std::ostream &stream) const {
 
 	return true;
 }
+
+DIF_NAMESPACE_END

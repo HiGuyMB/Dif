@@ -32,6 +32,8 @@
 #include "interior.h"
 #include "math.h"
 
+DIF_NAMESPACE
+
 bool Interior::read(std::istream &stream) {
 	READCHECK(interiorFileVersion, U32); //interiorFileVersion
 	READCHECK(detailLevel, U32); //detailLevel
@@ -49,8 +51,8 @@ bool Interior::read(std::istream &stream) {
 		READCHECK(pointVisibility, std::vector<U8>); //pointVisibility
 	}
 	READCHECK(texGenEq, std::vector<TexGenEq>); //texGenEq
-	IO::read_with<::BSPNode>(stream, BSPNode, [&](::BSPNode &node, std::istream &stream)->bool{return node.read(stream, this->interiorFileVersion);}, "BSPNode"); //BSPNode
-	READCHECK(BSPSolidLeaf, std::vector<::BSPSolidLeaf>); //BSPSolidLeaf
+	IO::read_with<DIF::BSPNode>(stream, BSPNode, [&](DIF::BSPNode &node, std::istream &stream)->bool{return node.read(stream, this->interiorFileVersion);}, "BSPNode"); //BSPNode
+	READCHECK(BSPSolidLeaf, std::vector<DIF::BSPSolidLeaf>); //BSPSolidLeaf
 	//MaterialList
 	READCHECK(materialListVersion, U8); //version
 	READCHECK(materialName, std::vector<std::string>); //materialName
@@ -263,8 +265,8 @@ bool Interior::write(std::ostream &stream) const {
 	WRITECHECK(point, std::vector<Point3F>); //point
 	WRITECHECK(pointVisibility, std::vector<U8>); //pointVisibility
 	WRITECHECK(texGenEq, std::vector<TexGenEq>); //texGenEq
-	WRITECHECK(BSPNode, std::vector<::BSPNode>); //BSPNode
-	WRITECHECK(BSPSolidLeaf, std::vector<::BSPSolidLeaf>); //BSPSolidLeaf
+	WRITECHECK(BSPNode, std::vector<DIF::BSPNode>); //BSPNode
+	WRITECHECK(BSPSolidLeaf, std::vector<DIF::BSPSolidLeaf>); //BSPSolidLeaf
 	WRITECHECK(materialListVersion, U8); //materialListVersion
 	WRITECHECK(materialName, std::vector<std::string>); //material
 	WRITECHECK(index, std::vector<U32>); //index
@@ -707,3 +709,5 @@ bool TexMatrix::write(std::ostream &stream) const {
 	WRITECHECK(B, S32); //B
 	return true;
 }
+
+DIF_NAMESPACE_END

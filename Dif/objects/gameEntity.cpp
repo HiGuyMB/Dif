@@ -28,6 +28,8 @@
 #include "io.h"
 #include "gameEntity.h"
 
+DIF_NAMESPACE
+
 bool GameEntity::read(std::istream &stream) {
 	READCHECK(datablock, std::string); //datablock
 	READCHECK(gameClass, std::string); //gameClass
@@ -45,3 +47,5 @@ bool GameEntity::write(std::ostream &stream) const {
 
 	return true;
 }
+
+DIF_NAMESPACE_END

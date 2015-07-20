@@ -28,6 +28,8 @@
 #ifndef color_h
 #define color_h
 
+DIF_NAMESPACE
+
 template <typename T>
 class Color : public Readable, public Writable {
 public:
@@ -53,5 +55,6 @@ public:
 	virtual bool write(std::ostream &stream) const;
 };
 
+DIF_NAMESPACE_END
 
 #endif

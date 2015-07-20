@@ -28,6 +28,8 @@
 #include "staticMesh.h"
 #include <assert.h>
 
+DIF_NAMESPACE
+
 bool StaticMesh::read(std::istream &stream) {
 	READCHECK(primitive, std::vector<Primitive>); //primitive
 	READCHECK(index, std::vector<U16>); //index
@@ -117,3 +119,5 @@ bool MaterialList::write(std::ostream &stream) const {
 
 	return true;
 }
+
+DIF_NAMESPACE_END

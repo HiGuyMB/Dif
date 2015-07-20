@@ -34,6 +34,8 @@
 #include <map>
 #include <iostream>
 
+DIF_NAMESPACE
+
 #define LIGHT_MAP_SIZE 0x400
 
 #ifdef _WIN32
@@ -564,5 +566,7 @@ inline const T& __magic_const_cast(const F &thing) {
 	#define READCHECK(name, type)  { if (!IO::read (stream, __magic_cast<type>(name),       "")) return false; }
 	#define WRITECHECK(name, type) { if (!IO::write(stream, __magic_const_cast<type>(name), "")) return false; }
 #endif
+
+DIF_NAMESPACE_END
 
 #endif

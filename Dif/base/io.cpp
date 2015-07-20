@@ -27,6 +27,8 @@
 
 #include "io.h"
 
+DIF_NAMESPACE
+
 bool PlaneF::read(std::istream &stream) {
 	return
 		IO::read(stream, x, "x") &&
@@ -191,3 +193,5 @@ const std::string IO::getBase(const std::string &file, const char &seperator) {
 	}
 	return file;
 }
+
+DIF_NAMESPACE_END

@@ -31,6 +31,8 @@
 #include "types.h"
 #include "staticMesh.h"
 
+DIF_NAMESPACE
+
 static U32 gNumCoordBins = 16;
 
 struct Plane : public Readable, public Writable {
@@ -310,5 +312,7 @@ public:
 	 */
 	bool write(std::ostream &stream) const;
 };
+
+DIF_NAMESPACE_END
 
 #endif

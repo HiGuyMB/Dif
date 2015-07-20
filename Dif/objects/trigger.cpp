@@ -30,6 +30,8 @@
 #include "io.h"
 #include "trigger.h"
 
+DIF_NAMESPACE
+
 bool Trigger::read(std::istream &stream) {
 	READCHECK(name, std::string); //name
 	READCHECK(datablock, std::string); //datablock
@@ -107,3 +109,5 @@ std::string Trigger::getPolyhedron() {
 	      vecs[2].x << ' ' << vecs[2].y << ' ' << vecs[2].z;
 	return ss.str();
 }
+
+DIF_NAMESPACE_END

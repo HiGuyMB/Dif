@@ -3,8 +3,8 @@
 #include <fstream>
 #include "objects/dif.h"
 
-void printTriggers(DIF dif) {
-	for (Trigger trigger : dif.trigger) {
+void printTriggers(DIF::DIF dif) {
+	for (DIF::Trigger trigger : dif.trigger) {
 		std::cout << "new Trigger(" << trigger.name << ") {" << std::endl;
 		std::cout << "   position = \"" << trigger.offset.x << " " << trigger.offset.y << " " << trigger.offset.z << "\";" << std::endl;
 		std::cout << "   rotation = \"1 0 0 0\";" << std::endl;
@@ -18,8 +18,8 @@ void printTriggers(DIF dif) {
 	}
 }
 
-void printEntities(DIF dif) {
-	for (GameEntity entity : dif.gameEntity) {
+void printEntities(DIF::DIF dif) {
+	for (DIF::GameEntity entity : dif.gameEntity) {
 		std::cout << "new " << entity.gameClass << "() {" << std::endl;
 		std::cout << "   position = \"" << entity.position.x << " " << entity.position.y << " " << entity.position.z << "\";" << std::endl;
 		std::cout << "   rotation = \"1 0 0 0\";" << std::endl;
@@ -32,7 +32,7 @@ void printEntities(DIF dif) {
 	}
 }
 
-bool readDif(const char *file, DIF *dif) {
+bool readDif(const char *file, DIF::DIF *dif) {
 	std::ifstream stream(file);
 	if (stream.good()) {
 		dif->read(stream);
@@ -43,7 +43,7 @@ bool readDif(const char *file, DIF *dif) {
 }
 
 bool testEquality(const char *file) {
-	DIF dif;
+	DIF::DIF dif;
 	//Make sure we can actually read/write the dif first
 	if (readDif(file, &dif)) {
 		std::ostringstream out;
@@ -81,7 +81,7 @@ bool testEquality(const char *file) {
 
 int main(int argc, const char * argv[]) {
 	//Read it into the dif
-	DIF dif;
+	DIF::DIF dif;
 	if (readDif(argv[1], &dif)) {
 		printTriggers(dif);
 		printEntities(dif);

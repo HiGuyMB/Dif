@@ -28,6 +28,8 @@
 #include "io.h"
 #include "forceField.h"
 
+DIF_NAMESPACE
+
 bool ForceField::read(std::istream &stream) {
 	READCHECK(forceFieldFileVersion, U32); //forceFieldFileVersion
 	READCHECK(name, std::string); //name
@@ -125,3 +127,5 @@ bool Surface_FF::write(std::ostream &stream) const {
 
 	return true;
 }
+
+DIF_NAMESPACE_END

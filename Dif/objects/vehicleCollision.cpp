@@ -28,6 +28,8 @@
 #include "io.h"
 #include "vehicleCollision.h"
 
+DIF_NAMESPACE
+
 bool VehicleCollision::read(std::istream &stream) {
 	READCHECK(vehicleCollisionFileVersion, U32); //vehicleCollisionFileVersion
 	READCHECK(vehicleConvexHull, std::vector<VehicleConvexHull>); //vehicleConvexHull
@@ -138,3 +140,5 @@ bool VehicleWindingIndex::write(std::ostream &stream) const {
 
 	return true;
 }
+
+DIF_NAMESPACE_END

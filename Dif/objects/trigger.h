@@ -30,6 +30,8 @@
 
 #include "types.h"
 
+DIF_NAMESPACE
+
 struct PolyHedronEdge : public Readable, public Writable {
 	U32 face[2];
 	U32 vertex[2];
@@ -71,5 +73,7 @@ public:
 
 	std::string getPolyhedron();
 };
+
+DIF_NAMESPACE_END
 
 #endif

@@ -28,6 +28,8 @@
 #include "io.h"
 #include "aiSpecialNode.h"
 
+DIF_NAMESPACE
+
 bool AISpecialNode::read(std::istream &stream) {
 	READCHECK(name, std::string); //name
 	READCHECK(position, Point3F); //position
@@ -41,3 +43,5 @@ bool AISpecialNode::write(std::ostream &stream) const {
 
 	return true;
 }
+
+DIF_NAMESPACE_END

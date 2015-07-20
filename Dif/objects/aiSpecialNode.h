@@ -30,6 +30,8 @@
 
 #include "types.h"
 
+DIF_NAMESPACE
+
 class AISpecialNode : public Readable, public Writable {
 public:
 	std::string name;
@@ -48,5 +50,7 @@ public:
 	 */
 	virtual bool write(std::ostream &stream) const;
 };
+
+DIF_NAMESPACE_END
 
 #endif

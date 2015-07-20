@@ -37,6 +37,8 @@
 #include "vehicleCollision.h"
 #include "gameEntity.h"
 
+DIF_NAMESPACE
+
 class DIF : public Readable, public Writable {
 public:
 	std::vector<Interior> interior;
@@ -66,5 +68,7 @@ public:
 	 */
 	bool write(std::ostream &stream) const;
 };
+
+DIF_NAMESPACE_END
 
 #endif

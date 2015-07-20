@@ -31,6 +31,8 @@
 #include <math.h>
 #include <limits>
 
+DIF_NAMESPACE
+
 template <typename T>
 class Point2 : public Readable, public Writable {
 public:
@@ -164,5 +166,7 @@ inline Point2<T> Point2<T>::roundThousands() const {
 	return Point2<T>(floorf(x * 1000.0f) / 1000.f,
 					 floorf(y * 1000.0f) / 1000.f);
 }
+
+DIF_NAMESPACE_END
 
 #endif

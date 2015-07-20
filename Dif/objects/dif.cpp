@@ -28,6 +28,8 @@
 #include "io.h"
 #include "dif.h"
 
+DIF_NAMESPACE
+
 bool DIF::read(std::istream &stream) {
 	//http://rustycode.com/tutorials/DIF_File_Format_44_14.html
 	// Someone give that guy all the cookies.
@@ -83,3 +85,5 @@ bool DIF::write(std::ostream &stream) const {
 
 	return true;
 }
+
+DIF_NAMESPACE_END

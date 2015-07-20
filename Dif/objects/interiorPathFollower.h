@@ -30,6 +30,8 @@
 
 #include "types.h"
 
+DIF_NAMESPACE
+
 class WayPoint : public Readable, public Writable {
 public:
 	Point3F position;
@@ -67,5 +69,7 @@ public:
 	 */
 	virtual bool write(std::ostream &stream) const;
 };
+
+DIF_NAMESPACE_END
 
 #endif

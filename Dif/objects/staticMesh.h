@@ -31,6 +31,8 @@
 #include "types.h"
 #include "io.h"
 
+DIF_NAMESPACE
+
 struct Primitive : public Readable, public Writable {
 	U8 alpha;
 	U32 texS;
@@ -96,5 +98,7 @@ public:
 	 */
 	virtual bool write(std::ostream &stream) const;
 };
+
+DIF_NAMESPACE_END
 
 #endif

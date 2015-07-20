@@ -30,6 +30,8 @@
 
 #include "types.h"
 
+DIF_NAMESPACE
+
 struct Plane_FF : public Readable, public Writable {
 	U32 normalIndex;
 	F32 planeDistance;
@@ -98,5 +100,7 @@ public:
 	 */
 	virtual bool write(std::ostream &stream) const;
 };
+
+DIF_NAMESPACE_END
 
 #endif

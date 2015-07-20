@@ -32,6 +32,11 @@
 #include <vector>
 #include <map>
 
+#define DIF_NAMESPACE namespace DIF {
+#define DIF_NAMESPACE_END }
+
+DIF_NAMESPACE
+
 //Base types (names stolen from TGE because lazy)
 typedef unsigned char      U8;
 typedef unsigned short     U16;
@@ -56,9 +61,13 @@ public:
 	virtual bool write(std::ostream &stream) const = 0;
 };
 
+DIF_NAMESPACE_END
+
 #include "point2.h"
 #include "point3.h"
 #include "color.h"
+
+DIF_NAMESPACE
 
 typedef Point2<S16> Point2I;
 typedef Point2<F32> Point2F;
@@ -161,5 +170,7 @@ public:
 	virtual bool read(std::istream &stream);
 	virtual bool write(std::ostream &stream) const;
 };
+
+DIF_NAMESPACE_END
 
 #endif
