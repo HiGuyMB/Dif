@@ -46,16 +46,16 @@ bool VehicleCollision::read(std::istream &stream) {
 
 bool VehicleCollision::write(std::ostream &stream) const {
 	WRITECHECK(vehicleCollisionFileVersion, U32);
-	WRITE(vehicleConvexHull, std::vector<VehicleConvexHull>); //vehicleConvexHull
-	WRITE(vehicleConvexHullEmitStringCharacter, std::vector<U8>); //vehicleConvexHullEmitStringCharacter
-	WRITE(vehicleHullIndex, std::vector<U32>); //vehicleHullIndex
-	WRITE(vehicleHullPlaneIndex, std::vector<U16>); //vehicleHullPlaneIndex
-	WRITE(vehicleHullEmitStringIndex, std::vector<U32>); //vehicleHullEmitStringIndex
-	WRITE(vehicleHullSurfaceIndex, std::vector<U32>); //vehicleHullSurfaceIndex
-	WRITE(vehiclePolyListPlaneIndex, std::vector<U16>); //vehiclePolyListPlaneIndex
-	WRITE(vehiclePolyListPointIndex, std::vector<U32>); //vehiclePolyListPointIndex
-	WRITE(vehiclePolyListStringCharacter, std::vector<U8>); //vehiclePolyListStringCharacter
-	WRITE(vehicleNullSurface, std::vector<VehicleNullSurface>); //vehicleNullSurface
+	WRITECHECK(vehicleConvexHull, std::vector<VehicleConvexHull>); //vehicleConvexHull
+	WRITECHECK(vehicleConvexHullEmitStringCharacter, std::vector<U8>); //vehicleConvexHullEmitStringCharacter
+	WRITECHECK(vehicleHullIndex, std::vector<U32>); //vehicleHullIndex
+	WRITECHECK(vehicleHullPlaneIndex, std::vector<U16>); //vehicleHullPlaneIndex
+	WRITECHECK(vehicleHullEmitStringIndex, std::vector<U32>); //vehicleHullEmitStringIndex
+	WRITECHECK(vehicleHullSurfaceIndex, std::vector<U32>); //vehicleHullSurfaceIndex
+	WRITECHECK(vehiclePolyListPlaneIndex, std::vector<U16>); //vehiclePolyListPlaneIndex
+	WRITECHECK(vehiclePolyListPointIndex, std::vector<U32>); //vehiclePolyListPointIndex
+	WRITECHECK(vehiclePolyListStringCharacter, std::vector<U8>); //vehiclePolyListStringCharacter
+	WRITECHECK(vehicleNullSurface, std::vector<VehicleNullSurface>); //vehicleNullSurface
 
 	return true;
 }

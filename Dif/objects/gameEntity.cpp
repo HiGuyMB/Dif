@@ -38,10 +38,10 @@ bool GameEntity::read(std::istream &stream) {
 }
 
 bool GameEntity::write(std::ostream &stream) const {
-	WRITE(datablock, std::string); //datablock
-	WRITE(gameClass, std::string); //gameClass
+	WRITECHECK(datablock, std::string); //datablock
+	WRITECHECK(gameClass, std::string); //gameClass
 	WRITECHECK(position, Point3F); //position
-	WRITE(properties, Dictionary); //properties
+	WRITECHECK(properties, Dictionary); //properties
 
 	return true;
 }

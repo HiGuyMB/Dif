@@ -42,13 +42,13 @@ bool InteriorPathFollower::read(std::istream &stream) {
 }
 
 bool InteriorPathFollower::write(std::ostream &stream) const {
-	WRITE(name, std::string); //name
-	WRITE(datablock, std::string); //datablock
+	WRITECHECK(name, std::string); //name
+	WRITECHECK(datablock, std::string); //datablock
 	WRITECHECK(interiorResIndex, U32); //interiorResIndex
 	WRITECHECK(offset, Point3F); //offset
-	WRITE(properties, Dictionary); //properties
-	WRITE(triggerId, std::vector<U32>); //triggerId
-	WRITE(wayPoint, std::vector<WayPoint>); //wayPoint
+	WRITECHECK(properties, Dictionary); //properties
+	WRITECHECK(triggerId, std::vector<U32>); //triggerId
+	WRITECHECK(wayPoint, std::vector<WayPoint>); //wayPoint
 	WRITECHECK(totalMS, U32); //totalMS
 
 	return true;
@@ -64,10 +64,10 @@ bool WayPoint::read(std::istream &stream) {
 }
 
 bool WayPoint::write(std::ostream &stream) const {
-	WRITE(position, Point3F); //position
-	WRITE(rotation, QuatF); //rotation
-	WRITE(msToNext, U32); //msToNext
-	WRITE(smoothingType, U32); //smoothingType
+	WRITECHECK(position, Point3F); //position
+	WRITECHECK(rotation, QuatF); //rotation
+	WRITECHECK(msToNext, U32); //msToNext
+	WRITECHECK(smoothingType, U32); //smoothingType
 
 	return true;
 }

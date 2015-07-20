@@ -36,7 +36,7 @@ bool AISpecialNode::read(std::istream &stream) {
 }
 
 bool AISpecialNode::write(std::ostream &stream) const {
-	WRITE(name, std::string); //name
+	WRITECHECK(name, std::string); //name
 	WRITECHECK(position, Point3F); //position
 
 	return true;

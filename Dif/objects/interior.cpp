@@ -246,58 +246,58 @@ bool Interior::write(std::ostream &stream) const {
 	WRITECHECK(boundingSphere, SphereF); //boundingSphere
 	WRITECHECK(hasAlarmState, U8); //hasAlarmState
 	WRITECHECK(numLightStateEntries, U32); //numLightStateEntries
-	WRITE(normal, std::vector<Point3F>); //normal
-	WRITE(plane, std::vector<Plane>); //numPlanes
-	WRITE(point, std::vector<Point3F>); //point
-	WRITE(pointVisibility, std::vector<U8>); //pointVisibility
-	WRITE(texGenEq, std::vector<TexGenEq>); //texGenEq
-	WRITE(BSPNode, std::vector<::BSPNode>); //BSPNode
-	WRITE(BSPSolidLeaf, std::vector<::BSPSolidLeaf>); //BSPSolidLeaf
+	WRITECHECK(normal, std::vector<Point3F>); //normal
+	WRITECHECK(plane, std::vector<Plane>); //numPlanes
+	WRITECHECK(point, std::vector<Point3F>); //point
+	WRITECHECK(pointVisibility, std::vector<U8>); //pointVisibility
+	WRITECHECK(texGenEq, std::vector<TexGenEq>); //texGenEq
+	WRITECHECK(BSPNode, std::vector<::BSPNode>); //BSPNode
+	WRITECHECK(BSPSolidLeaf, std::vector<::BSPSolidLeaf>); //BSPSolidLeaf
 	WRITECHECK(materialListVersion, U8); //materialListVersion
-	WRITE(materialName, std::vector<std::string>); //material
-	WRITE(index, std::vector<U32>); //index
-	WRITE(windingIndex, std::vector<WindingIndex>); //windingIndex
-	WRITE(zone, std::vector<Zone>); //zone
-	WRITE(zoneSurface, std::vector<U16>); //zoneSurface
-	WRITE(zonePortalList, std::vector<U16>); //zonePortalList
-	WRITE(portal, std::vector<Portal>); //portal
-	WRITE(surface, std::vector<Surface>); //surface
-	WRITE(normalLMapIndex, std::vector<U8>); //normalLMapIndex
-	WRITE(alarmLMapIndex, std::vector<U8>); //alarmLMapIndex
-	WRITE(nullSurface, std::vector<NullSurface>); //nullSurface
-	WRITE(lightMap, std::vector<LightMap>); //lightMap
-	WRITE(solidLeafSurface, std::vector<U32>); //solidLeafSurface
-	WRITE(animatedLight, std::vector<AnimatedLight>); //animatedLight
-	WRITE(lightState, std::vector<LightState>); //lightState
-	WRITE(stateData, std::vector<StateData>); //stateData
+	WRITECHECK(materialName, std::vector<std::string>); //material
+	WRITECHECK(index, std::vector<U32>); //index
+	WRITECHECK(windingIndex, std::vector<WindingIndex>); //windingIndex
+	WRITECHECK(zone, std::vector<Zone>); //zone
+	WRITECHECK(zoneSurface, std::vector<U16>); //zoneSurface
+	WRITECHECK(zonePortalList, std::vector<U16>); //zonePortalList
+	WRITECHECK(portal, std::vector<Portal>); //portal
+	WRITECHECK(surface, std::vector<Surface>); //surface
+	WRITECHECK(normalLMapIndex, std::vector<U8>); //normalLMapIndex
+	WRITECHECK(alarmLMapIndex, std::vector<U8>); //alarmLMapIndex
+	WRITECHECK(nullSurface, std::vector<NullSurface>); //nullSurface
+	WRITECHECK(lightMap, std::vector<LightMap>); //lightMap
+	WRITECHECK(solidLeafSurface, std::vector<U32>); //solidLeafSurface
+	WRITECHECK(animatedLight, std::vector<AnimatedLight>); //animatedLight
+	WRITECHECK(lightState, std::vector<LightState>); //lightState
+	WRITECHECK(stateData, std::vector<StateData>); //stateData
 	IO::write_extra(stream, stateDataBuffer, [&](std::ostream &stream)->bool {
 		return WRITE(flags, U32); //flags
 	}, "stateDataBuffer"); //stateDataBuffer
-	WRITE(nameBufferCharacter, std::vector<U8>); //nameBufferCharacter
-	WRITE(numSubObjects, U32);
+	WRITECHECK(nameBufferCharacter, std::vector<U8>); //nameBufferCharacter
+	WRITECHECK(numSubObjects, U32);
 //	WRITELOOP(numSubObjects) {} //numSubObjects
-	WRITE(convexHull, std::vector<ConvexHull>); //convexHull
-	WRITE(convexHullEmitStringCharacter, std::vector<U8>); //convexHullEmitStringCharacter
-	WRITE(hullIndex, std::vector<U32>); //hullIndex
-	WRITE(hullPlaneIndex, std::vector<U16>); //hullPlaneIndex
-	WRITE(hullEmitStringIndex, std::vector<U32>); //hullEmitStringIndex
-	WRITE(hullSurfaceIndex, std::vector<U32>); //hullSurfaceIndex
-	WRITE(polyListPlaneIndex, std::vector<U16>); //polyListPlaneIndex
-	WRITE(polyListPointIndex, std::vector<U32>); //polyListPointIndex
-	WRITE(polyListStringCharacter, std::vector<U8>); //polyListStringCharacter
+	WRITECHECK(convexHull, std::vector<ConvexHull>); //convexHull
+	WRITECHECK(convexHullEmitStringCharacter, std::vector<U8>); //convexHullEmitStringCharacter
+	WRITECHECK(hullIndex, std::vector<U32>); //hullIndex
+	WRITECHECK(hullPlaneIndex, std::vector<U16>); //hullPlaneIndex
+	WRITECHECK(hullEmitStringIndex, std::vector<U32>); //hullEmitStringIndex
+	WRITECHECK(hullSurfaceIndex, std::vector<U32>); //hullSurfaceIndex
+	WRITECHECK(polyListPlaneIndex, std::vector<U16>); //polyListPlaneIndex
+	WRITECHECK(polyListPointIndex, std::vector<U32>); //polyListPointIndex
+	WRITECHECK(polyListStringCharacter, std::vector<U8>); //polyListStringCharacter
 	for (U32 i = 0; i < gNumCoordBins * gNumCoordBins; i ++) {
-		WRITE(coordBin[i], CoordBin);
+		WRITECHECK(coordBin[i], CoordBin);
 	}
-	WRITE(coordBinIndex, std::vector<U16>); //coordBinIndex
+	WRITECHECK(coordBinIndex, std::vector<U16>); //coordBinIndex
 	WRITECHECK(coordBinMode, U32); //coordBinMode
 	WRITECHECK(baseAmbientColor, ColorI); //baseAmbientColor
 	WRITECHECK(alarmAmbientColor, ColorI); //alarmAmbientColor
 	/*
 	 Static meshes (not included)
 	 */
-	WRITE(texNormal, std::vector<Point3F>); //texNormal
-	WRITE(texMatrix, std::vector<TexMatrix>); //texMatrix
-	WRITE(texMatIndex, std::vector<U32>); //texMatIndex
+	WRITECHECK(texNormal, std::vector<Point3F>); //texNormal
+	WRITECHECK(texMatrix, std::vector<TexMatrix>); //texMatrix
+	WRITECHECK(texMatIndex, std::vector<U32>); //texMatIndex
 	WRITECHECK(0, U32); //extendedLightMapData
 //	WRITECHECK(extendedLightMapData, U32); //extendedLightMapData
 
@@ -570,7 +570,7 @@ bool LightMap::read(std::istream &stream, bool isTGEInterior) {
 }
 
 bool LightMap::write(std::ostream &stream) const {
-	WRITE(lightMap, PNG); //lightMap
+	WRITECHECK(lightMap, PNG); //lightMap
 	WRITECHECK(keepLightMap, U8); //keepLightMap
 	return true;
 }

@@ -41,10 +41,10 @@ bool Trigger::read(std::istream &stream) {
 }
 
 bool Trigger::write(std::ostream &stream) const {
-	WRITE(name, std::string); //name
-	WRITE(datablock, std::string); //datablock
-	WRITE(properties, Dictionary); //properties
-	WRITE(polyhedron, PolyHedron);
+	WRITECHECK(name, std::string); //name
+	WRITECHECK(datablock, std::string); //datablock
+	WRITECHECK(properties, Dictionary); //properties
+	WRITECHECK(polyhedron, PolyHedron);
 	WRITECHECK(offset, Point3F); //offset
 
 	return true;
@@ -59,9 +59,9 @@ bool PolyHedron::read(std::istream &stream) {
 }
 
 bool PolyHedron::write(std::ostream &stream) const {
-	WRITE(pointList, std::vector<Point3F>); //polyHedronPoint
-	WRITE(planeList, std::vector<PlaneF>); //polyHedronPlane
-	WRITE(edgeList, std::vector<PolyHedronEdge>); //numPolyHedronEdges
+	WRITECHECK(pointList, std::vector<Point3F>); //polyHedronPoint
+	WRITECHECK(planeList, std::vector<PlaneF>); //polyHedronPlane
+	WRITECHECK(edgeList, std::vector<PolyHedronEdge>); //numPolyHedronEdges
 
 	return true;
 }

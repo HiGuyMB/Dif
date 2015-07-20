@@ -48,17 +48,17 @@ bool ForceField::read(std::istream &stream) {
 
 bool ForceField::write(std::ostream &stream) const {
 	WRITECHECK(forceFieldFileVersion, U32); //forceFieldFileVersion
-	WRITE(name, std::string); //name
-	WRITE(trigger, std::vector<std::string>); //trigger
+	WRITECHECK(name, std::string); //name
+	WRITECHECK(trigger, std::vector<std::string>); //trigger
 	WRITECHECK(boundingBox, BoxF); //boundingBox
 	WRITECHECK(boundingSphere, SphereF); //boundingSphere
-	WRITE(normal, std::vector<Point3F>); //normal
-	WRITE(plane, std::vector<Plane_FF>); //plane
-	WRITE(BSPNode, std::vector<BSPNode_FF>); //BSPNode
-	WRITE(BSPSolidLeaf, std::vector<BSPSolidLeaf_FF>); //BSPSolidLeaf
-	WRITE(index, std::vector<U32>); //index
-	WRITE(surface, std::vector<Surface_FF>); //surface
-	WRITE(solidLeafSurface, std::vector<U32>); //solidLeafSurface
+	WRITECHECK(normal, std::vector<Point3F>); //normal
+	WRITECHECK(plane, std::vector<Plane_FF>); //plane
+	WRITECHECK(BSPNode, std::vector<BSPNode_FF>); //BSPNode
+	WRITECHECK(BSPSolidLeaf, std::vector<BSPSolidLeaf_FF>); //BSPSolidLeaf
+	WRITECHECK(index, std::vector<U32>); //index
+	WRITECHECK(surface, std::vector<Surface_FF>); //surface
+	WRITECHECK(solidLeafSurface, std::vector<U32>); //solidLeafSurface
 	WRITECHECK(color, ColorI); //color
 
 	return true;
@@ -72,8 +72,8 @@ bool Plane_FF::read(std::istream &stream) {
 }
 
 bool Plane_FF::write(std::ostream &stream) const {
-	WRITE(normalIndex, U32); //normalIndex
-	WRITE(planeDistance, F32); //planeDistance
+	WRITECHECK(normalIndex, U32); //normalIndex
+	WRITECHECK(planeDistance, F32); //planeDistance
 
 	return true;
 }
@@ -86,8 +86,8 @@ bool BSPNode_FF::read(std::istream &stream) {
 }
 
 bool BSPNode_FF::write(std::ostream &stream) const {
-	WRITE(frontIndex, U16); //frontIndex
-	WRITE(backIndex, U16); //backIndex
+	WRITECHECK(frontIndex, U16); //frontIndex
+	WRITECHECK(backIndex, U16); //backIndex
 
 	return true;
 }
@@ -100,8 +100,8 @@ bool BSPSolidLeaf_FF::read(std::istream &stream) {
 }
 
 bool BSPSolidLeaf_FF::write(std::ostream &stream) const {
-	WRITE(surfaceIndex, U32); //surfaceIndex
-	WRITE(surfaceCount, U16); //surfaceCount
+	WRITECHECK(surfaceIndex, U32); //surfaceIndex
+	WRITECHECK(surfaceCount, U16); //surfaceCount
 
 	return true;
 }
@@ -117,11 +117,11 @@ bool Surface_FF::read(std::istream &stream) {
 }
 
 bool Surface_FF::write(std::ostream &stream) const {
-	WRITE(windingStart, U32); //windingStart
-	WRITE(windingCount, U8); //windingCount
-	WRITE(planeIndex, U16); //planeIndex
-	WRITE(surfaceFlags, U8); //surfaceFlags
-	WRITE(fanMask, U32); //fanMask
+	WRITECHECK(windingStart, U32); //windingStart
+	WRITECHECK(windingCount, U8); //windingCount
+	WRITECHECK(planeIndex, U16); //planeIndex
+	WRITECHECK(surfaceFlags, U8); //surfaceFlags
+	WRITECHECK(fanMask, U32); //fanMask
 
 	return true;
 }
