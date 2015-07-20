@@ -49,22 +49,22 @@ bool Interior::read(std::istream &stream) {
 		READCHECK(pointVisibility, std::vector<U8>); //pointVisibility
 	}
 	READCHECK(texGenEq, std::vector<TexGenEq>); //texGenEq
-	IO::read_with<::BSPNode>(stream, &BSPNode, [&](::BSPNode *node, std::istream &stream)->bool{return node->read(stream, this->interiorFileVersion);}, "BSPNode"); //BSPNode
+	IO::read_with<::BSPNode>(stream, BSPNode, [&](::BSPNode *node, std::istream &stream)->bool{return node->read(stream, this->interiorFileVersion);}, "BSPNode"); //BSPNode
 	READCHECK(BSPSolidLeaf, std::vector<::BSPSolidLeaf>); //BSPSolidLeaf
 	//MaterialList
 	READCHECK(materialListVersion, U8); //version
 	READCHECK(materialName, std::vector<std::string>); //materialName
-	IO::read_as<U32, U16>(stream, &index, [](bool useAlternate, U32 param)->bool{return param;}, "index"); //index
+	IO::read_as<U32, U16>(stream, index, [](bool useAlternate, U32 param)->bool{return param;}, "index"); //index
 	READCHECK(windingIndex, std::vector<WindingIndex>); //windingIndex
 	if (this->interiorFileVersion >= 12) {
 		READCHECK(edge, std::vector<Edge>); //edge
 	}
-	IO::read_with<Zone>(stream, &zone, [&](Zone *zone, std::istream &stream)->bool{return zone->read(stream, this->interiorFileVersion);}, "zone"); //zone
-	IO::read_as<U16, U16>(stream, &zoneSurface, [](bool useAlternate, U32 param)->bool{return false;}, "zoneSurface");
+	IO::read_with<Zone>(stream, zone, [&](Zone *zone, std::istream &stream)->bool{return zone->read(stream, this->interiorFileVersion);}, "zone"); //zone
+	IO::read_as<U16, U16>(stream, zoneSurface, [](bool useAlternate, U32 param)->bool{return false;}, "zoneSurface");
 	if (this->interiorFileVersion >= 12) {
 		READCHECK(zoneStaticMesh, std::vector<U32>); //zoneStaticMesh
 	}
-	IO::read_as<U16, U16>(stream, &zonePortalList, [](bool useAlternate, U32 param)->bool{return false;}, "zonePortalList"); //zonePortalList
+	IO::read_as<U16, U16>(stream, zonePortalList, [](bool useAlternate, U32 param)->bool{return false;}, "zonePortalList"); //zonePortalList
 	READCHECK(portal, std::vector<Portal>); //portal
 
 	//Ok so Torque needs to fuck themselves in the ass, multiple times.
@@ -78,7 +78,7 @@ bool Interior::read(std::istream &stream) {
 
 	bool isTGEInterior = false;
 
-	if (!IO::read_with<Surface>(stream, &surface, [&](Surface *surface, std::istream &stream)->bool{return surface->read(stream, interiorFileVersion, false, index.size(), plane.size(), materialName.size(), texGenEq.size());}, "surface")) { //surface
+	if (!IO::read_with<Surface>(stream, surface, [&](Surface *surface, std::istream &stream)->bool{return surface->read(stream, interiorFileVersion, false, index.size(), plane.size(), materialName.size(), texGenEq.size());}, "surface")) { //surface
 		isTGEInterior = true;
 
 		if (interiorFileVersion != 0) {
@@ -95,7 +95,7 @@ bool Interior::read(std::istream &stream) {
 		stream.seekg(pos);
 
 		//Second, re-read
-		if (!IO::read_with<Surface>(stream, &surface, [&](Surface *surface, std::istream &stream)->bool{return surface->read(stream, interiorFileVersion, true, index.size(), plane.size(), materialName.size(), texGenEq.size());}, "surface")) { //surface
+		if (!IO::read_with<Surface>(stream, surface, [&](Surface *surface, std::istream &stream)->bool{return surface->read(stream, interiorFileVersion, true, index.size(), plane.size(), materialName.size(), texGenEq.size());}, "surface")) { //surface
 			//Ok this surface failed too. Bail.
 			//TODO: Blow up here
 			return false;
@@ -130,7 +130,7 @@ bool Interior::read(std::istream &stream) {
 			// Not really sure why, haven't seen this anywhere else.
 
 			std::vector<U16> somethingElse;
-			IO::read_as<U16, U8>(stream, &somethingElse, [](bool useAlternate, U32 param)->bool{return (useAlternate && param == 0);}, "somethingElse"); //somethingElse
+			IO::read_as<U16, U8>(stream, somethingElse, [](bool useAlternate, U32 param)->bool{return (useAlternate && param == 0);}, "somethingElse"); //somethingElse
 		}
 	}
 	if (this->interiorFileVersion == 4) { //Found in 0, 2, 3, and TGE (14)
@@ -144,11 +144,11 @@ bool Interior::read(std::istream &stream) {
 		READCHECK(normalLMapIndex, std::vector<U8>); //normalLMapIndex
 		READCHECK(alarmLMapIndex, std::vector<U8>); //alarmLMapIndex
 	}
-	IO::read_with<NullSurface>(stream, &nullSurface, [&](NullSurface *nullSurface, std::istream &stream)->bool{return nullSurface->read(stream, this->interiorFileVersion);}, "nullSurface"); //nullSurface
+	IO::read_with<NullSurface>(stream, nullSurface, [&](NullSurface *nullSurface, std::istream &stream)->bool{return nullSurface->read(stream, this->interiorFileVersion);}, "nullSurface"); //nullSurface
 	if (this->interiorFileVersion != 4) { //Also found in 0, 2, 3, 14
-		IO::read_with<LightMap>(stream, &lightMap, [&](LightMap *lightMap, std::istream &stream)->bool{return lightMap->read(stream, isTGEInterior);}, "lightMap"); //lightMap
+		IO::read_with<LightMap>(stream, lightMap, [&](LightMap *lightMap, std::istream &stream)->bool{return lightMap->read(stream, isTGEInterior);}, "lightMap"); //lightMap
 	}
-	IO::read_as<U32, U16>(stream, &solidLeafSurface, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "solidLeafSurface"); //solidLeafSurface
+	IO::read_as<U32, U16>(stream, solidLeafSurface, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "solidLeafSurface"); //solidLeafSurface
 	READCHECK(animatedLight, std::vector<AnimatedLight>); //animatedLight
 	READCHECK(lightState, std::vector<LightState>); //lightState
 	if (this->interiorFileVersion == 4) { //Yet more things found in 0, 2, 3, 14
@@ -160,8 +160,8 @@ bool Interior::read(std::istream &stream) {
 		//State datas have the flags field written right after the vector size,
 		// and THEN the data, just to make things confusing. So we need yet another
 		// read method for this.
-		IO::read_extra(stream, &stateDataBuffer, [&](std::istream &stream)->bool{
-			return IO::read(stream, &flags, "flags"); //flags
+		IO::read_extra(stream, stateDataBuffer, [&](std::istream &stream)->bool{
+			return IO::read(stream, flags, "flags"); //flags
 		}, "stateDataBuffer"); //stateDataBuffer
 		READCHECK(nameBufferCharacter, std::vector<U8>); //nameBufferCharacter
 
@@ -171,7 +171,7 @@ bool Interior::read(std::istream &stream) {
 //			//NFC
 //		}
 	}
-	IO::read_with<ConvexHull>(stream, &convexHull, [&](ConvexHull *convexHull, std::istream &stream)->bool{return convexHull->read(stream, this->interiorFileVersion);}, "convexHull"); //convexHull
+	IO::read_with<ConvexHull>(stream, convexHull, [&](ConvexHull *convexHull, std::istream &stream)->bool{return convexHull->read(stream, this->interiorFileVersion);}, "convexHull"); //convexHull
 	READCHECK(convexHullEmitStringCharacter, std::vector<U8>); //convexHullEmitStringCharacter
 
 	//-------------------------------------------------------------------------
@@ -185,12 +185,12 @@ bool Interior::read(std::istream &stream) {
 	// fuck, GarageGames?
 	//-------------------------------------------------------------------------
 
-	IO::read_as<U32, U16>(stream, &hullIndex, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "hullIndex"); //hullIndex
-	IO::read_as<U16, U16>(stream, &hullPlaneIndex, [](bool useAlternate, U32 param)->bool{return true;}, "hullPlaneIndex"); //hullPlaneIndex
-	IO::read_as<U32, U16>(stream, &hullEmitStringIndex, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "hullEmitStringIndex"); //hullEmitStringIndex
-	IO::read_as<U32, U16>(stream, &hullSurfaceIndex, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "hullSurfaceIndex"); //hullSurfaceIndex
-	IO::read_as<U16, U16>(stream, &polyListPlaneIndex, [](bool useAlternate, U32 param)->bool{return true;}, "polyListPlaneIndex"); //polyListPlaneIndex
-	IO::read_as<U32, U16>(stream, &polyListPointIndex, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "polyListPointIndex"); //polyListPointIndex
+	IO::read_as<U32, U16>(stream, hullIndex, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "hullIndex"); //hullIndex
+	IO::read_as<U16, U16>(stream, hullPlaneIndex, [](bool useAlternate, U32 param)->bool{return true;}, "hullPlaneIndex"); //hullPlaneIndex
+	IO::read_as<U32, U16>(stream, hullEmitStringIndex, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "hullEmitStringIndex"); //hullEmitStringIndex
+	IO::read_as<U32, U16>(stream, hullSurfaceIndex, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "hullSurfaceIndex"); //hullSurfaceIndex
+	IO::read_as<U16, U16>(stream, polyListPlaneIndex, [](bool useAlternate, U32 param)->bool{return true;}, "polyListPlaneIndex"); //polyListPlaneIndex
+	IO::read_as<U32, U16>(stream, polyListPointIndex, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "polyListPointIndex"); //polyListPointIndex
 	//Not sure if this should be a read_as, but I haven't seen any evidence
 	// of needing that for U8 lists.
 	READCHECK(polyListStringCharacter, std::vector<U8>); //polyListStringCharacter
@@ -198,13 +198,13 @@ bool Interior::read(std::istream &stream) {
 	coordBin.reserve(gNumCoordBins * gNumCoordBins);
 	for (U32 i = 0; i < gNumCoordBins * gNumCoordBins; i ++) {
 		CoordBin bin;
-		if (IO::read(stream, &bin, "coordBin")) //coordBin
+		if (IO::read(stream, bin, "coordBin")) //coordBin
 			coordBin.push_back(bin);
 		else
 			return false;
 	}
 
-	IO::read_as<U16, U16>(stream, &coordBinIndex, [](bool useAlternate, U32 param)->bool{return true;}, "coordBinIndex"); //coordBinIndex
+	IO::read_as<U16, U16>(stream, coordBinIndex, [](bool useAlternate, U32 param)->bool{return true;}, "coordBinIndex"); //coordBinIndex
 	READCHECK(coordBinMode, U32); //coordBinMode
 	if (this->interiorFileVersion == 4) { //All of this is missing in v4 as well. Saves no space.
 		baseAmbientColor = ColorI(0, 0, 0, 255);

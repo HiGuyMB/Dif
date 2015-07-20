@@ -51,18 +51,18 @@ public:
 	//Read primitive types from a std::istream
 	template <typename T, bool=true>
 	struct read_impl {
-		static inline bool read(std::istream &stream, T *value, const std::string &name) {
+		static inline bool read(std::istream &stream, T &value, const std::string &name) {
 			if (stream.eof())
 				return false;
-			stream.read(reinterpret_cast<char *>(value), sizeof(*value));
+			stream.read(reinterpret_cast<char *>(&value), sizeof(value));
 			return stream.good();
 		}
 	};
 	//Read structures from a std::istream
 	template <typename T>
 	struct read_impl<T, false> {
-		static inline bool read(std::istream &stream, T *value, const std::string &name) {
-			return value->read(stream);
+		static inline bool read(std::istream &stream, T &value, const std::string &name) {
+			return value.read(stream);
 		}
 	};
 
@@ -74,7 +74,7 @@ public:
 	 @return If the operation was successful
 	 */
 	template <typename T>
-	static inline bool read(std::istream &stream, T *value, const std::string &name) {
+	static inline bool read(std::istream &stream, T &value, const std::string &name) {
 		//This will select one of the two read_impls above based on whether or not
 		// T is a struct or a primitive type.
 		return read_impl<T, std::is_fundamental<T>::value>::read(stream, value, name);
@@ -88,20 +88,20 @@ public:
 	 @return If the operation was successful
 	 */
 	template <typename T>
-	static inline bool read(std::istream &stream, std::vector<T> *value, const std::string &name) {
+	static inline bool read(std::istream &stream, std::vector<T> &value, const std::string &name) {
 		//Read the size of the vector
 		U32 size;
-		if (!read(stream, &size, "size"))
+		if (!read(stream, size, "size"))
 			return false;
 		//Reserve some space
-		value->reserve(size);
+		value.reserve(size);
 
 		//Read all the objects
 		for (int i = 0; i < size; i ++) {
 			T obj;
 			//Make sure the read succeeds
-			if (read(stream, &obj, "obj"))
-				value->push_back(obj);
+			if (read(stream, obj, "obj"))
+				value.push_back(obj);
 			else
 				return false;
 		}
@@ -116,19 +116,19 @@ public:
 	 @var name - A string containing the name of the variable (for debugging)
 	 @return If the operation was successful
 	 */
-	static inline bool read(std::istream &stream, std::string *value, const std::string &name) {
+	static inline bool read(std::istream &stream, std::string &value, const std::string &name) {
 		//How long is the string
 		U8 length;
-		if (!read(stream, &length, "length"))
+		if (!read(stream, length, "length"))
 			return false;
 		//Empty the string
-		*value = std::string();
+		value = std::string();
 		//Read each byte of the string
 		for (U32 i = 0; i < length; i ++) {
 			//If we can read the byte, append it to the string
 			U8 chr;
-			if (read(stream, &chr, "chr"))
-				*value += chr;
+			if (read(stream, chr, "chr"))
+				value += chr;
 			else
 				return false;
 		}
@@ -143,27 +143,27 @@ public:
 	 @var name - A string containing the name of the variable (for debugging)
 	 @return If the operation was successful
 	 */
-	static inline bool read(std::istream &stream, Dictionary *value, const std::string &name) {
+	static inline bool read(std::istream &stream, Dictionary &value, const std::string &name) {
 		//How long is the map
 		U32 length;
-		if (!read(stream, &length, "length"))
+		if (!read(stream, length, "length"))
 			return false;
 
 		//Empty the map
-		*value = Dictionary();
+		value = Dictionary();
 
 		//Read the map strings
 		for (U32 i = 0; i < length; i ++) {
 			std::string name, val;
 
 			//Make sure we can read it
-			if (!IO::read(stream, &name, "name") ||
-			    !IO::read(stream, &val, "val")) {
+			if (!IO::read(stream, name, "name") ||
+			    !IO::read(stream, val, "val")) {
 				return false;
 			}
 
 			//Insert the pair
-			(*value).push_back(Dictionary::value_type(name, val));
+			value.push_back(Dictionary::value_type(name, val));
 		}
 
 		return true;
@@ -177,10 +177,10 @@ public:
 	 @return If the operation was successful
 	 */
 	template <typename type1, typename type2>
-	static inline bool read_as(std::istream &stream, std::vector<type1> *value, std::function<bool(bool,U32)> condition, const std::string &name) {
+	static inline bool read_as(std::istream &stream, std::vector<type1> &value, std::function<bool(bool,U32)> condition, const std::string &name) {
 		//Read the size of the vector
 		U32 size;
-		if (!read(stream, &size, "size"))
+		if (!read(stream, size, "size"))
 			return false;
 
 		//Lots of index lists here that have U16 or U32 versions based on loop2.
@@ -199,12 +199,12 @@ public:
 			useAlternate = true;
 
 			//Extra U8 of data in each of these, almost never used but still there
-			if (!read(stream, &param, "param"))
+			if (!read(stream, param, "param"))
 				return false;
 		}
 
 		//Reserve some space
-		value->reserve(size);
+		value.reserve(size);
 
 		//Read all the objects
 		for (int i = 0; i < size; i ++) {
@@ -212,16 +212,16 @@ public:
 			if (condition(useAlternate, param)) {
 				type2 obj;
 				//Make sure the read succeeds
-				if (read(stream, &obj, "obj"))
+				if (read(stream, obj, "obj"))
 					//Cast it back to what we want
-					value->push_back(static_cast<type1>(obj));
+					value.push_back(static_cast<type1>(obj));
 				else
 					return false;
 			} else {
 				type1 obj;
 				//Make sure the read succeeds
-				if (read(stream, &obj, "obj"))
-					value->push_back(obj);
+				if (read(stream, obj, "obj"))
+					value.push_back(obj);
 				else
 					return false;
 			}
@@ -238,20 +238,20 @@ public:
 	 @return If the operation was successful
 	 */
 	template <typename T>
-	static inline bool read_with(std::istream &stream, std::vector<T> *value, std::function<bool(T*, std::istream &)> passed_method, const std::string &name) {
+	static inline bool read_with(std::istream &stream, std::vector<T> &value, std::function<bool(T*, std::istream &)> passed_method, const std::string &name) {
 		//Read the size of the vector
 		U32 size;
-		if (!read(stream, &size, "size"))
+		if (!read(stream, size, "size"))
 			return false;
 		//Reserve some space
-		value->reserve(size);
+		value.reserve(size);
 
 		//Read all the objects
 		for (int i = 0; i < size; i ++) {
 			T obj;
 			//Make sure the read succeeds
 			if (passed_method(&obj, stream))
-				value->push_back(obj);
+				value.push_back(obj);
 			else
 				return false;
 		}
@@ -267,13 +267,13 @@ public:
 	 @return If the operation was successful
 	 */
 	template <typename T>
-	static inline bool read_extra(std::istream &stream, std::vector<T> *value, std::function<bool(std::istream &)> extra_method, const std::string &name) {
+	static inline bool read_extra(std::istream &stream, std::vector<T> &value, std::function<bool(std::istream &)> extra_method, const std::string &name) {
 		//Read the size of the vector
 		U32 size;
-		if (!read(stream, &size, "size"))
+		if (!read(stream, size, "size"))
 			return false;
 		//Reserve some space
-		value->reserve(size);
+		value.reserve(size);
 
 		//Do the extra method
 		if (!extra_method(stream))
@@ -283,8 +283,8 @@ public:
 		for (int i = 0; i < size; i ++) {
 			T obj;
 			//Make sure the read succeeds
-			if (read(stream, &obj, "obj"))
-				value->push_back(obj);
+			if (read(stream, obj, "obj"))
+				value.push_back(obj);
 			else
 				return false;
 		}
@@ -441,34 +441,34 @@ public:
 template <typename T>
 bool Point2<T>::read(std::istream &stream) {
 	return
-	IO::read(stream, &x, "x") &&
-	IO::read(stream, &y, "y");
+	IO::read(stream, x, "x") &&
+	IO::read(stream, y, "y");
 }
 
 template <typename T>
 bool Point3<T>::read(std::istream &stream) {
 	return
-	IO::read(stream, &x, "x") &&
-	IO::read(stream, &y, "y") &&
-	IO::read(stream, &z, "z");
+	IO::read(stream, x, "x") &&
+	IO::read(stream, y, "y") &&
+	IO::read(stream, z, "z");
 }
 
 template <typename T>
 bool Point4<T>::read(std::istream &stream) {
 	return
-	IO::read(stream, &w, "w") &&
-	IO::read(stream, &x, "x") &&
-	IO::read(stream, &y, "y") &&
-	IO::read(stream, &z, "z");
+	IO::read(stream, w, "w") &&
+	IO::read(stream, x, "x") &&
+	IO::read(stream, y, "y") &&
+	IO::read(stream, z, "z");
 }
 
 template <typename T>
 bool Color<T>::read(std::istream &stream) {
 	return
-	IO::read(stream, &red, "red") &&
-	IO::read(stream, &green, "green") &&
-	IO::read(stream, &blue, "blue") &&
-	IO::read(stream, &alpha, "alpha");
+	IO::read(stream, red, "red") &&
+	IO::read(stream, green, "green") &&
+	IO::read(stream, blue, "blue") &&
+	IO::read(stream, alpha, "alpha");
 }
 
 template <typename T>
@@ -510,9 +510,9 @@ template <typename T>
 inline T __read(std::istream &stream, T *thing) {
 	T __garbage;
 #ifdef DEBUG
-	IO::read(stream, &__garbage, "garbage");
+	IO::read(stream, __garbage, "garbage");
 #else
-	IO::read(stream, &__garbage, "");
+	IO::read(stream, __garbage, "");
 #endif
 	return __garbage;
 }
@@ -523,13 +523,13 @@ inline T __read(std::istream &stream, T *thing) {
 #ifdef DEBUG
 	#define READVAR(name, type) \
 		type name; \
-		IO::read(stream, reinterpret_cast<type *>(&name), #name)
-	#define READTOVAR(name, type) IO::read(stream, reinterpret_cast<type *>(&name), #name)
+		IO::read(stream, name, #name)
+	#define READTOVAR(name, type) IO::read(stream, name, #name)
 #else
 	#define READVAR(name, type) \
 		type name; \
-		IO::read(stream, reinterpret_cast<type *>(&name), "")
-	#define READTOVAR(name, type) IO::read(stream, reinterpret_cast<type *>(&name), "")
+		IO::read(stream, name, "")
+	#define READTOVAR(name, type) IO::read(stream, name, "")
 #endif
 
 #define READCHECK(name, type) { if (!READTOVAR(name, type)) return false; }

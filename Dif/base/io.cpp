@@ -29,56 +29,56 @@
 
 bool PlaneF::read(std::istream &stream) {
 	return
-		IO::read(stream, &x, "x") &&
-		IO::read(stream, &y, "x") &&
-		IO::read(stream, &z, "x") &&
-		IO::read(stream, &d, "x");
+		IO::read(stream, x, "x") &&
+		IO::read(stream, y, "x") &&
+		IO::read(stream, z, "x") &&
+		IO::read(stream, d, "x");
 }
 
 bool QuatF::read(std::istream &stream) {
 	return
-		IO::read(stream, &w, "w") &&
-		IO::read(stream, &x, "x") &&
-		IO::read(stream, &y, "y") &&
-		IO::read(stream, &z, "z");
+		IO::read(stream, w, "w") &&
+		IO::read(stream, x, "x") &&
+		IO::read(stream, y, "y") &&
+		IO::read(stream, z, "z");
 }
 
 bool BoxF::read(std::istream &stream) {
 	return
-		IO::read(stream, &minX, "minX") &&
-		IO::read(stream, &minY, "minY") &&
-		IO::read(stream, &minZ, "minZ") &&
-		IO::read(stream, &maxX, "maxX") &&
-		IO::read(stream, &maxY, "maxY") &&
-		IO::read(stream, &maxZ, "maxZ");
+		IO::read(stream, minX, "minX") &&
+		IO::read(stream, minY, "minY") &&
+		IO::read(stream, minZ, "minZ") &&
+		IO::read(stream, maxX, "maxX") &&
+		IO::read(stream, maxY, "maxY") &&
+		IO::read(stream, maxZ, "maxZ");
 }
 
 bool SphereF::read(std::istream &stream) {
 	return
-		IO::read(stream, &x, "x") &&
-		IO::read(stream, &y, "y") &&
-		IO::read(stream, &z, "z") &&
-		IO::read(stream, &radius, "radius");
+		IO::read(stream, x, "x") &&
+		IO::read(stream, y, "y") &&
+		IO::read(stream, z, "z") &&
+		IO::read(stream, radius, "radius");
 }
 
 bool MatrixF::read(std::istream &stream) {
 	return
-		IO::read(stream, &m[0], "m[0]") &&
-		IO::read(stream, &m[1], "m[1]") &&
-		IO::read(stream, &m[2], "m[2]") &&
-		IO::read(stream, &m[3], "m[3]") &&
-		IO::read(stream, &m[4], "m[4]") &&
-		IO::read(stream, &m[5], "m[5]") &&
-		IO::read(stream, &m[6], "m[6]") &&
-		IO::read(stream, &m[7], "m[7]") &&
-		IO::read(stream, &m[8], "m[8]") &&
-		IO::read(stream, &m[9], "m[9]") &&
-		IO::read(stream, &m[10], "m[10]") &&
-		IO::read(stream, &m[11], "m[11]") &&
-		IO::read(stream, &m[12], "m[12]") &&
-		IO::read(stream, &m[13], "m[13]") &&
-		IO::read(stream, &m[14], "m[14]") &&
-		IO::read(stream, &m[15], "m[15]");
+		IO::read(stream, m[0], "m[0]") &&
+		IO::read(stream, m[1], "m[1]") &&
+		IO::read(stream, m[2], "m[2]") &&
+		IO::read(stream, m[3], "m[3]") &&
+		IO::read(stream, m[4], "m[4]") &&
+		IO::read(stream, m[5], "m[5]") &&
+		IO::read(stream, m[6], "m[6]") &&
+		IO::read(stream, m[7], "m[7]") &&
+		IO::read(stream, m[8], "m[8]") &&
+		IO::read(stream, m[9], "m[9]") &&
+		IO::read(stream, m[10], "m[10]") &&
+		IO::read(stream, m[11], "m[11]") &&
+		IO::read(stream, m[12], "m[12]") &&
+		IO::read(stream, m[13], "m[13]") &&
+		IO::read(stream, m[14], "m[14]") &&
+		IO::read(stream, m[15], "m[15]");
 }
 
 bool PNG::read(std::istream &stream) {
@@ -87,7 +87,7 @@ bool PNG::read(std::istream &stream) {
 
 	//I can't parse these, so I just read em all
 	for (size = 0; ;size ++) {
-		IO::read(stream, &(data[size]), "data");
+		IO::read(stream, (data[size]), "data");
 		if (size > 8 && memcmp(&data[size - 7], PNGFooter, 8) == 0)
 			break;
 	}
