@@ -510,28 +510,17 @@ inline T __read(std::istream &stream, T *thing) {
 #define READ(type) __read(stream, reinterpret_cast<type *>(NULL))
 
 #ifdef DEBUG
-	#define READVAR(name, type) \
-		type name; \
-		IO::read(stream, name, #name)
 	#define READTOVAR(name, type) IO::read(stream, name, #name)
 #else
-	#define READVAR(name, type) \
-		type name; \
-		IO::read(stream, name, "")
 	#define READTOVAR(name, type) IO::read(stream, name, "")
 #endif
 
 #define READCHECK(name, type) { if (!READTOVAR(name, type)) return false; }
 
 #define READLOOP(name) \
-READVAR(name##_length, U32); \
+U32 name##_length; \
+READCHECK(name##_length, U32); \
 for (U32 i = 0; i < name##_length; i ++)
-
-#define READLIST(name, type) \
-READVAR(name##_length, U32); \
-for (U32 i = 0; i < name##_length; i ++) { \
-	READ(type); \
-}
 
 //Macros to speed up file writing
 #ifdef DEBUG

@@ -97,7 +97,6 @@ bool Interior::read(std::istream &stream) {
 		//Second, re-read
 		if (!IO::read_with<Surface>(stream, surface, [&](Surface &surface, std::istream &stream)->bool{return surface.read(stream, interiorFileVersion, true, index.size(), plane.size(), materialName.size(), texGenEq.size());}, "surface")) { //surface
 			//Ok this surface failed too. Bail.
-			//TODO: Blow up here
 			return false;
 		}
 	}
@@ -122,9 +121,11 @@ bool Interior::read(std::istream &stream) {
 		//v4 has some extra points and indices, no clue what these are either
 		if (this->interiorFileVersion == 4) {
 			//May be brush points, normals, no clue
-			READLIST(numPointsOfSomeKind, Point3F); //Not sure, normals of some sort
-			//Looks like indcies of some sort, can't seem to make them out though
+			Point3F pointOfSomeKind;
+			READCHECK(pointOfSomeKind, std::vector<Point3F>); //Not sure, normals of some sort
 
+			//Looks like indcies of some sort, can't seem to make them out though
+			
 			//Unlike anywhere else, these actually take the param into account.
 			// If it's read2 and param == 0, then they use U8s, if param == 1, they use U16s
 			// Not really sure why, haven't seen this anywhere else.
@@ -477,7 +478,8 @@ bool Surface::read(std::istream &stream, U32 interiorFileVersion, bool isTGEInte
 		return false;
 
 	//Fucking GarageGames. Sometimes the plane is | 0x8000 because WHY NOT
-	READVAR(plane, S16); //planeIndex
+	S16 plane;
+	READCHECK(plane, S16); //planeIndex
 	//Ugly hack
 	planeFlipped = (plane >> 15 != 0);
 	plane &= ~0x8000;
