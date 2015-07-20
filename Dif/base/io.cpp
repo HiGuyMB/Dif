@@ -104,10 +104,12 @@ bool Dictionary::read(std::istream &stream) {
 	//<length>[<name><value>]...
 	IO::read(stream, &size, "size");
 	for (int i = 0; i < size; i ++) {
-		names.push_back(String());
-		values.push_back(String());
-		names[i].read(stream);
-		values[i].read(stream);
+		std::string name, value;
+		IO::read(stream, &name, "name");
+		IO::read(stream, &value, "value");
+
+		names.push_back(name);
+		values.push_back(value);
 	}
 
 	return true;
@@ -185,8 +187,8 @@ bool Dictionary::write(std::ostream &stream) const {
 	if (!IO::write(stream, size, "size"))
 		return false;
 	for (int i = 0; i < size; i ++) {
-		if (!names[i].write(stream) ||
-		    !values[i].write(stream))
+		if (!IO::write(stream, names[i], "name") ||
+			!IO::write(stream, values[i], "value"))
 		return false;
 	}
 

@@ -234,8 +234,8 @@ public:
 class Dictionary : public Readable, Writable {
 public:
 	U32 size;
-	std::vector<String> names;
-	std::vector<String> values;
+	std::vector<std::string> names;
+	std::vector<std::string> values;
 
 	virtual bool read(std::istream &stream);
 	virtual bool write(std::ostream &stream) const;
@@ -244,7 +244,7 @@ public:
 
 	}
 
-	String get(const String &key) const {
+	std::string get(const std::string &key) const {
 		for (U32 i = 0; i < size; i ++) {
 			if (names[i] == key)
 				return values[i];
@@ -252,7 +252,7 @@ public:
 		return "";
 	}
 
-	void put(const String &key, const String &value) {
+	void put(const std::string &key, const std::string &value) {
 		names.push_back(key);
 		values.push_back(value);
 		size ++;
