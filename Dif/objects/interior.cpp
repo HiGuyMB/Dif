@@ -94,7 +94,10 @@ bool Interior::read(std::istream &stream) {
 		//First, rewind
 		stream.seekg(pos);
 
-		//Second, re-read
+		//Second clean up
+		surface.clear();
+
+		//Third, re-read
 		if (!IO::read_with<Surface>(stream, surface, [&](Surface &surface, std::istream &stream)->bool{return surface.read(stream, interiorFileVersion, true, index.size(), plane.size(), materialName.size(), texGenEq.size());}, "surface")) { //surface
 			//Ok this surface failed too. Bail.
 			return false;
