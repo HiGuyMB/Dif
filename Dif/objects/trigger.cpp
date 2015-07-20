@@ -27,6 +27,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <sstream>
 #include "types.h"
 #include "io.h"
 #include "trigger.h"
@@ -84,7 +85,7 @@ bool PolyHedronEdge::write(std::ostream &stream) const {
 	return true;
 }
 
-String Trigger::getPolyhedron() {
+std::string Trigger::getPolyhedron() {
 	// First point is corner, need to find the three vectors...`
 	Point3F origin = polyhedron.pointList[0];
 	U32 currVec = 0;
@@ -99,11 +100,10 @@ String Trigger::getPolyhedron() {
 	}
 
 	// Build output string.
-	String ret(1024);
-	snprintf(ret, 1023, "%7.7f %7.7f %7.7f %7.7f %7.7f %7.7f %7.7f %7.7f %7.7f %7.7f %7.7f %7.7f",
-			 origin.x, origin.y, origin.z,
-			 vecs[0].x, vecs[0].y, vecs[0].z,
-			 vecs[2].x, vecs[2].y, vecs[2].z,
-			 vecs[1].x, vecs[1].y, vecs[1].z);
-	return ret;
+	std::stringstream ss;
+	ss << origin.x << ' ' << origin.y << ' ' << origin.z <<
+	      vecs[0].x << ' ' << vecs[0].y << ' ' << vecs[0].z <<
+	      vecs[1].x << ' ' << vecs[1].y << ' ' << vecs[1].z <<
+	      vecs[2].x << ' ' << vecs[2].y << ' ' << vecs[2].z;
+	return ss.str();
 }

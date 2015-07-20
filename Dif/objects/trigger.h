@@ -64,7 +64,7 @@ public:
 
 	bool write(std::ostream &stream) const;
 
-	String getPolyhedron();
+	std::string getPolyhedron();
 };
 
 #endif
