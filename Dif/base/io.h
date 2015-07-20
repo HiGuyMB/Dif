@@ -137,20 +137,20 @@ public:
 	}
 
 	/**
-	 Read a map from a stream
+	 Read a dictionary from a stream
 	 @var stream - The stream from which the data is read
 	 @var value - A pointer into which the data will be read
 	 @var name - A string containing the name of the variable (for debugging)
 	 @return If the operation was successful
 	 */
-	static inline bool read(std::istream &stream, std::map<std::string, std::string> *value, const std::string &name) {
+	static inline bool read(std::istream &stream, Dictionary *value, const std::string &name) {
 		//How long is the map
 		U32 length;
 		if (!read(stream, &length, "length"))
 			return false;
 
 		//Empty the map
-		*value = std::map<std::string, std::string>();
+		*value = Dictionary();
 
 		//Read the map strings
 		for (U32 i = 0; i < length; i ++) {
@@ -240,13 +240,13 @@ public:
 	}
 
 	/**
-	 Write a map to a stream
+	 Write a dictionary to a stream
 	 @var stream - The stream to which the data is written
 	 @var value - The map to write
 	 @var name - A string containing the name of the variable (for debugging)
 	 @return If the operation was successful
 	 */
-	static inline bool write(std::ostream &stream, const std::map<std::string, std::string> &value, const std::string &name) {
+	static inline bool write(std::ostream &stream, const Dictionary &value, const std::string &name) {
 		//How long is the map
 		if (!write(stream, (U32)value.size(), "length"))
 			return false;
