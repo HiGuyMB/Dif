@@ -32,6 +32,7 @@
 #include "math.h"
 #include <type_traits>
 #include <map>
+#include <iostream>
 
 #define LIGHT_MAP_SIZE 0x400
 
@@ -43,12 +44,28 @@
 
 class IO {
 public:
+#ifdef PRINT_DEBUG_INFO
+	template <typename T>
+	static inline void debug_print(std::istream &stream, T &value, const std::string &name) {
+		std::istream::pos_type pos = stream.tellg();
+		std::cout << "Read " << name << " at offset " << pos << " (0x" << std::hex << pos << ")" << std::dec << std::endl;
+	}
+	template <typename T>
+	static inline void debug_print(std::ostream &stream, const T &value, const std::string &name) {
+		std::istream::pos_type pos = stream.tellp();
+		std::cout << "Write " << name << " at offset " << pos << " (0x" << std::hex << pos << ")" << std::dec << std::endl;
+	}
+#else
+#define debug_print(stream, value, name)
+#endif
+
 	//Read primitive types from a std::istream
 	template <typename T, bool=true>
 	struct read_impl {
 		static inline bool read(std::istream &stream, T &value, const std::string &name) {
 			if (stream.eof())
 				return false;
+			debug_print(stream, value, name);
 			stream.read(reinterpret_cast<char *>(&value), sizeof(value));
 			return stream.good();
 		}
@@ -57,6 +74,7 @@ public:
 	template <typename T>
 	struct read_impl<T, false> {
 		static inline bool read(std::istream &stream, T &value, const std::string &name) {
+			debug_print(stream, value, name);
 			return value.read(stream);
 		}
 	};
@@ -301,6 +319,7 @@ public:
 	template <typename T, bool=true>
 	struct write_impl {
 		static inline bool write(std::ostream &stream, const T &value, const std::string &name) {
+			debug_print(stream, value, name);
 			stream.write(reinterpret_cast<const char *>(&value), sizeof(value));
 			return stream.good();
 		}
@@ -309,6 +328,7 @@ public:
 	template <typename T>
 	struct write_impl<T, false> {
 		static inline bool write(std::ostream &stream, const T &value, const std::string &name) {
+			debug_print(stream, value, name);
 			return value.write(stream);
 		}
 	};
@@ -521,8 +541,8 @@ inline const T& __magic_const_cast(const F &thing) {
 
 //Macros to speed up file reading/writing
 #ifdef DEBUG
-	#define READCHECK(name, type)  { if (!IO::read(stream, __magic_cast<type>(name),        #name)) return false; }
-	#define WRITECHECK(name, type) { if (!IO::write(stream, __magic_const_cast<type>(name), #name)) return false; }
+	#define READCHECK(name, type)  { if (!IO::read(stream, __magic_cast<type>(name),        #name " as " #type)) return false; }
+	#define WRITECHECK(name, type) { if (!IO::write(stream, __magic_const_cast<type>(name), #name " as " #type)) return false; }
 #else
 	#define READCHECK(name, type)  { if (!IO::read(stream, __magic_cast<type>(name),        "")) return false; }
 	#define WRITECHECK(name, type) { if (!IO::write(stream, __magic_const_cast<type>(name), "")) return false; }
