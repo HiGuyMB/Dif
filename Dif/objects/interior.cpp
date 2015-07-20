@@ -140,8 +140,8 @@ bool Interior::read(std::istream &stream) {
 		READCHECK(normalLMapIndex, std::vector<U8>); //normalLMapIndex
 	} else if (this->interiorFileVersion >= 13) {
 		//These are 32-bit values in v13 and up
-		READCHECK(normalLMapIndex, std::vector<U8>); //normalLMapIndex
-		READCHECK(alarmLMapIndex, std::vector<U8>); //alarmLMapIndex
+		READCHECK(normalLMapIndex, std::vector<U32>); //normalLMapIndex
+		READCHECK(alarmLMapIndex, std::vector<U32>); //alarmLMapIndex
 	} else {
 		//Normally they're just 8
 		READCHECK(normalLMapIndex, std::vector<U8>); //normalLMapIndex

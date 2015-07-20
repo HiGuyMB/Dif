@@ -509,17 +509,23 @@ inline T __read(std::istream &stream, T *thing) {
 // the type and let the template work
 #define READ(type) __read(stream, reinterpret_cast<type *>(NULL))
 
-#ifdef DEBUG
-	#define READCHECK(name, type) { if (!IO::read(stream, name, #name)) return false; }
-#else
-	#define READCHECK(name, type) { if (!IO::read(stream, name, "")) return false; }
-#endif
+template <typename T, typename F>
+inline T& __magic_cast(F &thing) {
+	return reinterpret_cast<T&>(thing);
+}
 
-//Macros to speed up file writing
+template <typename T, typename F>
+inline const T& __magic_const_cast(const F &thing) {
+	return reinterpret_cast<const T&>(thing);
+}
+
+//Macros to speed up file reading/writing
 #ifdef DEBUG
-#define WRITECHECK(value, type) { if (!IO::write(stream, (const type) value, #value)) return false; }
+	#define READCHECK(name, type)  { if (!IO::read(stream, __magic_cast<type>(name),        #name)) return false; }
+	#define WRITECHECK(name, type) { if (!IO::write(stream, __magic_const_cast<type>(name), #name)) return false; }
 #else
-#define WRITECHECK(value, type) { if (!IO::write(stream, (const type) value, "")) return false; }
+	#define READCHECK(name, type)  { if (!IO::read(stream, __magic_cast<type>(name),        "")) return false; }
+	#define WRITECHECK(name, type) { if (!IO::write(stream, __magic_const_cast<type>(name), "")) return false; }
 #endif
 
 
