@@ -321,17 +321,13 @@ public:
 	ColorI baseAmbientColor;
 	ColorI alarmAmbientColor;
 
-	U32 numStaticMeshes;
-	StaticMesh **staticMesh;
-
+	std::vector<StaticMesh> staticMesh;
 	std::vector<Point3F> texNormal;
 	std::vector<TexMatrix> texMatrix;
 	std::vector<U32> texMatIndex;
 
 	U32 extendedLightMapData;
 	U32 lightMapBorderSize;
-
-	~Interior();
 
 	/**
 	 Reads an Interior from a FILE

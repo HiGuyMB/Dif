@@ -303,12 +303,7 @@ bool Interior::read(std::istream &stream) {
 		READTOVAR(alarmAmbientColor, ColorI); //alarmAmbientColor
 
 		if (this->interiorFileVersion >= 10) {
-			READLOOPVAR(numStaticMeshes, staticMesh, StaticMesh *) {
-				staticMesh[i] = new StaticMesh();
-				staticMesh[i]->read(stream);
-			}
-		} else {
-			numStaticMeshes = 0;
+			READTOVAR(staticMesh, std::vector<StaticMesh>);
 		}
 		if (this->interiorFileVersion >= 11) {
 			READTOVAR(texNormal, std::vector<Point3F>); //texNormal
@@ -396,12 +391,6 @@ bool Interior::write(std::ostream &stream) const {
 //	WRITECHECK(extendedLightMapData, U32); //extendedLightMapData
 
 	return true;
-}
-
-Interior::~Interior() {
-	for (int i = 0; i < numStaticMeshes; i ++) {
-		delete staticMesh[i];
-	}
 }
 
 //----------------------------------------------------------------------------
