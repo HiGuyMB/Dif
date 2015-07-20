@@ -106,14 +106,14 @@ bool Primitive::write(std::ostream &stream) const {
 
 bool MaterialList::read(std::istream &stream) {
 	//It's a disaster
-	assert(1);
+	assert(0);
 
 	return true;
 }
 
 bool MaterialList::write(std::ostream &stream) const {
 	//Not going to bother
-	assert(1);
+	assert(0);
 
 	return true;
 }
