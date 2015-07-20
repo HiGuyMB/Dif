@@ -59,7 +59,7 @@ public:
 	virtual bool write(std::ostream &stream) const = 0;
 };
 
-struct String : public Readable, Writable {
+struct String {
 	U8 *data;
 	U32 length;
 	bool allocated;
@@ -144,9 +144,6 @@ struct String : public Readable, Writable {
 			allocated = false;
 		}
 	}
-
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
 };
 
 #include "point2.h"

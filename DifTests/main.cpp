@@ -11,7 +11,7 @@ void printTriggers(DIF *dif) {
 		std::cout << "   datablock = \"" << trigger->datablock <<  "\";" << std::endl;
 		std::cout << "   polyhedron = \"" << (const char *)trigger->getPolyhedron() << "\";" << std::endl;
 		for (int j = 0; j < trigger->properties.size; j ++) {
-			std::cout << "      " << (const char *)trigger->properties.names[j] << " = \"" << (const char *)trigger->properties.values[j] << "\";" << std::endl;
+			std::cout << "      " << trigger->properties.names[j] << " = \"" << trigger->properties.values[j] << "\";" << std::endl;
 		}
 		std::cout << "};" << std::endl;
 	}

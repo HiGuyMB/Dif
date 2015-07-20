@@ -85,19 +85,6 @@ bool MatrixF::read(std::istream &stream) {
 		IO::read(stream, &m[15], "m[15]");
 }
 
-bool String::read(std::istream &stream) {
-	//<length><bytes>
-
-	IO::read(stream, (U8 *)&length, "length");
-	data = new U8[length + 1];
-	for (int i = 0; i < length; i ++) {
-		IO::read(stream, &(data[i]), "data");
-	}
-	//Null-terminate
-	data[length] = 0;
-	return true;
-}
-
 bool PNG::read(std::istream &stream) {
 	U8 PNGFooter[8] = {0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82};
 	data = new U8[LIGHT_MAP_SIZE];
@@ -180,17 +167,6 @@ bool MatrixF::write(std::ostream &stream) const {
 		IO::write(stream, m[13], "m[13]") &&
 		IO::write(stream, m[14], "m[14]") &&
 		IO::write(stream, m[15], "m[15]");
-}
-
-bool String::write(std::ostream &stream) const {
-	//<length><bytes>
-	if (!IO::write(stream, (U8)length, "length"))
-		return false;
-	for (int i = 0; i < length; i ++) {
-		if (!IO::write(stream, data[i], "data"))
-			return false;
-	}
-	return true;
 }
 
 bool PNG::write(std::ostream &stream) const {
