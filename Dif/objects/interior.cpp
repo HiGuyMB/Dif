@@ -228,15 +228,17 @@ bool Interior::read(std::istream &stream) {
 	if (this->interiorFileVersion == 4) { //Yet more things found in 0, 2, 3, 14
 		flags = 0;
 		numStateDataBuffers = 0;
+		numSubObjects = 0;
 	} else {
 		READTOVAR(stateData, std::vector<StateData>); //stateData
 		READLISTVAR(numStateDataBuffers, stateDataBuffer, U8); //stateDataBuffer
 		READTOVAR(flags, U32); //flags
 		READTOVAR(nameBufferCharacter, std::vector<U8>); //nameBufferCharacter
 
-		READLOOP(numSubObjects) {
-			//NFC
-		}
+		READTOVAR(numSubObjects, U32);
+//		READLOOP(numSubObjects) {
+//			//NFC
+//		}
 	}
 	READLOOPVAR(numConvexHulls, convexHull, ConvexHull) {
 		READTOVAR(convexHull[i].hullStart, U32); //hullStart
@@ -364,7 +366,8 @@ bool Interior::write(std::ostream &stream) const {
 	WRITELIST(numStateDataBuffers, stateDataBuffer, U32); //stateDataBuffer
 	WRITECHECK(flags, U32); //flags
 	WRITE(nameBufferCharacter, std::vector<U8>); //nameBufferCharacter
-	WRITELOOP(numSubObjects) {} //numSubObjects
+	WRITE(numSubObjects, U32);
+//	WRITELOOP(numSubObjects) {} //numSubObjects
 	WRITELIST(numConvexHulls, convexHull, ConvexHull); //convexHull
 	WRITE(convexHullEmitStringCharacter, std::vector<U8>); //convexHullEmitStringCharacter
 	WRITELIST(numHullIndices, hullIndex, U32); //hullIndex
