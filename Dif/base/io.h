@@ -42,6 +42,11 @@
 #define DIR_SEP '/'
 #endif
 
+//Define this to activate stream debug read/write logging
+#if 0
+#define PRINT_DEBUG_INFO
+#endif
+
 class IO {
 public:
 #ifdef PRINT_DEBUG_INFO
