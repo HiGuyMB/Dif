@@ -132,8 +132,7 @@ bool Interior::read(std::istream &stream) {
 		//v4 has some extra points and indices, no clue what these are either
 		if (this->interiorFileVersion == 4) {
 			//May be brush points, normals, no clue
-			Point3F pointOfSomeKind;
-			READCHECK(pointOfSomeKind, std::vector<Point3F>); //Not sure, normals of some sort
+			READ(std::vector<Point3F>); //Not sure, normals of some sort
 
 			//Looks like indcies of some sort, can't seem to make them out though
 			
