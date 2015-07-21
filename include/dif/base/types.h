@@ -89,9 +89,6 @@ public:
 	F32 y;
 	F32 z;
 
-	QuatF() : x(0), y(0), z(0), w(0) {};
-	QuatF(const F32 &x, const F32 &y, const F32 &z, const F32 &w) : x(x), y(y), z(z), w(w) {};
-
 	virtual bool read(std::istream &stream);
 	virtual bool write(std::ostream &stream) const;
 };
