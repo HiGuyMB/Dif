@@ -25,8 +25,8 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //------------------------------------------------------------------------------
 
-#include "io.h"
-#include "vehicleCollision.h"
+#include <dif/base/io.h>
+#include <dif/objects/vehicleCollision.h>
 
 DIF_NAMESPACE
 

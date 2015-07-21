@@ -28,7 +28,7 @@
 #ifndef gameEntity_h
 #define gameEntity_h
 
-#include "types.h"
+#include <dif/base/types.h>
 
 DIF_NAMESPACE
 

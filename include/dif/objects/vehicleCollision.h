@@ -28,7 +28,7 @@
 #ifndef vehicleCollision_h
 #define vehicleCollision_h
 
-#include "types.h"
+#include <dif/base/types.h>
 
 DIF_NAMESPACE
 

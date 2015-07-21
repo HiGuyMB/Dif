@@ -28,14 +28,14 @@
 #ifndef dif_h
 #define dif_h
 
-#include "types.h"
-#include "interior.h"
-#include "trigger.h"
-#include "interiorPathFollower.h"
-#include "forceField.h"
-#include "aiSpecialNode.h"
-#include "vehicleCollision.h"
-#include "gameEntity.h"
+#include <dif/base/types.h>
+#include <dif/objects/interior.h>
+#include <dif/objects/trigger.h>
+#include <dif/objects/interiorPathFollower.h>
+#include <dif/objects/forceField.h>
+#include <dif/objects/aiSpecialNode.h>
+#include <dif/objects/vehicleCollision.h>
+#include <dif/objects/gameEntity.h>
 
 DIF_NAMESPACE
 

@@ -25,8 +25,8 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //------------------------------------------------------------------------------
 
-#include "io.h"
-#include "dif.h"
+#include <dif/base/io.h>
+#include <dif/objects/dif.h>
 
 DIF_NAMESPACE
 

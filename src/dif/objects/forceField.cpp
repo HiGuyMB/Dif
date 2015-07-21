@@ -25,8 +25,8 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //------------------------------------------------------------------------------
 
-#include "io.h"
-#include "forceField.h"
+#include <dif/base/io.h>
+#include <dif/objects/forceField.h>
 
 DIF_NAMESPACE
 

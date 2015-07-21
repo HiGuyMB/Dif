@@ -28,8 +28,8 @@
 #ifndef interior_h
 #define interior_h
 
-#include "types.h"
-#include "staticMesh.h"
+#include <dif/base/types.h>
+#include <dif/objects/staticMesh.h>
 
 DIF_NAMESPACE
 

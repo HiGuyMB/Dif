@@ -28,7 +28,7 @@
 #ifndef forceField_h
 #define forceField_h
 
-#include "types.h"
+#include <dif/base/types.h>
 
 DIF_NAMESPACE
 

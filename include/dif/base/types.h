@@ -63,9 +63,9 @@ public:
 
 DIF_NAMESPACE_END
 
-#include "point2.h"
-#include "point3.h"
-#include "color.h"
+#include <dif/base/point2.h>
+#include <dif/base/point3.h>
+#include <dif/base/color.h>
 
 DIF_NAMESPACE
 

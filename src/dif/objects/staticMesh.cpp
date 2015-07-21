@@ -25,7 +25,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //------------------------------------------------------------------------------
 
-#include "staticMesh.h"
+#include <dif/objects/staticMesh.h>
 #include <assert.h>
 
 DIF_NAMESPACE

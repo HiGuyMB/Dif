@@ -28,7 +28,7 @@
 #ifndef trigger_h
 #define trigger_h
 
-#include "types.h"
+#include <dif/base/types.h>
 
 DIF_NAMESPACE
 

@@ -28,8 +28,7 @@
 #ifndef io_h
 #define io_h
 
-#include "types.h"
-#include "math.h"
+#include <dif/base/types.h>
 #include <type_traits>
 #include <map>
 #include <iostream>

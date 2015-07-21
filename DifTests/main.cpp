@@ -1,7 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include "objects/dif.h"
+#include <dif/objects/dif.h>
 
 void printTriggers(DIF::DIF dif) {
 	for (DIF::Trigger trigger : dif.trigger) {

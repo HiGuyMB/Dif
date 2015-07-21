@@ -25,8 +25,8 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //------------------------------------------------------------------------------
 
-#include "io.h"
-#include "aiSpecialNode.h"
+#include <dif/base/io.h>
+#include <dif/objects/aiSpecialNode.h>
 
 DIF_NAMESPACE
 

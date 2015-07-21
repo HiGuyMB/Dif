@@ -28,7 +28,7 @@
 #ifndef aiSpecialNode_h
 #define aiSpecialNode_h
 
-#include "types.h"
+#include <dif/base/types.h>
 
 DIF_NAMESPACE
 

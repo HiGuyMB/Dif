@@ -28,9 +28,8 @@
 //Warning: This is the scary file.
 
 #include <assert.h>
-#include "io.h"
-#include "interior.h"
-#include "math.h"
+#include <dif/base/io.h>
+#include <dif/objects/interior.h>
 
 DIF_NAMESPACE
 

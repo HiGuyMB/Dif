@@ -28,8 +28,8 @@
 #ifndef staticMesh_h
 #define staticMesh_h
 
-#include "types.h"
-#include "io.h"
+#include <dif/base/types.h>
+#include <dif/base/io.h>
 
 DIF_NAMESPACE
 

@@ -26,9 +26,9 @@
 //------------------------------------------------------------------------------
 
 #include <sstream>
-#include "types.h"
-#include "io.h"
-#include "trigger.h"
+#include <dif/base/types.h>
+#include <dif/base/io.h>
+#include <dif/objects/trigger.h>
 
 DIF_NAMESPACE
 
