@@ -55,7 +55,7 @@ bool Interior::read(std::istream &stream) {
 	//MaterialList
 	READCHECK(materialListVersion, U8); //version
 	READCHECK(materialName, std::vector<std::string>); //materialName
-	if (!IO::read_as<U32, U16>(stream, index, [](bool useAlternate, U32 param)->bool{return param;}, "index")) return false; //index
+	if (!IO::read_as<U32, U16>(stream, index, [](bool useAlternate, U32 param)->bool{return param ? true : false;}, "index")) return false; //index
 	READCHECK(windingIndex, std::vector<WindingIndex>); //windingIndex
 	if (this->interiorFileVersion >= 12) {
 		READCHECK(edge, std::vector<Edge>); //edge

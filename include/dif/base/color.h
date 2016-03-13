@@ -25,8 +25,8 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //------------------------------------------------------------------------------
 
-#ifndef color_h
-#define color_h
+#ifndef dif_color_h
+#define dif_color_h
 
 DIF_NAMESPACE
 

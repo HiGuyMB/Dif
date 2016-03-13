@@ -25,23 +25,24 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //------------------------------------------------------------------------------
 
-#ifndef io_h
-#define io_h
+#ifndef dif_io_h
+#define dif_io_h
 
 #include <dif/base/types.h>
 #include <type_traits>
 #include <map>
 #include <iostream>
+#include <functional>
 
 DIF_NAMESPACE
 
 #define LIGHT_MAP_SIZE 0x400
 
-#ifdef _WIN32
-#define DIR_SEP '\\'
-#else
+//#ifdef _WIN32
+//#define DIR_SEP '\\'
+//#else
 #define DIR_SEP '/'
-#endif
+//#endif
 
 //Define this to activate stream debug read/write logging
 #if 0
@@ -122,7 +123,7 @@ public:
 		value.reserve(size);
 
 		//Read all the objects
-		for (int i = 0; i < size; i ++) {
+		for (U32 i = 0; i < size; i ++) {
 			T obj;
 			//Make sure the read succeeds
 			if (read(stream, obj, "obj"))
@@ -235,7 +236,7 @@ public:
 		value.reserve(size);
 
 		//Read all the objects
-		for (int i = 0; i < size; i ++) {
+		for (U32 i = 0; i < size; i ++) {
 			//Should we use the alternate type? Lambda functions to the rescue!
 			if (condition(isSigned, param)) {
 				type2 obj;
@@ -278,7 +279,7 @@ public:
 		value.reserve(size);
 
 		//Read all the objects
-		for (int i = 0; i < size; i ++) {
+		for (U32 i = 0; i < size; i ++) {
 			T obj;
 			//Make sure the read succeeds
 			if (passed_method(obj, stream))
@@ -314,7 +315,7 @@ public:
 			return false;
 
 		//Read all the objects
-		for (int i = 0; i < size; i ++) {
+		for (U32 i = 0; i < size; i ++) {
 			T obj;
 			//Make sure the read succeeds
 			if (read(stream, obj, "obj"))
@@ -372,7 +373,7 @@ public:
 		if (!write(stream, static_cast<U32>(value.size()), "size"))
 			return false;
 		//Write all of the objects in the vector
-		for (int i = 0; i < value.size(); i ++) {
+		for (size_t i = 0; i < value.size(); i ++) {
 			if (!write(stream, value[i], "value"))
 				return false;
 		}
@@ -441,7 +442,7 @@ public:
 			return false;
 
 		//Write all of the objects in the vector
-		for (int i = 0; i < value.size(); i ++) {
+		for (size_t i = 0; i < value.size(); i ++) {
 			if (!write(stream, value[i], "value"))
 				return false;
 		}

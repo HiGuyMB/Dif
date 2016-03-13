@@ -25,8 +25,8 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //------------------------------------------------------------------------------
 
-#ifndef staticMesh_h
-#define staticMesh_h
+#ifndef dif_staticMesh_h
+#define dif_staticMesh_h
 
 #include <dif/base/types.h>
 #include <dif/base/io.h>
@@ -48,6 +48,8 @@ public:
 		Point2I lightMapOffset;
 		Point2I lightMapSize;
 
+		Primitive() : alpha(0), texS(0), texT(0), diffuseIndex(0), lightMapIndex(0), start(0), count(0) {};
+
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
 	};
@@ -62,6 +64,8 @@ public:
 		U32 *lightMap;
 		U32 *detailScale;
 		U32 *reflectionAmount;
+
+		MaterialList() : materialCount(0), flags(nullptr), reflectanceMap(nullptr), bumpMap(nullptr), detailMap(nullptr), lightMap(nullptr), detailScale(nullptr), reflectionAmount(nullptr) {};
 
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
@@ -84,6 +88,8 @@ public:
 	BoxF bounds;
 	MatrixF transform;
 	Point3F scale;
+
+	StaticMesh() : hasMaterialList(0), numDiffuseBitmaps(0), hasSolid(0), hasTranslucency(0) {};
 
 	/**
 	 * Reads a StaticMesh from a stream

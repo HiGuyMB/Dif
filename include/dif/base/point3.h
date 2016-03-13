@@ -25,11 +25,13 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //------------------------------------------------------------------------------
 
-#ifndef point3_h
-#define point3_h
+#ifndef dif_point3_h
+#define dif_point3_h
 
 #include <math.h>
 #include <limits>
+
+#include <glm/vec3.hpp>
 
 DIF_NAMESPACE
 
@@ -71,6 +73,10 @@ public:
 	Point3<T> roundThousands() const;
 	Point3<T> normalize() const;
 	Point3<T> normalize(const T &scalar) const;
+
+	Point3<T>(const glm::vec3 &vec) : x((T)vec.x), y((T)vec.y), z((T)vec.z) {}
+	operator glm::vec3();
+	operator glm::vec3() const;
 
 	/**
 	 Reads a Point3 from a stream
@@ -213,6 +219,17 @@ inline Point3<T> Point3<T>::roundThousands() const {
 	                 floorf(y * 1000.0f) / 1000.f,
 	                 floorf(z * 1000.0f) / 1000.f);
 }
+
+template <typename T>
+inline Point3<T>::operator glm::vec3() {
+	return glm::vec3(x, y, z);
+}
+
+template <typename T>
+inline Point3<T>::operator glm::vec3() const {
+	return glm::vec3(x, y, z);
+}
+
 
 DIF_NAMESPACE_END
 
