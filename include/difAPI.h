@@ -45,12 +45,13 @@ public:
 
 	bool read(const std::string &file);
 
-	std::unordered_map<int, std::vector<float>> mVertices;
-	std::unordered_map<int, std::vector<float>> mUVs;
-	std::unordered_map<int, std::vector<float>> mNormals;
-	std::unordered_map<int, std::vector<float>> mTangents;
-	std::unordered_map<int, int> mTriangleCount;
+	std::vector<float> mVertices;
+	std::vector<float> mUVs;
+	std::vector<float> mNormals;
+	std::vector<float> mTangents;
+	std::unordered_map<int, std::vector<int>> mIndices;
 	std::vector<std::string> mMaterials;
+	int mTotalTriangleCount;
 };
 
 extern "C" {
@@ -72,17 +73,42 @@ extern "C" {
 	/** 
 	 *
 	 */
-	PLUGIN_API float* dif_get_vertices(void *dif, int materialId);
+	PLUGIN_API void dif_get_vertices(void *dif, float **vertArray);
+
+	/**
+	 * 
+	 */
+	PLUGIN_API void dif_get_uvs(void *dif, float **uvArray);
 
 	/**
 	 *
 	 */
-	PLUGIN_API int dif_get_triangle_count(void *dif, int materialId);
+	PLUGIN_API void dif_get_normals(void *dif, float **normalArray);
+
+	/**
+	 *
+	 */
+	PLUGIN_API void dif_get_tangents(void *dif, float **tangentArray);
+
+	/**
+	 *
+	 */
+	PLUGIN_API int dif_get_triangle_count_by_material(void *dif, int materialId);
 
 	/**
 	 *
 	 */
 	PLUGIN_API int dif_get_material_count(void *dif);
+
+	/**
+	 *
+	 */
+	PLUGIN_API int dif_get_total_triangle_count(void *dif);
+
+	/**
+	 *
+	 */
+	PLUGIN_API void dif_get_triangles_by_material(void *dif, int materialId, int **indices);
 }
 
 #endif // _DIF_CPLUGIN_API_H_

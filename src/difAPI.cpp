@@ -45,6 +45,8 @@ static void parseDif(Dif *thisptr, DIF::DIF &dif) {
 	// set the materials.
 	thisptr->mMaterials = interior.materialName;
 
+	int vertIndex = 0;
+
 	// Create an instance in the map for each material
 	for (size_t i = 0; i < interior.surface.size(); i++) {
 		const DIF::Interior::Surface &surface = interior.surface[i];
@@ -93,37 +95,42 @@ static void parseDif(Dif *thisptr, DIF::DIF &dif) {
 			//bitangent = glm::normalize(bitangent);
 
 			// Point 0 data
-			thisptr->mVertices[surface.textureIndex].push_back(v0.x);
-			thisptr->mVertices[surface.textureIndex].push_back(v0.y);
-			thisptr->mVertices[surface.textureIndex].push_back(v0.z);
-			thisptr->mUVs[surface.textureIndex].push_back(uv0.x);
-			thisptr->mUVs[surface.textureIndex].push_back(uv0.y);
+			thisptr->mVertices.push_back(v0.x);
+			thisptr->mVertices.push_back(v0.z);
+			thisptr->mVertices.push_back(v0.y);
+			thisptr->mUVs.push_back(uv0.x);
+			thisptr->mUVs.push_back(uv0.y);
 
 			// Point 1 data
-			thisptr->mVertices[surface.textureIndex].push_back(v1.x);
-			thisptr->mVertices[surface.textureIndex].push_back(v1.y);
-			thisptr->mVertices[surface.textureIndex].push_back(v1.z);
-			thisptr->mUVs[surface.textureIndex].push_back(uv1.x);
-			thisptr->mUVs[surface.textureIndex].push_back(uv1.y);
+			thisptr->mVertices.push_back(v1.x);
+			thisptr->mVertices.push_back(v1.z);
+			thisptr->mVertices.push_back(v1.y);
+			thisptr->mUVs.push_back(uv1.x);
+			thisptr->mUVs.push_back(uv1.y);
 
 			// Point 2 data
-			thisptr->mVertices[surface.textureIndex].push_back(v2.x);
-			thisptr->mVertices[surface.textureIndex].push_back(v2.y);
-			thisptr->mVertices[surface.textureIndex].push_back(v2.z);
-			thisptr->mUVs[surface.textureIndex].push_back(uv2.x);
-			thisptr->mUVs[surface.textureIndex].push_back(uv2.y);
+			thisptr->mVertices.push_back(v2.x);
+			thisptr->mVertices.push_back(v2.z);
+			thisptr->mVertices.push_back(v2.y);
+			thisptr->mUVs.push_back(uv2.x);
+			thisptr->mUVs.push_back(uv2.y);
 
 			// Do this only once per triangle instead of per point.
 			// takes care of normals and tangents
-			thisptr->mNormals[surface.textureIndex].push_back(normal.x);
-			thisptr->mNormals[surface.textureIndex].push_back(normal.y);
-			thisptr->mNormals[surface.textureIndex].push_back(normal.z);
-			thisptr->mTangents[surface.textureIndex].push_back(tangent.x);
-			thisptr->mTangents[surface.textureIndex].push_back(tangent.y);
-			thisptr->mTangents[surface.textureIndex].push_back(tangent.z);
+			thisptr->mNormals.push_back(normal.x);
+			thisptr->mNormals.push_back(normal.y);
+			thisptr->mNormals.push_back(normal.z);
+			thisptr->mTangents.push_back(tangent.x);
+			thisptr->mTangents.push_back(tangent.y);
+			thisptr->mTangents.push_back(tangent.z);
+
+			// index buffer
+			for (int j = 0; j < 3; j++)
+				thisptr->mIndices[surface.textureIndex].push_back(vertIndex + j);
+			vertIndex += 3;
 
 			// Up triangle count
-			thisptr->mTriangleCount[surface.textureIndex]++;
+			thisptr->mTotalTriangleCount++;
 		}
 	}
 }
@@ -133,7 +140,7 @@ static void parseDif(Dif *thisptr, DIF::DIF &dif) {
 //-----------------------------------------------------------------------------
 
 Dif::Dif() {
-
+	mTotalTriangleCount = 0;
 }
 
 Dif::~Dif() {
@@ -173,15 +180,35 @@ extern "C" {
 		static_cast<Dif*>(dif)->read(file);
 	}
 
-	float* dif_get_vertices(void *dif, int materialId) {
-		return &static_cast<Dif*>(dif)->mVertices[materialId][0];
+	void dif_get_vertices(void *dif, float **vertArray) {
+		*vertArray = &static_cast<Dif*>(dif)->mVertices[0];
 	}
 
-	int dif_get_triangle_count(void *dif, int materialId) {
-		return static_cast<Dif*>(dif)->mTriangleCount[materialId];
+	void dif_get_uvs(void *dif, float **uvArray) {
+		*uvArray = &static_cast<Dif*>(dif)->mUVs[0];
+	}
+
+	void dif_get_normals(void *dif, float **normalArray) {
+		*normalArray = &static_cast<Dif*>(dif)->mNormals[0];
+	}
+
+	void dif_get_tangents(void *dif, float **tangentArray) {
+		*tangentArray = &static_cast<Dif*>(dif)->mTangents[0];
+	}
+
+	int dif_get_triangle_count_by_material(void *dif, int materialId) {
+		return int(static_cast<Dif*>(dif)->mIndices[materialId].size());
 	}
 
 	int dif_get_material_count(void *dif) {
 		return int(static_cast<Dif*>(dif)->mMaterials.size());
+	}
+
+	int dif_get_total_triangle_count(void *dif) {
+		return int(static_cast<Dif*>(dif)->mTotalTriangleCount);
+	}
+
+	void dif_get_triangles_by_material(void *dif, int materialId, int **indices) {
+		*indices = &static_cast<Dif*>(dif)->mIndices[materialId][0];
 	}
 }
