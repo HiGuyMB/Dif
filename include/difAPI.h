@@ -57,27 +57,32 @@ extern "C" {
 	/**
 	 *
 	 */
-	PLUGIN_API void* createDif();
+	PLUGIN_API void* dif_create();
 
 	/**
 	 *
 	 */
-	PLUGIN_API void freeDif(void *dif);
+	PLUGIN_API void dif_free(void *dif);
 
 	/**
 	 *
 	 */
-	PLUGIN_API void readDif(void *dif, const char *file);
+	PLUGIN_API void dif_read(void *dif, const char *file);
 
 	/** 
 	 *
 	 */
-	PLUGIN_API float* getVertices(void *dif, int materialId);
+	PLUGIN_API float* dif_get_vertices(void *dif, int materialId);
 
 	/**
 	 *
 	 */
-	PLUGIN_API int getTriangleCount(void *dif, int materialId);
+	PLUGIN_API int dif_get_triangle_count(void *dif, int materialId);
+
+	/**
+	 *
+	 */
+	PLUGIN_API int dif_get_material_count(void *dif);
 }
 
 #endif // _DIF_CPLUGIN_API_H_

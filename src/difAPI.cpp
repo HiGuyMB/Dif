@@ -160,25 +160,28 @@ bool Dif::read(const std::string &file) {
 //-----------------------------------------------------------------------------
 
 extern "C" {
-
-	void* createDif() {
+	void* dif_create() {
 		return new Dif();
 	}
 
-	void freeDif(void *dif) {
+	void dif_free(void *dif) {
 		if (dif != NULL)
 			delete dif;
 	}
 
-	void readDif(void *dif, const char *file) {
+	void dif_read(void *dif, const char *file) {
 		static_cast<Dif*>(dif)->read(file);
 	}
 
-	float* getVertices(void *dif, int materialId) {
+	float* dif_get_vertices(void *dif, int materialId) {
 		return &static_cast<Dif*>(dif)->mVertices[materialId][0];
 	}
 
-	int getTriangleCount(void *dif, int materialId) {
+	int dif_get_triangle_count(void *dif, int materialId) {
 		return static_cast<Dif*>(dif)->mTriangleCount[materialId];
+	}
+
+	int dif_get_material_count(void *dif) {
+		return int(static_cast<Dif*>(dif)->mMaterials.size());
 	}
 }
