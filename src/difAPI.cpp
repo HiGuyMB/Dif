@@ -159,23 +159,26 @@ bool Dif::read(const std::string &file) {
 // C linkage API
 //-----------------------------------------------------------------------------
 
-void* createDif() {
-	return new Dif();
-}
+extern "C" {
 
-void freeDif(void *dif) {
-	if (dif != NULL)
-		delete dif;
-}
+	void* createDif() {
+		return new Dif();
+	}
 
-void readDif(void *dif, const char *file) {
-	static_cast<Dif*>(dif)->read(file);
-}
+	void freeDif(void *dif) {
+		if (dif != NULL)
+			delete dif;
+	}
 
-float* getVertices(void *dif, int materialId) {
-	return &static_cast<Dif*>(dif)->mVertices[materialId][0];
-}
+	void readDif(void *dif, const char *file) {
+		static_cast<Dif*>(dif)->read(file);
+	}
 
-int getTriangleCount(void *dif, int materialId) {
-	return static_cast<Dif*>(dif)->mTriangleCount[materialId];
+	float* getVertices(void *dif, int materialId) {
+		return &static_cast<Dif*>(dif)->mVertices[materialId][0];
+	}
+
+	int getTriangleCount(void *dif, int materialId) {
+		return static_cast<Dif*>(dif)->mTriangleCount[materialId];
+	}
 }

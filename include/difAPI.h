@@ -78,6 +78,6 @@ extern "C" {
 	 *
 	 */
 	PLUGIN_API int getTriangleCount(void *dif, int materialId);
-};
+}
 
 #endif // _DIF_CPLUGIN_API_H_
