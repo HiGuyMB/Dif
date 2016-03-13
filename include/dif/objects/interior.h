@@ -25,8 +25,8 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //------------------------------------------------------------------------------
 
-#ifndef interior_h
-#define interior_h
+#ifndef dif_interior_h
+#define dif_interior_h
 
 #include <dif/base/types.h>
 #include <dif/objects/staticMesh.h>
@@ -42,6 +42,8 @@ public:
 		U16 normalIndex;
 		F32 planeDistance;
 
+		Plane() : normalIndex(0), planeDistance(0.0f) {}
+
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
 	};
@@ -49,6 +51,8 @@ public:
 	struct TexGenEq : public Readable, public Writable {
 		PlaneF planeX;
 		PlaneF planeY;
+
+		TexGenEq() {}
 
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
@@ -59,6 +63,8 @@ public:
 		U16 frontIndex;
 		U16 backIndex;
 
+		BSPNode() : planeIndex(0), frontIndex(0), backIndex(0) {}
+
 		bool read(std::istream &stream, U32 interiorFileVersion);
 		virtual bool write(std::ostream &stream) const;
 	};
@@ -67,6 +73,8 @@ public:
 		U32 surfaceIndex;
 		U16 surfaceCount;
 
+		BSPSolidLeaf() : surfaceIndex(0), surfaceCount(0) {}
+
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
 	};
@@ -74,6 +82,8 @@ public:
 	struct WindingIndex : public Readable, public Writable {
 		U32 windingStart;
 		U32 windingCount;
+
+		WindingIndex() : windingStart(0), windingCount(0) {}
 
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
@@ -84,6 +94,8 @@ public:
 		S32 pointIndex1;
 		S32 surfaceIndex0;
 		S32 surfaceIndex1;
+
+		Edge() : pointIndex0(0), pointIndex1(0), surfaceIndex0(0), surfaceIndex1(0) {}
 
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
@@ -98,6 +110,8 @@ public:
 		U32 staticMeshCount;
 		U16 flags;
 
+		Zone() : portalStart(0), portalCount(0), surfaceStart(0), surfaceCount(0), staticMeshStart(0), staticMeshCount(0), flags(0) {}
+
 		bool read(std::istream &stream, U32 interiorFileVersion);
 		virtual bool write(std::ostream &stream) const;
 	};
@@ -109,6 +123,8 @@ public:
 		U16 zoneFront;
 		U16 zoneBack;
 
+		Portal() : planeIndex(0), triFanCount(0), triFanStart(0), zoneFront(0), zoneBack(0) {}
+
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
 	};
@@ -117,6 +133,8 @@ public:
 		PNG lightMap;
 		PNG lightDirMap;
 		U8 keepLightMap;
+
+		LightMap() : keepLightMap(0) {}
 
 		bool read(std::istream &stream, bool isTGEInterior);
 		virtual bool write(std::ostream &stream) const;
@@ -129,12 +147,24 @@ public:
 			F32 texGenXDistance;
 			F32 texGenYDistance;
 
+			LightMap() : finalWord(0), texGenXDistance(0.0f), texGenYDistance(0.0f) {}
+
 			virtual bool read(std::istream &stream);
 			virtual bool write(std::ostream &stream) const;
 		};
 
+		Surface() : windingStart(0), windingCount(0),
+						planeIndex(0), planeFlipped(0),
+						textureIndex(0), texGenIndex(0),
+						surfaceFlags(0), fanMask(0),
+						lightCount(0), lightStateInfoStart(0), 
+						mapOffsetX(0), mapOffsetY(0),
+						mapSizeX(0), mapSizeY(0) {
+
+		}
+
 		U32 windingStart;
-		U8 windingCount;
+		U32 windingCount;
 		U16 planeIndex;
 		U8 planeFlipped;
 		U16 textureIndex;
@@ -144,10 +174,10 @@ public:
 		LightMap lightMap;
 		U16 lightCount;
 		U32 lightStateInfoStart;
-		U8 mapOffsetX;
-		U8 mapOffsetY;
-		U8 mapSizeX;
-		U8 mapSizeY;
+		U32 mapOffsetX;
+		U32 mapOffsetY;
+		U32 mapSizeX;
+		U32 mapSizeY;
 
 		bool read(std::istream &stream, U32 interiorFileVersion, bool isTGEInterior, U32 indexSize, U32 planeSize, U32 materialSize, U32 texGenEqSize);
 		virtual bool write(std::ostream &stream) const;
@@ -159,6 +189,8 @@ public:
 		U8 surfaceFlags;
 		U8 windingCount;
 
+		NullSurface() : windingStart(0), planeIndex(0), surfaceFlags(0), windingCount(0) {}
+
 		bool read(std::istream &stream, U32 interiorFileVersion);
 		virtual bool write(std::ostream &stream) const;
 	};
@@ -169,6 +201,8 @@ public:
 		U16 stateCount;
 		U16 flags;
 		U32 duration;
+
+		AnimatedLight() : nameIndex(0), stateIndex(0), stateCount(0), flags(0), duration(0) {}
 
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
@@ -182,6 +216,8 @@ public:
 		U32 dataIndex;
 		U16 dataCount;
 
+		LightState() : red(0), green(0), blue(0), activeTime(0), dataIndex(0), dataCount(0) {}
+
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
 	};
@@ -190,6 +226,8 @@ public:
 		U32 surfaceIndex;
 		U32 mapIndex;
 		U16 lightStateIndex;
+
+		StateData() : surfaceIndex(0), mapIndex(0), lightStateIndex(0) {}
 
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
@@ -212,6 +250,24 @@ public:
 		U32 polyListStringStart;
 		U8 staticMesh;
 
+		ConvexHull() {
+			hullStart = 0;
+			hullCount = 0;
+			minX = 0.0f;
+			maxX = 0.0f;
+			minY = 0.0f;
+			maxY = 0.0f;
+			minZ = 0.0f;
+			maxZ = 0.0f;
+			surfaceStart = 0;
+			surfaceCount = 0;
+			planeStart = 0;
+			polyListPlaneStart = 0;
+			polyListPointStart = 0;
+			polyListStringStart = 0;
+			staticMesh = 0;
+		}
+
 		bool read(std::istream &stream, U32 interiorFileVersion);
 		virtual bool write(std::ostream &stream) const;
 	};
@@ -219,6 +275,8 @@ public:
 	struct CoordBin : public Readable, public Writable {
 		U32 binStart;
 		U32 binCount;
+
+		CoordBin() : binStart(0), binCount(0) {}
 
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
@@ -228,6 +286,8 @@ public:
 		S32 T;
 		S32 N;
 		S32 B;
+
+		TexMatrix() : T(0), N(0), B(0) {}
 		
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
@@ -300,6 +360,19 @@ public:
 
 	U32 extendedLightMapData;
 	U32 lightMapBorderSize;
+
+	Interior() {
+		interiorFileVersion = 0;
+		detailLevel = 0;
+		minPixels = 0;
+		hasAlarmState = 0;
+		numLightStateEntries = 0;
+		flags = 0;
+		numSubObjects = 0;
+		coordBinMode = 0;
+		extendedLightMapData = 0;
+		lightMapBorderSize = 0;
+	}
 
 	/**
 	 * Reads an Interior from a stream

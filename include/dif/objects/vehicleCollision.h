@@ -25,8 +25,8 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //------------------------------------------------------------------------------
 
-#ifndef vehicleCollision_h
-#define vehicleCollision_h
+#ifndef dif_vehicleCollision_h
+#define dif_vehicleCollision_h
 
 #include <dif/base/types.h>
 
@@ -50,6 +50,10 @@ public:
 		U32 polyListPointStart;
 		U32 polyListStringStart;
 
+		ConvexHull() : hullStart(0), hullCount(0), minX(0.0f), maxX(0.0f), minY(0.0f), 
+							maxY(0.0f), minZ(0.0f), maxZ(0.0f), surfaceStart(0), surfaceCount(0), 
+							planeStart(0), polyListPlaneStart(0), polyListPointStart(0), polyListStringStart(0) {};
+
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
 	};
@@ -60,6 +64,8 @@ public:
 		U8 surfaceFlags;
 		U32 windingCount;
 
+		NullSurface() : windingStart(0), planeIndex(0), surfaceFlags(0), windingCount(0) {};
+
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
 	};
@@ -67,6 +73,8 @@ public:
 	struct WindingIndex : public Readable, public Writable {
 		U32 windingStart;
 		U32 windingCount;
+
+		WindingIndex() : windingStart(0), windingCount(0) {};
 
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
@@ -88,6 +96,8 @@ public:
 	std::vector<PlaneF> vehiclePlanes;
 	std::vector<U32> vehicleWindings;
 	std::vector<WindingIndex> vehicleWindingIndices;
+
+	VehicleCollision() : vehicleCollisionFileVersion(0) {};
 
 	/**
 	 * Reads a VehicleCollision from a stream

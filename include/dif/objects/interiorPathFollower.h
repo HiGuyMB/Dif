@@ -25,8 +25,8 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //------------------------------------------------------------------------------
 
-#ifndef interiorPathFollower_h
-#define interiorPathFollower_h
+#ifndef dif_interiorPathFollower_h
+#define dif_interiorPathFollower_h
 
 #include <dif/base/types.h>
 
@@ -40,6 +40,8 @@ public:
 		QuatF rotation;
 		U32 msToNext;
 		U32 smoothingType;
+
+		WayPoint() : msToNext(0), smoothingType(0) {};
 
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
@@ -55,6 +57,8 @@ public:
 	std::vector<WayPoint> wayPoint;
 
 	U32 totalMS;
+
+	InteriorPathFollower() : name(""), datablock(""), interiorResIndex(0), totalMS(0) {};
 
 	/**
 	 * Reads an InteriorPathFollower from a stream

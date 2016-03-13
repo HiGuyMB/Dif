@@ -25,8 +25,8 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //------------------------------------------------------------------------------
 
-#ifndef aiSpecialNode_h
-#define aiSpecialNode_h
+#ifndef dif_aiSpecialNode_h
+#define dif_aiSpecialNode_h
 
 #include <dif/base/types.h>
 
@@ -36,6 +36,8 @@ class AISpecialNode : public Readable, public Writable {
 public:
 	std::string name;
 	Point3F position;
+
+	AISpecialNode() : name(""), position(Point3F(0.0f, 0.0f, 0.0f)) {}
 
 	/**
 	 * Reads an AISpecialNode from a stream

@@ -25,8 +25,8 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //------------------------------------------------------------------------------
 
-#ifndef forceField_h
-#define forceField_h
+#ifndef dif_forceField_h
+#define dif_forceField_h
 
 #include <dif/base/types.h>
 
@@ -38,6 +38,8 @@ public:
 		U32 normalIndex;
 		F32 planeDistance;
 
+		Plane() : normalIndex(0), planeDistance(0.0f) {}
+
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
 	};
@@ -46,6 +48,8 @@ public:
 		U16 frontIndex;
 		U16 backIndex;
 
+		BSPNode() : frontIndex(0), backIndex(0) {}
+
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
 	};
@@ -53,6 +57,8 @@ public:
 	struct BSPSolidLeaf : public Readable, public Writable {
 		U32 surfaceIndex;
 		U16 surfaceCount;
+
+		BSPSolidLeaf() : surfaceIndex(0), surfaceCount(0) {}
 
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
@@ -64,6 +70,8 @@ public:
 		U16 planeIndex;
 		U8 surfaceFlags;
 		U32 fanMask;
+
+		Surface() : windingStart(0), windingCount(0), planeIndex(0), surfaceFlags(0), fanMask(0) {}
 
 		virtual bool read(std::istream &stream);
 		virtual bool write(std::ostream &stream) const;
@@ -86,6 +94,8 @@ public:
 	std::vector<U32> solidLeafSurface;
 
 	ColorI color;
+
+	ForceField() : forceFieldFileVersion(0), name("") {}
 
 	/**
 	 * Reads a ForceField from a stream

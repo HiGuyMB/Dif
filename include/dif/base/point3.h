@@ -25,8 +25,8 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //------------------------------------------------------------------------------
 
-#ifndef point3_h
-#define point3_h
+#ifndef dif_point3_h
+#define dif_point3_h
 
 #include <math.h>
 #include <limits>

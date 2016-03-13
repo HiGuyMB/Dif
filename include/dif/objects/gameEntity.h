@@ -25,8 +25,8 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //------------------------------------------------------------------------------
 
-#ifndef gameEntity_h
-#define gameEntity_h
+#ifndef dif_gameEntity_h
+#define dif_gameEntity_h
 
 #include <dif/base/types.h>
 
@@ -38,6 +38,8 @@ public:
 	std::string gameClass;
 	Point3F position;
 	Dictionary properties;
+
+	GameEntity() : datablock(""), gameClass(""), position(Point3F(0.0f, 0.0f, 0.0f)) {}
 
 	/**
 	 * Reads a GameEntity from a stream
