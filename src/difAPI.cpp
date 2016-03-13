@@ -168,7 +168,7 @@ void freeDif(void *dif) {
 		delete dif;
 }
 
-void read(void *dif, const char *file) {
+void readDif(void *dif, const char *file) {
 	static_cast<Dif*>(dif)->read(file);
 }
 

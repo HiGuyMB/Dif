@@ -67,7 +67,7 @@ extern "C" {
 	/**
 	 *
 	 */
-	PLUGIN_API void read(void *dif, const char *file);
+	PLUGIN_API void readDif(void *dif, const char *file);
 
 	/** 
 	 *
