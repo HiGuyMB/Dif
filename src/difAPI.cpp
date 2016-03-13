@@ -164,6 +164,9 @@ bool Dif::read(const std::string &file) {
 
 //-----------------------------------------------------------------------------
 // C linkage API
+//
+// Note: memcpy wasn't working for copying from the vectors to arrays.
+// It was crashing Unity. Idk why.
 //-----------------------------------------------------------------------------
 
 extern "C" {
@@ -180,20 +183,28 @@ extern "C" {
 		static_cast<Dif*>(dif)->read(file);
 	}
 
-	void dif_get_vertices(void *dif, float **vertArray) {
-		*vertArray = &static_cast<Dif*>(dif)->mVertices[0];
+	void dif_get_vertices(void *dif, float *vertArray) {
+		int size = int(static_cast<Dif*>(dif)->mVertices.size());
+		for (int i = 0; i < size; i++)
+			vertArray[i] = static_cast<Dif*>(dif)->mVertices[i];
 	}
 
-	void dif_get_uvs(void *dif, float **uvArray) {
-		*uvArray = &static_cast<Dif*>(dif)->mUVs[0];
+	void dif_get_uvs(void *dif, float *uvArray) {
+		int size = int(static_cast<Dif*>(dif)->mUVs.size());
+		for (int i = 0; i < size; i++)
+			uvArray[i] = static_cast<Dif*>(dif)->mUVs[i];
 	}
 
-	void dif_get_normals(void *dif, float **normalArray) {
-		*normalArray = &static_cast<Dif*>(dif)->mNormals[0];
+	void dif_get_normals(void *dif, float *normalArray) {
+		int size = int(static_cast<Dif*>(dif)->mNormals.size());
+		for (int i = 0; i < size; i++)
+			normalArray[i] = static_cast<Dif*>(dif)->mNormals[i];
 	}
 
-	void dif_get_tangents(void *dif, float **tangentArray) {
-		*tangentArray = &static_cast<Dif*>(dif)->mTangents[0];
+	void dif_get_tangents(void *dif, float *tangentArray) {
+		int size = int(static_cast<Dif*>(dif)->mTangents.size());
+		for (int i = 0; i < size; i++)
+			tangentArray[i] = static_cast<Dif*>(dif)->mTangents[i];
 	}
 
 	int dif_get_triangle_count_by_material(void *dif, int materialId) {
@@ -208,7 +219,16 @@ extern "C" {
 		return int(static_cast<Dif*>(dif)->mTotalTriangleCount);
 	}
 
-	void dif_get_triangles_by_material(void *dif, int materialId, int **indices) {
-		*indices = &static_cast<Dif*>(dif)->mIndices[materialId][0];
+	void dif_get_triangles_by_material(void *dif, int materialId, int *indices) {
+		int size = int(static_cast<Dif*>(dif)->mIndices[materialId].size());
+		for (int i = 0; i < size; i++)
+			indices[i] = static_cast<Dif*>(dif)->mIndices[materialId][i];
+	}
+
+	void dif_get_materials(void *dif, char **materialList, int stringLength) {
+		for (int i = 0; i < static_cast<Dif*>(dif)->mMaterials.size(); i++) {
+			const char *str = static_cast<Dif*>(dif)->mMaterials[i].c_str();
+			strncpy(materialList[i], str, stringLength);
+		}
 	}
 }

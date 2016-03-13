@@ -73,22 +73,22 @@ extern "C" {
 	/** 
 	 *
 	 */
-	PLUGIN_API void dif_get_vertices(void *dif, float **vertArray);
+	PLUGIN_API void dif_get_vertices(void *dif, float *vertArray);
 
 	/**
 	 * 
 	 */
-	PLUGIN_API void dif_get_uvs(void *dif, float **uvArray);
+	PLUGIN_API void dif_get_uvs(void *dif, float *uvArray);
 
 	/**
 	 *
 	 */
-	PLUGIN_API void dif_get_normals(void *dif, float **normalArray);
+	PLUGIN_API void dif_get_normals(void *dif, float *normalArray);
 
 	/**
 	 *
 	 */
-	PLUGIN_API void dif_get_tangents(void *dif, float **tangentArray);
+	PLUGIN_API void dif_get_tangents(void *dif, float *tangentArray);
 
 	/**
 	 *
@@ -108,7 +108,12 @@ extern "C" {
 	/**
 	 *
 	 */
-	PLUGIN_API void dif_get_triangles_by_material(void *dif, int materialId, int **indices);
+	PLUGIN_API void dif_get_triangles_by_material(void *dif, int materialId, int *indices);
+
+	/**
+	 *
+	 */
+	PLUGIN_API void dif_get_materials(void *dif, char **materialList, int stringLength);
 }
 
 #endif // _DIF_CPLUGIN_API_H_
