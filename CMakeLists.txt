@@ -77,3 +77,9 @@ set (C_API_SRC
 )
 add_library(DifPlugin SHARED ${C_API_SRC})
 target_link_libraries(DifPlugin Dif)
+###############################################################################
+# Tests
+###############################################################################
+
+add_executable(DifTests tests/main.cpp)
+target_link_libraries(DifTests ${CMAKE_BINARY_DIR}/Debug/libDif.a)
