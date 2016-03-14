@@ -1,5 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2015 HiGuy Smith
+// Copyright (c) 2016 Jeff Hutchinson
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
