@@ -96,22 +96,22 @@ static void parseDif(Dif *thisptr, DIF::DIF &dif) {
 
 			// Point 0 data
 			thisptr->mVertices.push_back(v0.x);
-			thisptr->mVertices.push_back(v0.z);
 			thisptr->mVertices.push_back(v0.y);
+			thisptr->mVertices.push_back(v0.z);
 			thisptr->mUVs.push_back(uv0.x);
 			thisptr->mUVs.push_back(uv0.y);
 
 			// Point 1 data
 			thisptr->mVertices.push_back(v1.x);
-			thisptr->mVertices.push_back(v1.z);
 			thisptr->mVertices.push_back(v1.y);
+			thisptr->mVertices.push_back(v1.z);
 			thisptr->mUVs.push_back(uv1.x);
 			thisptr->mUVs.push_back(uv1.y);
 
 			// Point 2 data
 			thisptr->mVertices.push_back(v2.x);
-			thisptr->mVertices.push_back(v2.z);
 			thisptr->mVertices.push_back(v2.y);
+			thisptr->mVertices.push_back(v2.z);
 			thisptr->mUVs.push_back(uv2.x);
 			thisptr->mUVs.push_back(uv2.y);
 
