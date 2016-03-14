@@ -73,7 +73,7 @@ public:
 	 */
 	virtual bool write(std::ostream &stream) const;
 
-	std::string getPolyhedron();
+	std::string getPolyhedron() const;
 };
 
 DIF_NAMESPACE_END
