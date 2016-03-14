@@ -226,10 +226,7 @@ extern "C" {
 			indices[i] = static_cast<Dif*>(dif)->mIndices[materialId][i];
 	}
 
-	void dif_get_materials(void *dif, char **materialList, int stringLength) {
-		for (int i = 0; i < static_cast<Dif*>(dif)->mMaterials.size(); i++) {
-			const char *str = static_cast<Dif*>(dif)->mMaterials[i].c_str();
-			strncpy(materialList[i], str, stringLength);
-		}
+	void* dif_get_material_at(void *dif, int index) {
+		return (void*)(static_cast<Dif*>(dif)->mMaterials[index].c_str());
 	}
 }

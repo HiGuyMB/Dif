@@ -114,7 +114,7 @@ extern "C" {
 	/**
 	 *
 	 */
-	PLUGIN_API void dif_get_materials(void *dif, char **materialList, int stringLength);
+	PLUGIN_API void* dif_get_material_at(void *dif, int index);
 }
 
 #endif // _DIF_CPLUGIN_API_H_
