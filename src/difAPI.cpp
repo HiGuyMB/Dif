@@ -60,14 +60,14 @@ static void parseDif(Dif *thisptr, DIF::DIF &dif) {
 			DIF::Point3F v0, v1, v2;
 
 			if ((j - (surface.windingStart + 2)) % 2 == 0) {
-				v0 = interior.point[interior.index[j]];
-				v1 = interior.point[interior.index[j - 1]];
-				v2 = interior.point[interior.index[j - 2]];
-			}
-			else {
 				v0 = interior.point[interior.index[j - 2]];
 				v1 = interior.point[interior.index[j - 1]];
-				v2 = interior.point[interior.index[j]];
+				v2 = interior.point[interior.index[j - 0]];
+			}
+			else {
+				v0 = interior.point[interior.index[j - 0]];
+				v1 = interior.point[interior.index[j - 1]];
+				v2 = interior.point[interior.index[j - 2]];
 			}
 
 			DIF::Interior::TexGenEq texGenEq = interior.texGenEq[surface.texGenIndex];
@@ -97,33 +97,33 @@ static void parseDif(Dif *thisptr, DIF::DIF &dif) {
 
 			// Point 0 data
 			thisptr->mVertices.push_back(v0.x);
-			thisptr->mVertices.push_back(v0.y);
 			thisptr->mVertices.push_back(v0.z);
+			thisptr->mVertices.push_back(v0.y);
 			thisptr->mUVs.push_back(uv0.x);
 			thisptr->mUVs.push_back(uv0.y);
 
 			// Point 1 data
 			thisptr->mVertices.push_back(v1.x);
-			thisptr->mVertices.push_back(v1.y);
 			thisptr->mVertices.push_back(v1.z);
+			thisptr->mVertices.push_back(v1.y);
 			thisptr->mUVs.push_back(uv1.x);
 			thisptr->mUVs.push_back(uv1.y);
 
 			// Point 2 data
 			thisptr->mVertices.push_back(v2.x);
-			thisptr->mVertices.push_back(v2.y);
 			thisptr->mVertices.push_back(v2.z);
+			thisptr->mVertices.push_back(v2.y);
 			thisptr->mUVs.push_back(uv2.x);
 			thisptr->mUVs.push_back(uv2.y);
 
 			// Do this only once per triangle instead of per point.
 			// takes care of normals and tangents
 			thisptr->mNormals.push_back(normal.x);
-			thisptr->mNormals.push_back(normal.y);
 			thisptr->mNormals.push_back(normal.z);
+			thisptr->mNormals.push_back(normal.y);
 			thisptr->mTangents.push_back(tangent.x);
-			thisptr->mTangents.push_back(tangent.y);
 			thisptr->mTangents.push_back(tangent.z);
+			thisptr->mTangents.push_back(tangent.y);
 
 			// index buffer
 			for (int j = 0; j < 3; j++)
@@ -177,7 +177,7 @@ extern "C" {
 
 	void dif_free(void *dif) {
 		if (dif != NULL)
-			delete dif;
+			delete static_cast<Dif*>(dif);
 	}
 
 	void dif_read(void *dif, const char *file) {
