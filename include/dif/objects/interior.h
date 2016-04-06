@@ -44,8 +44,8 @@ public:
 
 		Plane() : normalIndex(0), planeDistance(0.0f) {}
 
-		virtual bool read(std::istream &stream);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
 	struct TexGenEq : public Readable, public Writable {
@@ -54,19 +54,19 @@ public:
 
 		TexGenEq() {}
 
-		virtual bool read(std::istream &stream);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
-	struct BSPNode : public Writable {
+	struct BSPNode : public Readable, public Writable {
 		U16 planeIndex;
 		U16 frontIndex;
 		U16 backIndex;
 
 		BSPNode() : planeIndex(0), frontIndex(0), backIndex(0) {}
 
-		bool read(std::istream &stream, U32 interiorFileVersion);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
 	struct BSPSolidLeaf : public Readable, public Writable {
@@ -75,8 +75,8 @@ public:
 
 		BSPSolidLeaf() : surfaceIndex(0), surfaceCount(0) {}
 
-		virtual bool read(std::istream &stream);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
 	struct WindingIndex : public Readable, public Writable {
@@ -85,8 +85,8 @@ public:
 
 		WindingIndex() : windingStart(0), windingCount(0) {}
 
-		virtual bool read(std::istream &stream);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
 	struct Edge : public Readable, public Writable {
@@ -97,11 +97,11 @@ public:
 
 		Edge() : pointIndex0(0), pointIndex1(0), surfaceIndex0(0), surfaceIndex1(0) {}
 
-		virtual bool read(std::istream &stream);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
-	struct Zone : public Writable {
+	struct Zone : public Readable, public Writable {
 		U16 portalStart;
 		U16 portalCount;
 		U32 surfaceStart;
@@ -112,8 +112,8 @@ public:
 
 		Zone() : portalStart(0), portalCount(0), surfaceStart(0), surfaceCount(0), staticMeshStart(0), staticMeshCount(0), flags(0) {}
 
-		bool read(std::istream &stream, U32 interiorFileVersion);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
 	struct Portal : public Readable, public Writable {
@@ -125,19 +125,19 @@ public:
 
 		Portal() : planeIndex(0), triFanCount(0), triFanStart(0), zoneFront(0), zoneBack(0) {}
 
-		virtual bool read(std::istream &stream);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
-	struct LightMap : public Writable {
+	struct LightMap : public Readable, public Writable {
 		PNG lightMap;
 		PNG lightDirMap;
 		U8 keepLightMap;
 
 		LightMap() : keepLightMap(0) {}
 
-		bool read(std::istream &stream, bool isTGEInterior);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
 	struct Surface : public Writable {
@@ -149,8 +149,8 @@ public:
 
 			LightMap() : finalWord(0), texGenXDistance(0.0f), texGenYDistance(0.0f) {}
 
-			virtual bool read(std::istream &stream);
-			virtual bool write(std::ostream &stream) const;
+			virtual bool read(std::istream &stream, Version &version);
+			virtual bool write(std::ostream &stream, Version version) const;
 		};
 
 		Surface() : windingStart(0), windingCount(0),
@@ -159,7 +159,8 @@ public:
 						surfaceFlags(0), fanMask(0),
 						lightCount(0), lightStateInfoStart(0), 
 						mapOffsetX(0), mapOffsetY(0),
-						mapSizeX(0), mapSizeY(0) {
+						mapSizeX(0), mapSizeY(0),
+		                brushId(0) {
 
 		}
 
@@ -178,12 +179,27 @@ public:
 		U32 mapOffsetY;
 		U32 mapSizeX;
 		U32 mapSizeY;
+		U32 brushId;
 
-		bool read(std::istream &stream, U32 interiorFileVersion, bool isTGEInterior, U32 indexSize, U32 planeSize, U32 materialSize, U32 texGenEqSize);
-		virtual bool write(std::ostream &stream) const;
+		bool read(std::istream &stream, Version &version, U32 indexSize, U32 planeSize, U32 materialSize, U32 texGenEqSize);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
-	struct NullSurface : public Writable {
+	struct Edge2 : public Readable, public Writable {
+		U32 vertex0;
+		U32 vertex1;
+		U32 normal0;
+		U32 normal1;
+		U32 face0;
+		U32 face1;
+
+		Edge2() : vertex0(0), vertex1(0), normal0(0), normal1(0), face0(0), face1(0) {}
+
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
+	};
+
+	struct NullSurface : public Readable, public Writable {
 		U32 windingStart;
 		U16 planeIndex;
 		U8 surfaceFlags;
@@ -191,8 +207,8 @@ public:
 
 		NullSurface() : windingStart(0), planeIndex(0), surfaceFlags(0), windingCount(0) {}
 
-		bool read(std::istream &stream, U32 interiorFileVersion);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
 	struct AnimatedLight : public Readable, public Writable {
@@ -204,8 +220,8 @@ public:
 
 		AnimatedLight() : nameIndex(0), stateIndex(0), stateCount(0), flags(0), duration(0) {}
 
-		virtual bool read(std::istream &stream);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
 	struct LightState : public Readable, public Writable {
@@ -218,8 +234,8 @@ public:
 
 		LightState() : red(0), green(0), blue(0), activeTime(0), dataIndex(0), dataCount(0) {}
 
-		virtual bool read(std::istream &stream);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
 	struct StateData : public Readable, public Writable {
@@ -229,11 +245,11 @@ public:
 
 		StateData() : surfaceIndex(0), mapIndex(0), lightStateIndex(0) {}
 
-		virtual bool read(std::istream &stream);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
-	struct ConvexHull : public Writable {
+	struct ConvexHull : public Readable, public Writable {
 		U32 hullStart;
 		U16 hullCount;
 		F32 minX;
@@ -268,8 +284,8 @@ public:
 			staticMesh = 0;
 		}
 
-		bool read(std::istream &stream, U32 interiorFileVersion);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
 	struct CoordBin : public Readable, public Writable {
@@ -278,8 +294,8 @@ public:
 
 		CoordBin() : binStart(0), binCount(0) {}
 
-		virtual bool read(std::istream &stream);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 	
 	struct TexMatrix : public Readable, public Writable {
@@ -289,11 +305,10 @@ public:
 
 		TexMatrix() : T(0), N(0), B(0) {}
 		
-		virtual bool read(std::istream &stream);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
-	U32 interiorFileVersion;
 	U32 detailLevel;
 	U32 minPixels;
 	BoxF boundingBox;
@@ -309,26 +324,28 @@ public:
 	std::vector<BSPNode> bspNode;
 	std::vector<BSPSolidLeaf> bspSolidLeaf;
 
-	U8 materialListVersion;
 	std::vector<std::string> materialName;
-	std::vector<U32>index;
+	std::vector<U32> index;
 	std::vector<WindingIndex> windingIndex;
 	std::vector<Edge> edge;
-	std::vector<Zone>zone;
-	std::vector<U16>zoneSurface;
+	std::vector<Zone> zone;
+	std::vector<U16> zoneSurface;
 	std::vector<U32> zoneStaticMesh;
-	std::vector<U16>zonePortalList;
+	std::vector<U16> zonePortalList;
 	std::vector<Portal> portal;
-	std::vector<Surface>surface;
+	std::vector<Surface> surface;
+	std::vector<Edge2> edge2;
+	std::vector<Point3F> normal2;
+	std::vector<U16> normalIndex;
 	std::vector<U8> normalLMapIndex;
 	std::vector<U8> alarmLMapIndex;
-	std::vector<NullSurface>nullSurface;
-	std::vector<LightMap>lightMap;
-	std::vector<U32>solidLeafSurface;
+	std::vector<NullSurface> nullSurface;
+	std::vector<LightMap> lightMap;
+	std::vector<U32> solidLeafSurface;
 	std::vector<AnimatedLight> animatedLight;
 	std::vector<LightState> lightState;
 	std::vector<StateData> stateData;
-	std::vector<U8>stateDataBuffer;
+	std::vector<U8> stateDataBuffer;
 
 	U32 flags;
 
@@ -337,7 +354,7 @@ public:
 	U32 numSubObjects;
 	//SubObject *subObject;
 
-	std::vector<ConvexHull>convexHull;
+	std::vector<ConvexHull> convexHull;
 	std::vector<U8> convexHullEmitStringCharacter;
 	std::vector<U32> hullIndex;
 	std::vector<U16> hullPlaneIndex;
@@ -346,8 +363,8 @@ public:
 	std::vector<U16> polyListPlaneIndex;
 	std::vector<U32> polyListPointIndex;
 	std::vector<U8> polyListStringCharacter;
-	std::vector<CoordBin>coordBin;
-	std::vector<U16>coordBinIndex;
+	std::vector<CoordBin> coordBin;
+	std::vector<U16> coordBinIndex;
 
 	U32 coordBinMode;
 	ColorI baseAmbientColor;
@@ -362,7 +379,6 @@ public:
 	U32 lightMapBorderSize;
 
 	Interior() {
-		interiorFileVersion = 0;
 		detailLevel = 0;
 		minPixels = 0;
 		hasAlarmState = 0;
@@ -379,13 +395,13 @@ public:
 	 * @param stream The stream to read from
 	 * @return If the operation was successful
 	 */
-	bool read(std::istream &stream);
+	bool read(std::istream &stream, Version &version);
 	/**
 	 * Writes a Interior to a stream
 	 * @param stream The stream to write to
 	 * @return If the operation was successful
 	 */
-	bool write(std::ostream &stream) const;
+	bool write(std::ostream &stream, Version version) const;
 };
 
 DIF_NAMESPACE_END

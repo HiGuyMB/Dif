@@ -77,13 +77,13 @@ public:
 	 @param stream The stream to read from
 	 @return If the operation was successful
 	 */
-	virtual bool read(std::istream &stream);
+	virtual bool read(std::istream &stream, Version &version);
 	/**
 	 Writes a Point3 to a stream
 	 @param stream The stream to write to
 	 @return If the operation was successful
 	 */
-	virtual bool write(std::ostream &stream) const;
+	virtual bool write(std::ostream &stream, Version version) const;
 };
 
 template <typename T>

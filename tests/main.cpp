@@ -318,10 +318,10 @@ void exportJSON(const DIF::Interior &dif, const char *outFile) {
 	out.close();
 }
 
-bool readDif(const char *file, DIF::DIF *dif) {
+bool readDif(const char *file, DIF::DIF dif, DIF::Version &version) {
 	std::ifstream stream(file);
 	if (stream.good()) {
-		dif->read(stream);
+		dif.read(stream, version);
 		stream.close();
 		return true;
 	}
@@ -330,10 +330,12 @@ bool readDif(const char *file, DIF::DIF *dif) {
 
 bool testEquality(const char *file) {
 	DIF::DIF dif;
+	DIF::Version inVersion;
+	DIF::Version outVersion(DIF::Version::DIFVersion::v44_MBG, DIF::Version::InteriorVersion::v0_MBG);
 	//Make sure we can actually read/write the dif first
-	if (readDif(file, &dif)) {
+	if (readDif(file, dif, inVersion)) {
 		std::ostringstream out;
-		if (dif.write(out)) {
+		if (dif.write(out, outVersion)) {
 			out.flush();
 
 			//Take the written output of the DIF and feed it back into itself
@@ -342,7 +344,7 @@ bool testEquality(const char *file) {
 
 			//Clear the output stream so we can reuse it
 			out.clear();
-			if (dif.read(in) && dif.write(out)) {
+			if (dif.read(in, inVersion) && dif.write(out, outVersion)) {
 				//Read the two strings from their streams
 				std::string fileStr = in.str();
 				std::string difStr = out.str();
@@ -367,10 +369,12 @@ bool testEquality(const char *file) {
 
 bool convertDif(const char *file) {
 	DIF::DIF dif;
-	if (readDif(file, &dif)) {
+	DIF::Version inVersion;
+	DIF::Version outVersion(DIF::Version::DIFVersion::v44_MBG, DIF::Version::InteriorVersion::v0_MBG);
+	if (readDif(file, dif, inVersion)) {
 		//Save it again
 		std::ofstream out(file);
-		return dif.write(out);
+		return dif.write(out, outVersion);
 	}
 	return false;
 }
@@ -420,10 +424,12 @@ void printTextures(DIF::DIF &dif) {
 int main(int argc, const char * argv[]) {
 	if (argc > 2 && strcmp(argv[1], "--null") == 0) {
 		DIF::DIF dif;
-		if (readDif(argv[2], &dif)) {
+		DIF::Version inVersion;
+		DIF::Version outVersion(DIF::Version::DIFVersion::v44_MBG, DIF::Version::InteriorVersion::v0_MBG);
+		if (readDif(argv[2], dif, inVersion)) {
 			nullSurfaces(dif);
 			std::ofstream out(argv[3]);
-			return dif.write(out) ? EXIT_SUCCESS : EXIT_FAILURE;
+			return dif.write(out, outVersion) ? EXIT_SUCCESS : EXIT_FAILURE;
 		}
 	}
 	if (argc > 2 && strcmp(argv[1], "--convert") == 0) {
@@ -432,14 +438,16 @@ int main(int argc, const char * argv[]) {
 	}
 	if (argc > 3 && strcmp(argv[1], "--export") == 0) {
 		DIF::DIF dif;
-		if (readDif(argv[2], &dif)) {
+		DIF::Version inVersion;
+		if (readDif(argv[2], dif, inVersion)) {
 			exportObj(dif.interior[0], argv[3]);
 		}
 		return EXIT_SUCCESS;
 	}
 	if (argc > 3 && strcmp(argv[1], "--json") == 0) {
 		DIF::DIF dif;
-		if (readDif(argv[2], &dif)) {
+		DIF::Version inVersion;
+		if (readDif(argv[2], dif, inVersion)) {
 			exportJSON(dif.interior[0], argv[3]);
 		}
 		return EXIT_SUCCESS;
@@ -448,17 +456,20 @@ int main(int argc, const char * argv[]) {
 		std::string textureName = argv[2];
 		DIF::Point2F scale(atof(argv[3]), atof(argv[4]));
 		DIF::DIF dif;
-		if (readDif(argv[5], &dif)) {
+		DIF::Version inVersion;
+		DIF::Version outVersion(DIF::Version::DIFVersion::v44_MBG, DIF::Version::InteriorVersion::v0_MBG);
+		if (readDif(argv[5], dif, inVersion)) {
 			scaleTexture(dif, textureName, scale);
 			std::ofstream out(argv[5]);
-			return dif.write(out) ? EXIT_SUCCESS : EXIT_FAILURE;
+			return dif.write(out, outVersion) ? EXIT_SUCCESS : EXIT_FAILURE;
 		}
 		return EXIT_FAILURE;
 	}
 	if (argc > 2 && strcmp(argv[1], "--textures") == 0) {
 		for (DIF::U32 i = 2; i < argc; i ++) {
 			DIF::DIF dif;
-			if (readDif(argv[i], &dif)) {
+			DIF::Version inVersion;
+			if (readDif(argv[i], dif, inVersion)) {
 				printTextures(dif);
 			}
 		}
@@ -467,7 +478,8 @@ int main(int argc, const char * argv[]) {
 
 	//Read it into the dif
 	DIF::DIF dif;
-	if (readDif(argv[1], &dif)) {
+	DIF::Version inVersion;
+	if (readDif(argv[1], dif, inVersion)) {
 		std::cout << "Dif information for " << argv[1] << std::endl;
 		std::cout << "   Interior File Version: 44" << std::endl;
 

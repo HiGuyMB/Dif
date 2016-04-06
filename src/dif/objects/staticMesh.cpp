@@ -30,7 +30,7 @@
 
 DIF_NAMESPACE
 
-bool StaticMesh::read(std::istream &stream) {
+bool StaticMesh::read(std::istream &stream, Version &version) {
 	READCHECK(primitive, std::vector<Primitive>); //primitive
 	READCHECK(index, std::vector<U16>); //index
 	READCHECK(vertex, std::vector<Point3F>); //vertex
@@ -40,7 +40,7 @@ bool StaticMesh::read(std::istream &stream) {
 
 	READCHECK(hasMaterialList, U8); //hasMaterialList
 	if (hasMaterialList) {
-		baseMaterialList.read(stream); //baseMaterialList
+		baseMaterialList.read(stream, version); //baseMaterialList
 	}
 
 	READCHECK(hasSolid, U8); //hasSolid
@@ -52,7 +52,7 @@ bool StaticMesh::read(std::istream &stream) {
 	return true;
 }
 
-bool StaticMesh::write(std::ostream &stream) const {
+bool StaticMesh::write(std::ostream &stream, Version version) const {
 	WRITECHECK(primitive, std::vector<Primitive>); //primitive
 	WRITECHECK(index, std::vector<U16>); //index
 	WRITECHECK(vertex, std::vector<Point3F>); //vertex
@@ -62,7 +62,7 @@ bool StaticMesh::write(std::ostream &stream) const {
 
 	WRITECHECK(hasMaterialList, U8); //hasMaterialList
 	if (hasMaterialList) {
-		baseMaterialList.write(stream); //baseMaterialList
+		baseMaterialList.write(stream, version); //baseMaterialList
 	}
 
 	WRITECHECK(hasSolid, U8); //hasSolid
@@ -74,7 +74,7 @@ bool StaticMesh::write(std::ostream &stream) const {
 	return true;
 }
 
-bool StaticMesh::Primitive::read(std::istream &stream) {
+bool StaticMesh::Primitive::read(std::istream &stream, Version &version) {
 	READCHECK(alpha, U8); //alpha
 	READCHECK(texS, U32); //texS
 	READCHECK(texT, U32); //texT
@@ -90,7 +90,7 @@ bool StaticMesh::Primitive::read(std::istream &stream) {
 	return true;
 }
 
-bool StaticMesh::Primitive::write(std::ostream &stream) const {
+bool StaticMesh::Primitive::write(std::ostream &stream, Version version) const {
 	WRITECHECK(alpha, U8); //alpha
 	WRITECHECK(texS, U32); //texS
 	WRITECHECK(texT, U32); //texT
@@ -106,14 +106,14 @@ bool StaticMesh::Primitive::write(std::ostream &stream) const {
 	return true;
 }
 
-bool StaticMesh::MaterialList::read(std::istream &stream) {
+bool StaticMesh::MaterialList::read(std::istream &stream, Version &version) {
 	//It's a disaster
 	assert(0);
 
 	return true;
 }
 
-bool StaticMesh::MaterialList::write(std::ostream &stream) const {
+bool StaticMesh::MaterialList::write(std::ostream &stream, Version version) const {
 	//Not going to bother
 	assert(0);
 

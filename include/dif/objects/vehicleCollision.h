@@ -54,8 +54,8 @@ public:
 							maxY(0.0f), minZ(0.0f), maxZ(0.0f), surfaceStart(0), surfaceCount(0), 
 							planeStart(0), polyListPlaneStart(0), polyListPointStart(0), polyListStringStart(0) {};
 
-		virtual bool read(std::istream &stream);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
 	struct NullSurface : public Readable, public Writable {
@@ -66,8 +66,8 @@ public:
 
 		NullSurface() : windingStart(0), planeIndex(0), surfaceFlags(0), windingCount(0) {};
 
-		virtual bool read(std::istream &stream);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
 	struct WindingIndex : public Readable, public Writable {
@@ -76,8 +76,8 @@ public:
 
 		WindingIndex() : windingStart(0), windingCount(0) {};
 
-		virtual bool read(std::istream &stream);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
 	U32 vehicleCollisionFileVersion;
@@ -104,13 +104,13 @@ public:
 	 * @param stream The stream to read from
 	 * @return If the operation was successful
 	 */
-	virtual bool read(std::istream &stream);
+	virtual bool read(std::istream &stream, Version &version);
 	/**
 	 * Writes a VehicleCollision to a stream
 	 * @param stream The stream to write to
 	 * @return If the operation was successful
 	 */
-	virtual bool write(std::ostream &stream) const;
+	virtual bool write(std::ostream &stream, Version version) const;
 };
 
 DIF_NAMESPACE_END

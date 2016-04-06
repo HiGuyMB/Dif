@@ -30,7 +30,7 @@
 
 DIF_NAMESPACE
 
-bool InteriorPathFollower::read(std::istream &stream) {
+bool InteriorPathFollower::read(std::istream &stream, Version &version) {
 	READCHECK(name, std::string); //name
 	READCHECK(datablock, std::string); //datablock
 	READCHECK(interiorResIndex, U32); //interiorResIndex
@@ -43,7 +43,7 @@ bool InteriorPathFollower::read(std::istream &stream) {
 	return true;
 }
 
-bool InteriorPathFollower::write(std::ostream &stream) const {
+bool InteriorPathFollower::write(std::ostream &stream, Version version) const {
 	WRITECHECK(name, std::string); //name
 	WRITECHECK(datablock, std::string); //datablock
 	WRITECHECK(interiorResIndex, U32); //interiorResIndex
@@ -56,7 +56,7 @@ bool InteriorPathFollower::write(std::ostream &stream) const {
 	return true;
 }
 
-bool InteriorPathFollower::WayPoint::read(std::istream &stream) {
+bool InteriorPathFollower::WayPoint::read(std::istream &stream, Version &version) {
 	READCHECK(position, Point3F); //position
 	READCHECK(rotation, QuatF); //rotation
 	READCHECK(msToNext, U32); //msToNext
@@ -65,7 +65,7 @@ bool InteriorPathFollower::WayPoint::read(std::istream &stream) {
 	return true;
 }
 
-bool InteriorPathFollower::WayPoint::write(std::ostream &stream) const {
+bool InteriorPathFollower::WayPoint::write(std::ostream &stream, Version version) const {
 	WRITECHECK(position, Point3F); //position
 	WRITECHECK(rotation, QuatF); //rotation
 	WRITECHECK(msToNext, U32); //msToNext

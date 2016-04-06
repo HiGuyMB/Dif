@@ -52,14 +52,53 @@ typedef signed long long S64;
 typedef float F32;
 typedef double F64;
 
+struct Version {
+	struct DIFVersion {
+		enum Type {
+			MBG,
+			TGE
+		} type;
+		U32 version;
+
+		DIFVersion(Type type = MBG, U32 version = 44) : type(type), version(version) {
+
+		}
+	} dif;
+	struct InteriorVersion {
+		enum Type {
+			MBG,
+			TGE,
+			TGEA
+		} type;
+		U32 version;
+
+		InteriorVersion(Type type = MBG, U32 version = 0) : type(type), version(version) {
+
+		}
+	} interior;
+	struct MaterialListVersion {
+		U32 version;
+		MaterialListVersion(U32 version = 0) : version(version) {
+
+		}
+	} material;
+
+	Version(DIFVersion difVersion = DIFVersion(), InteriorVersion interiorVersion = InteriorVersion(), MaterialListVersion materialVersion = MaterialListVersion()) :
+		dif(difVersion),
+		interior(interiorVersion),
+		material(materialVersion) {
+
+	}
+};
+
 struct Readable {
 public:
-	virtual bool read(std::istream &stream) = 0;
+	virtual bool read(std::istream &stream, Version &version) = 0;
 };
 
 struct Writable {
 public:
-	virtual bool write(std::ostream &stream) const = 0;
+	virtual bool write(std::ostream &stream, Version version) const = 0;
 };
 
 DIF_NAMESPACE_END
@@ -92,8 +131,8 @@ public:
 
 	QuatF() : w(0.0f), x(0.0f), y(0.0f), z(0.0f) {}
 
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
+	virtual bool read(std::istream &stream, Version &version);
+	virtual bool write(std::ostream &stream, Version version) const;
 };
 
 class PlaneF : public Readable, public Writable {
@@ -105,8 +144,8 @@ public:
 
 	PlaneF() : x(0.0f), y(0.0f), z(0.0f), d(0.0f) {}
 
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
+	virtual bool read(std::istream &stream, Version &version);
+	virtual bool write(std::ostream &stream, Version version) const;
 };
 
 class BoxF : public Readable, public Writable {
@@ -130,8 +169,8 @@ public:
 		return (getMax() + getMin()) / 2;
 	}
 
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
+	virtual bool read(std::istream &stream, Version &version);
+	virtual bool write(std::ostream &stream, Version version) const;
 };
 
 class SphereF : public Readable, public Writable {
@@ -143,8 +182,8 @@ public:
 
 	SphereF() : x(0.0f), y(0.0f), z(0.0f), radius(0.0f) {}
 
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
+	virtual bool read(std::istream &stream, Version &version);
+	virtual bool write(std::ostream &stream, Version version) const;
 };
 
 class PNG : public Readable, public Writable {
@@ -154,8 +193,8 @@ public:
 
 	PNG() : size(0), data(nullptr) {}
 
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
+	virtual bool read(std::istream &stream, Version &version);
+	virtual bool write(std::ostream &stream, Version version) const;
 
 	~PNG() {
 //		delete [] data;
@@ -168,8 +207,8 @@ public:
 
 	MatrixF() {}
 
-	virtual bool read(std::istream &stream);
-	virtual bool write(std::ostream &stream) const;
+	virtual bool read(std::istream &stream, Version &version);
+	virtual bool write(std::ostream &stream, Version version) const;
 };
 
 DIF_NAMESPACE_END

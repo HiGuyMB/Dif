@@ -43,8 +43,8 @@ public:
 
 		WayPoint() : msToNext(0), smoothingType(0) {};
 
-		virtual bool read(std::istream &stream);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
 	std::string name;
@@ -65,13 +65,13 @@ public:
 	 * @param stream The stream to read from
 	 * @return If the operation was successful
 	 */
-	virtual bool read(std::istream &stream);
+	virtual bool read(std::istream &stream, Version &version);
 	/**
 	 * Writes a InteriorPathFollower to a stream
 	 * @param stream The stream to write to
 	 * @return If the operation was successful
 	 */
-	virtual bool write(std::ostream &stream) const;
+	virtual bool write(std::ostream &stream, Version version) const;
 };
 
 DIF_NAMESPACE_END

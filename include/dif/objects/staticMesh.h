@@ -50,8 +50,8 @@ public:
 
 		Primitive() : alpha(0), texS(0), texT(0), diffuseIndex(0), lightMapIndex(0), start(0), count(0) {};
 
-		virtual bool read(std::istream &stream);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
 	struct MaterialList : public Readable, public Writable {
@@ -67,8 +67,8 @@ public:
 
 		MaterialList() : materialCount(0), flags(nullptr), reflectanceMap(nullptr), bumpMap(nullptr), detailMap(nullptr), lightMap(nullptr), detailScale(nullptr), reflectionAmount(nullptr) {};
 
-		virtual bool read(std::istream &stream);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
 	std::vector<Primitive> primitive;
@@ -96,13 +96,13 @@ public:
 	 * @param stream The stream to read from
 	 * @return If the operation was successful
 	 */
-	virtual bool read(std::istream &stream);
+	virtual bool read(std::istream &stream, Version &version);
 	/**
 	 * Writes a StaticMesh to a stream
 	 * @param stream The stream to write to
 	 * @return If the operation was successful
 	 */
-	virtual bool write(std::ostream &stream) const;
+	virtual bool write(std::ostream &stream, Version version) const;
 };
 
 DIF_NAMESPACE_END

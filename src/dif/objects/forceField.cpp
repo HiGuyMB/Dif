@@ -30,7 +30,7 @@
 
 DIF_NAMESPACE
 
-bool ForceField::read(std::istream &stream) {
+bool ForceField::read(std::istream &stream, Version &version) {
 	READCHECK(forceFieldFileVersion, U32); //forceFieldFileVersion
 	READCHECK(name, std::string); //name
 	READCHECK(trigger, std::vector<std::string>); //trigger
@@ -48,7 +48,7 @@ bool ForceField::read(std::istream &stream) {
 	return true;
 }
 
-bool ForceField::write(std::ostream &stream) const {
+bool ForceField::write(std::ostream &stream, Version version) const {
 	WRITECHECK(forceFieldFileVersion, U32); //forceFieldFileVersion
 	WRITECHECK(name, std::string); //name
 	WRITECHECK(trigger, std::vector<std::string>); //trigger
@@ -66,49 +66,49 @@ bool ForceField::write(std::ostream &stream) const {
 	return true;
 }
 
-bool ForceField::Plane::read(std::istream &stream) {
+bool ForceField::Plane::read(std::istream &stream, Version &version) {
 	READCHECK(normalIndex, U32); //normalIndex
 	READCHECK(planeDistance, F32); //planeDistance
 
 	return true;
 }
 
-bool ForceField::Plane::write(std::ostream &stream) const {
+bool ForceField::Plane::write(std::ostream &stream, Version version) const {
 	WRITECHECK(normalIndex, U32); //normalIndex
 	WRITECHECK(planeDistance, F32); //planeDistance
 
 	return true;
 }
 
-bool ForceField::BSPNode::read(std::istream &stream) {
+bool ForceField::BSPNode::read(std::istream &stream, Version &version) {
 	READCHECK(frontIndex, U16); //frontIndex
 	READCHECK(backIndex, U16); //backIndex
 
 	return true;
 }
 
-bool ForceField::BSPNode::write(std::ostream &stream) const {
+bool ForceField::BSPNode::write(std::ostream &stream, Version version) const {
 	WRITECHECK(frontIndex, U16); //frontIndex
 	WRITECHECK(backIndex, U16); //backIndex
 
 	return true;
 }
 
-bool ForceField::BSPSolidLeaf::read(std::istream &stream) {
+bool ForceField::BSPSolidLeaf::read(std::istream &stream, Version &version) {
 	READCHECK(surfaceIndex, U32); //surfaceIndex
 	READCHECK(surfaceCount, U16); //surfaceCount
 
 	return true;
 }
 
-bool ForceField::BSPSolidLeaf::write(std::ostream &stream) const {
+bool ForceField::BSPSolidLeaf::write(std::ostream &stream, Version version) const {
 	WRITECHECK(surfaceIndex, U32); //surfaceIndex
 	WRITECHECK(surfaceCount, U16); //surfaceCount
 
 	return true;
 }
 
-bool ForceField::Surface::read(std::istream &stream) {
+bool ForceField::Surface::read(std::istream &stream, Version &version) {
 	READCHECK(windingStart, U32); //windingStart
 	READCHECK(windingCount, U8); //windingCount
 	READCHECK(planeIndex, U16); //planeIndex
@@ -118,7 +118,7 @@ bool ForceField::Surface::read(std::istream &stream) {
 	return true;
 }
 
-bool ForceField::Surface::write(std::ostream &stream) const {
+bool ForceField::Surface::write(std::ostream &stream, Version version) const {
 	WRITECHECK(windingStart, U32); //windingStart
 	WRITECHECK(windingCount, U8); //windingCount
 	WRITECHECK(planeIndex, U16); //planeIndex

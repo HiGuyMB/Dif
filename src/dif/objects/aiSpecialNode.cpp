@@ -30,14 +30,14 @@
 
 DIF_NAMESPACE
 
-bool AISpecialNode::read(std::istream &stream) {
+bool AISpecialNode::read(std::istream &stream, Version &version) {
 	READCHECK(name, std::string); //name
 	READCHECK(position, Point3F); //position
 
 	return true;
 }
 
-bool AISpecialNode::write(std::ostream &stream) const {
+bool AISpecialNode::write(std::ostream &stream, Version version) const {
 	WRITECHECK(name, std::string); //name
 	WRITECHECK(position, Point3F); //position
 

@@ -30,12 +30,12 @@
 
 DIF_NAMESPACE
 
-bool DIF::read(std::istream &stream) {
+bool DIF::read(std::istream &stream, Version &version) {
 	//http://rustycode.com/tutorials/DIF_File_Format_44_14.html
 	// Someone give that guy all the cookies.
 
 	//Must always be 44
-	if (READ(U32) != 44) { //interiorResourceFileVersion
+	if ((version.dif.version = READ(U32)) != 44) { //interiorResourceFileVersion
 		return false;
 	}
 
@@ -51,7 +51,7 @@ bool DIF::read(std::istream &stream) {
 	READCHECK(forceField, std::vector<ForceField>); //forceField
 	READCHECK(aiSpecialNode, std::vector<AISpecialNode>); //aiSpecialNode
 	if (READ(U32) == 1) { //readVehicleCollision
-		vehicleCollision.read(stream); //vehicleCollision
+		vehicleCollision.read(stream, version); //vehicleCollision
 	}
 	if (READ(U32) == 2) { //readGameEntities
 		READCHECK(gameEntity, std::vector<GameEntity>); //gameEntity
@@ -61,8 +61,8 @@ bool DIF::read(std::istream &stream) {
 	return true;
 }
 
-bool DIF::write(std::ostream &stream) const {
-	WRITECHECK(44, U32); //interiorResourceFileVersion
+bool DIF::write(std::ostream &stream, Version version) const {
+	WRITECHECK(version.dif.version, U32); //interiorResourceFileVersion
 	WRITECHECK(0, U8); //previewIncluded
 
 	WRITECHECK(interior, std::vector<Interior>); //interior
@@ -72,7 +72,7 @@ bool DIF::write(std::ostream &stream) const {
 	WRITECHECK(forceField, std::vector<ForceField>); //forceField
 	WRITECHECK(aiSpecialNode, std::vector<AISpecialNode>); //aiSpecialNode
 	WRITECHECK(1, U32); //readVehicleCollision
-	vehicleCollision.write(stream); //vehicleCollision
+	vehicleCollision.write(stream, version); //vehicleCollision
 
 	if (gameEntity.size()) {
 		WRITECHECK(2, U32); //readGameEntities

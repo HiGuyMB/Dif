@@ -38,8 +38,8 @@ public:
 		U32 face[2];
 		U32 vertex[2];
 
-		virtual bool read(std::istream &stream);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
 	struct PolyHedron : public Readable, public Writable {
@@ -47,8 +47,8 @@ public:
 		std::vector<PlaneF> planeList;
 		std::vector<PolyHedronEdge> edgeList;
 
-		virtual bool read(std::istream &stream);
-		virtual bool write(std::ostream &stream) const;
+		virtual bool read(std::istream &stream, Version &version);
+		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
 	std::string name;
@@ -65,13 +65,13 @@ public:
 	 * @param stream The stream to read from
 	 * @return If the operation was successful
 	 */
-	virtual bool read(std::istream &stream);
+	virtual bool read(std::istream &stream, Version &version);
 	/**
 	 * Writes a Trigger to a stream
 	 * @param stream The stream to write to
 	 * @return If the operation was successful
 	 */
-	virtual bool write(std::ostream &stream) const;
+	virtual bool write(std::ostream &stream, Version version) const;
 
 	std::string getPolyhedron() const;
 };

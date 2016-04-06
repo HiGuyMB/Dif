@@ -30,7 +30,7 @@
 
 DIF_NAMESPACE
 
-bool VehicleCollision::read(std::istream &stream) {
+bool VehicleCollision::read(std::istream &stream, Version &version) {
 	READCHECK(vehicleCollisionFileVersion, U32); //vehicleCollisionFileVersion
 	READCHECK(vehicleConvexHull, std::vector<ConvexHull>); //vehicleConvexHull
 	READCHECK(vehicleConvexHullEmitStringCharacter, std::vector<U8>); //vehicleConvexHullEmitStringCharacter
@@ -50,7 +50,7 @@ bool VehicleCollision::read(std::istream &stream) {
 	return true;
 }
 
-bool VehicleCollision::write(std::ostream &stream) const {
+bool VehicleCollision::write(std::ostream &stream, Version version) const {
 	WRITECHECK(vehicleCollisionFileVersion, U32); //vehicleCollisionFileVersion
 	WRITECHECK(vehicleConvexHull, std::vector<ConvexHull>); //vehicleConvexHull
 	WRITECHECK(vehicleConvexHullEmitStringCharacter, std::vector<U8>); //vehicleConvexHullEmitStringCharacter
@@ -70,7 +70,7 @@ bool VehicleCollision::write(std::ostream &stream) const {
 	return true;
 }
 
-bool VehicleCollision::ConvexHull::read(std::istream &stream) {
+bool VehicleCollision::ConvexHull::read(std::istream &stream, Version &version) {
 	READCHECK(hullStart, U32); //hullStart
 	READCHECK(hullCount, U16); //hullCount
 	READCHECK(minX, F32); //minX
@@ -90,7 +90,7 @@ bool VehicleCollision::ConvexHull::read(std::istream &stream) {
 	return true;
 }
 
-bool VehicleCollision::ConvexHull::write(std::ostream &stream) const {
+bool VehicleCollision::ConvexHull::write(std::ostream &stream, Version version) const {
 	WRITECHECK(hullStart, U32); //hullStart
 	WRITECHECK(hullCount, U16); //hullCount
 	WRITECHECK(minX, F32); //minX
@@ -109,7 +109,7 @@ bool VehicleCollision::ConvexHull::write(std::ostream &stream) const {
 	return true;
 }
 
-bool VehicleCollision::NullSurface::read(std::istream &stream) {
+bool VehicleCollision::NullSurface::read(std::istream &stream, Version &version) {
 	READCHECK(windingStart, U32); //windingStart
 	READCHECK(planeIndex, U16); //planeIndex
 	READCHECK(surfaceFlags, U8); //surfaceFlags
@@ -118,7 +118,7 @@ bool VehicleCollision::NullSurface::read(std::istream &stream) {
 	return true;
 }
 
-bool VehicleCollision::NullSurface::write(std::ostream &stream) const {
+bool VehicleCollision::NullSurface::write(std::ostream &stream, Version version) const {
 	WRITECHECK(windingStart, U32); //windingStart
 	WRITECHECK(planeIndex, U16); //planeIndex
 	WRITECHECK(surfaceFlags, U8); //surfaceFlags
@@ -127,14 +127,14 @@ bool VehicleCollision::NullSurface::write(std::ostream &stream) const {
 	return true;
 }
 
-bool VehicleCollision::WindingIndex::read(std::istream &stream) {
+bool VehicleCollision::WindingIndex::read(std::istream &stream, Version &version) {
 	READCHECK(windingStart, U32); //windingStart
 	READCHECK(windingCount, U32); //windingCount
 
 	return true;
 }
 
-bool VehicleCollision::WindingIndex::write(std::ostream &stream) const {
+bool VehicleCollision::WindingIndex::write(std::ostream &stream, Version version) const {
 	WRITECHECK(windingStart, U32); //windingStart
 	WRITECHECK(windingCount, U32); //windingCount
 
