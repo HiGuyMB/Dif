@@ -33,6 +33,7 @@
 #include <map>
 #include <iostream>
 #include <functional>
+#include <assert.h>
 
 DIF_NAMESPACE
 
@@ -59,36 +60,87 @@ public:
 	static inline void debug_print(std::istream &stream, T &value, const std::string &name) {
 		std::istream::pos_type pos = stream.tellg();
 		//Basic information about the data's name / offset
-		std::cout << "Read " << name << " at offset " << pos << " (0x" << std::hex << pos << ")" << std::dec << std::endl;
+		printf("Read %s at offset %lu (0x%lX)\n", name.c_str(), size_t(pos) - sizeof(T), size_t(pos) - sizeof(T));
 	}
 	template <typename T>
 	static inline void debug_print(std::ostream &stream, const T &value, const std::string &name) {
 		std::istream::pos_type pos = stream.tellp();
 		//Basic information about the data's name / offset
-		std::cout << "Write " << name << " at offset " << pos << " (0x" << std::hex << pos << ")" << std::dec << std::endl;
+		printf("Write %s at offset %lu (0x%lX)\n", name.c_str(), size_t(pos) - sizeof(T), size_t(pos) - sizeof(T));
+	}
+	template <typename T>
+	static inline void debug_print_value(std::istream &stream, T &value, const std::string &name) {
+		std::istream::pos_type pos = stream.tellg();
+		//Basic information about the data's name / offset
+		printf("Read %s at offset %lu (0x%lX): 0x%X / %u\n", name.c_str(), size_t(pos) - sizeof(T), size_t(pos) - sizeof(T), value, value);
+	}
+	template <typename T>
+	static inline void debug_print_value(std::ostream &stream, const T &value, const std::string &name) {
+		std::istream::pos_type pos = stream.tellp();
+		//Basic information about the data's name / offset
+		printf("Write %s at offset %lu (0x%lX): 0x%X / %u\n", name.c_str(), size_t(pos) - sizeof(T), size_t(pos) - sizeof(T), value, value);
+	}
+	static inline void debug_print_value(std::istream &stream, F32 &value, const std::string &name) {
+		std::istream::pos_type pos = stream.tellg();
+		//Basic information about the data's name / offset
+		printf("Read %s at offset %lu (0x%lX): 0x%08X / %f\n", name.c_str(), size_t(pos) - sizeof(F32), size_t(pos) - sizeof(F32), value, value);
+	}
+	static inline void debug_print_value(std::ostream &stream, const F32 &value, const std::string &name) {
+		std::istream::pos_type pos = stream.tellp();
+		//Basic information about the data's name / offset
+		printf("Write %s at offset %lu (0x%lX): 0x%08X / %f\n", name.c_str(), size_t(pos) - sizeof(F32), size_t(pos) - sizeof(F32), value, value);
+	}
+
+	//Print out information about the data being read / written to streams.
+	// READCHECK and WRITECHECK will automatically append the type to name, normal
+	// raw IO::read/write methods won't.
+	template <typename T>
+	static inline void debug_error(std::istream &stream, T &value, const std::string &name) {
+		std::istream::pos_type pos = stream.tellg();
+		//Basic information about the data's name / offset
+		std::cout << "[Error] Read " << name << " at offset " << pos << " (0x" << std::hex << pos << ")" << std::dec << std::endl;
+	}
+	template <typename T>
+	static inline void debug_error(std::ostream &stream, const T &value, const std::string &name) {
+		std::istream::pos_type pos = stream.tellp();
+		//Basic information about the data's name / offset
+		std::cout << "[Error] Write " << name << " at offset " << pos << " (0x" << std::hex << pos << ")" << std::dec << std::endl;
 	}
 #else
 	//Use a macro here so that absolutely no code is generated.
 #define debug_print(stream, value, name)
+#define debug_print_value(stream, value, name)
+	//Use a macro here so that absolutely no code is generated.
+#define debug_error(stream, value, name)
 #endif
 
 	//Read primitive types from a std::istream
 	template <typename T, bool=true>
 	struct read_impl {
-		static inline bool read(std::istream &stream, Version version, T &value, const std::string &name) {
-			if (stream.eof())
+		static inline bool read(std::istream &stream, Version &version, T &value, const std::string &name) {
+			if (stream.eof()) {
+				debug_error(stream, value, name);
 				return false;
-			debug_print(stream, value, name);
+			}
 			stream.read(reinterpret_cast<char *>(&value), sizeof(value));
-			return stream.good();
+			debug_print_value(stream, value, name);
+			bool success = stream.good();
+			if (!success) {
+				debug_error(stream, value, name);
+			}
+			return success;
 		}
 	};
 	//Read structures from a std::istream
 	template <typename T>
 	struct read_impl<T, false> {
-		static inline bool read(std::istream &stream, Version version, T &value, const std::string &name) {
+		static inline bool read(std::istream &stream, Version &version, T &value, const std::string &name) {
 			debug_print(stream, value, name);
-			return value.read(stream, version);
+			bool success = (value.read(stream, version) && stream.good());
+			if (!success) {
+				debug_error(stream, value, name);
+			}
+			return success;
 		}
 	};
 
