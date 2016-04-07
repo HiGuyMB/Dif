@@ -318,7 +318,7 @@ void exportJSON(const DIF::Interior &dif, const char *outFile) {
 	out.close();
 }
 
-bool readDif(const char *file, DIF::DIF dif, DIF::Version &version) {
+bool readDif(const char *file, DIF::DIF &dif, DIF::Version &version) {
 	std::ifstream stream(file);
 	if (stream.good()) {
 		dif.read(stream, version);
@@ -331,7 +331,7 @@ bool readDif(const char *file, DIF::DIF dif, DIF::Version &version) {
 bool testEquality(const char *file) {
 	DIF::DIF dif;
 	DIF::Version inVersion;
-	DIF::Version outVersion(DIF::Version::DIFVersion::v44_MBG, DIF::Version::InteriorVersion::v0_MBG);
+	DIF::Version outVersion(DIF::Version::DIFVersion(44), DIF::Version::InteriorVersion(0, DIF::Version::InteriorVersion::Type::MBG), DIF::Version::MaterialListVersion(1), DIF::Version::VehicleCollisionFileVersion(0));
 	//Make sure we can actually read/write the dif first
 	if (readDif(file, dif, inVersion)) {
 		std::ostringstream out;
@@ -370,7 +370,7 @@ bool testEquality(const char *file) {
 bool convertDif(const char *file) {
 	DIF::DIF dif;
 	DIF::Version inVersion;
-	DIF::Version outVersion(DIF::Version::DIFVersion::v44_MBG, DIF::Version::InteriorVersion::v0_MBG);
+	DIF::Version outVersion(DIF::Version::DIFVersion(44), DIF::Version::InteriorVersion(0, DIF::Version::InteriorVersion::Type::MBG), DIF::Version::MaterialListVersion(1), DIF::Version::VehicleCollisionFileVersion(0));
 	if (readDif(file, dif, inVersion)) {
 		//Save it again
 		std::ofstream out(file);
@@ -425,7 +425,7 @@ int main(int argc, const char * argv[]) {
 	if (argc > 2 && strcmp(argv[1], "--null") == 0) {
 		DIF::DIF dif;
 		DIF::Version inVersion;
-		DIF::Version outVersion(DIF::Version::DIFVersion::v44_MBG, DIF::Version::InteriorVersion::v0_MBG);
+		DIF::Version outVersion(DIF::Version::DIFVersion(44), DIF::Version::InteriorVersion(0, DIF::Version::InteriorVersion::Type::MBG), DIF::Version::MaterialListVersion(1), DIF::Version::VehicleCollisionFileVersion(0));
 		if (readDif(argv[2], dif, inVersion)) {
 			nullSurfaces(dif);
 			std::ofstream out(argv[3]);
@@ -457,7 +457,7 @@ int main(int argc, const char * argv[]) {
 		DIF::Point2F scale(atof(argv[3]), atof(argv[4]));
 		DIF::DIF dif;
 		DIF::Version inVersion;
-		DIF::Version outVersion(DIF::Version::DIFVersion::v44_MBG, DIF::Version::InteriorVersion::v0_MBG);
+		DIF::Version outVersion(DIF::Version::DIFVersion(44), DIF::Version::InteriorVersion(0, DIF::Version::InteriorVersion::Type::MBG), DIF::Version::MaterialListVersion(1), DIF::Version::VehicleCollisionFileVersion(0));
 		if (readDif(argv[5], dif, inVersion)) {
 			scaleTexture(dif, textureName, scale);
 			std::ofstream out(argv[5]);
@@ -476,36 +476,46 @@ int main(int argc, const char * argv[]) {
 		return EXIT_SUCCESS;
 	}
 
-	//Read it into the dif
-	DIF::DIF dif;
-	DIF::Version inVersion;
-	if (readDif(argv[1], dif, inVersion)) {
-		std::cout << "Dif information for " << argv[1] << std::endl;
-		std::cout << "   Interior File Version: 44" << std::endl;
+	for (DIF::U32 i = 1; i < argc; i ++) {
+		//Read it into the dif
+		DIF::DIF dif;
+		DIF::Version inVersion;
+		if (readDif(argv[i], dif, inVersion)) {
+			std::cout << "Dif information for " << argv[i] << std::endl;
+			std::cout << "   DIF File Version: " << inVersion.dif.to_string() << std::endl;
+			std::cout << "      Interior Version " << inVersion.interior.to_string() << std::endl;
+			std::cout << "      Material Version " << inVersion.material.to_string() << std::endl;
+			std::cout << "      Vehicle Collision Version " << inVersion.vehicleCollision.to_string() << std::endl;
 
-		std::cout << "   Interior Count: " << std::to_string(dif.interior.size()) << std::endl;
+			std::cout << "   Interior Count: " << std::to_string(dif.interior.size()) << std::endl;
 
-		for (DIF::U32 i = 0; i < dif.interior.size(); i ++) {
-			const DIF::Interior &interior = dif.interior[i];
-			std::cout << "      Interior " << std::to_string(i) << std::endl;
-			std::cout << "      Version " << std::to_string(interior.interiorFileVersion) << std::endl;
-			std::cout << "      Vertex Count " << std::to_string(interior.point.size()) << std::endl;
-			std::cout << "      Plane Count " << std::to_string(interior.plane.size()) << std::endl;
-			std::cout << "      Surface Count " << std::to_string(interior.surface.size()) << std::endl;
+			for (DIF::U32 i = 0; i < dif.interior.size(); i ++) {
+				const DIF::Interior &interior = dif.interior[i];
+				std::cout << "      Interior " << std::to_string(i) << std::endl;
+				std::cout << "      Vertex Count " << std::to_string(interior.point.size()) << std::endl;
+				std::cout << "      Plane Count " << std::to_string(interior.plane.size()) << std::endl;
+				std::cout << "      Surface Count " << std::to_string(interior.surface.size()) << std::endl;
+			}
+
+			std::cout << "   Pathed Interior Count: " << std::to_string(dif.subObject.size()) << std::endl;
+
+			for (DIF::U32 i = 0; i < dif.subObject.size(); i ++) {
+				const DIF::Interior &interior = dif.subObject[i];
+				std::cout << "      Interior " << std::to_string(i) << std::endl;
+				std::cout << "      Vertex Count " << std::to_string(interior.point.size()) << std::endl;
+				std::cout << "      Plane Count " << std::to_string(interior.plane.size()) << std::endl;
+				std::cout << "      Surface Count " << std::to_string(interior.surface.size()) << std::endl;
+			}
+
+			printTriggers(dif);
+
+			DIF::Version outVersion(DIF::Version::DIFVersion(44), DIF::Version::InteriorVersion(0, DIF::Version::InteriorVersion::Type::MBG), DIF::Version::MaterialListVersion(1), DIF::Version::VehicleCollisionFileVersion(0));
+
+			std::ofstream outstr(std::string(argv[i]) + ".export.dif");
+			if (!dif.write(outstr, outVersion)) {
+				return EXIT_FAILURE;
+			}
 		}
-
-		std::cout << "   Pathed Interior Count: " << std::to_string(dif.subObject.size()) << std::endl;
-
-		for (DIF::U32 i = 0; i < dif.subObject.size(); i ++) {
-			const DIF::Interior &interior = dif.subObject[i];
-			std::cout << "      Interior " << std::to_string(i) << std::endl;
-			std::cout << "      Version " << std::to_string(interior.interiorFileVersion) << std::endl;
-			std::cout << "      Vertex Count " << std::to_string(interior.point.size()) << std::endl;
-			std::cout << "      Plane Count " << std::to_string(interior.plane.size()) << std::endl;
-			std::cout << "      Surface Count " << std::to_string(interior.surface.size()) << std::endl;
-		}
-
-		printTriggers(dif);
 	}
 	return EXIT_SUCCESS;
 }
