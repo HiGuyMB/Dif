@@ -169,7 +169,7 @@ public:
 	static inline bool read(std::istream &stream, Version &version, std::vector<T> &value, const std::string &name) {
 		//Read the size of the vector
 		U32 size;
-		if (!read(stream, version, size, "size"))
+		if (!read(stream, version, size, name + " size"))
 			return false;
 		//Reserve some space
 		value.reserve(size);
@@ -178,7 +178,7 @@ public:
 		for (U32 i = 0; i < size; i ++) {
 			T obj;
 			//Make sure the read succeeds
-			if (read(stream, version, obj, "obj"))
+			if (read(stream, version, obj, name + " obj"))
 				value.push_back(obj);
 			else
 				return false;
@@ -197,7 +197,7 @@ public:
 	static inline bool read(std::istream &stream, Version &version, std::string &value, const std::string &name) {
 		//How long is the string
 		U8 length;
-		if (!read(stream, version, length, "length"))
+		if (!read(stream, version, length, name + " length"))
 			return false;
 		//Empty the string
 		value = std::string();
@@ -205,7 +205,7 @@ public:
 		for (U32 i = 0; i < length; i ++) {
 			//If we can read the byte, append it to the string
 			U8 chr;
-			if (read(stream, version, chr, "chr"))
+			if (read(stream, version, chr, name + " chr"))
 				value += chr;
 			else
 				return false;
@@ -224,7 +224,7 @@ public:
 	static inline bool read(std::istream &stream, Version &version, Dictionary &value, const std::string &name) {
 		//How long is the map
 		U32 length;
-		if (!read(stream, version, length, "length"))
+		if (!read(stream, version, length, name + " length"))
 			return false;
 
 		//Empty the map
@@ -235,8 +235,8 @@ public:
 			std::string name, val;
 
 			//Make sure we can read it
-			if (!read(stream, version, name, "name") ||
-			    !read(stream, version, val, "val")) {
+			if (!read(stream, version, name, name + " name") ||
+			    !read(stream, version, val, name + " val")) {
 				return false;
 			}
 
@@ -261,7 +261,7 @@ public:
 	static inline bool read_as(std::istream &stream, Version &version, std::vector<type1> &value, std::function<bool(bool,U32)> condition, const std::string &name) {
 		//Read the size of the vector
 		U32 size;
-		if (!read(stream, version, size, "size"))
+		if (!read(stream, version, size, name + " size"))
 			return false;
 
 		//Lots of index lists here that have U16 or U32 versions based on the sign bit.
@@ -280,7 +280,7 @@ public:
 			isSigned = true;
 
 			//Extra U8 of data in each of these, almost never used but still there
-			if (!read(stream, version, param, "param"))
+			if (!read(stream, version, param, name + " param"))
 				return false;
 		}
 
@@ -293,7 +293,7 @@ public:
 			if (condition(isSigned, param)) {
 				type2 obj;
 				//Make sure the read succeeds
-				if (read(stream, version, obj, "obj"))
+				if (read(stream, version, obj, name + " obj"))
 					//Cast it back to what we want
 					value.push_back(static_cast<type1>(obj));
 				else
@@ -301,7 +301,7 @@ public:
 			} else {
 				type1 obj;
 				//Make sure the read succeeds
-				if (read(stream, version, obj, "obj"))
+				if (read(stream, version, obj, name + " obj"))
 					value.push_back(obj);
 				else
 					return false;
@@ -325,7 +325,7 @@ public:
 	static inline bool read_with(std::istream &stream, Version &version, std::vector<T> &value, std::function<bool(T&, std::istream &, Version &)> passed_method, const std::string &name) {
 		//Read the size of the vector
 		U32 size;
-		if (!read(stream, version, size, "size"))
+		if (!read(stream, version, size, name + " size"))
 			return false;
 		//Reserve some space
 		value.reserve(size);
@@ -357,7 +357,7 @@ public:
 	static inline bool read_extra(std::istream &stream, Version &version, std::vector<T> &value, std::function<bool(std::istream &, Version &)> extra_method, const std::string &name) {
 		//Read the size of the vector
 		U32 size;
-		if (!read(stream, version, size, "size"))
+		if (!read(stream, version, size, name + " size"))
 			return false;
 		//Reserve some space
 		value.reserve(size);
@@ -370,7 +370,7 @@ public:
 		for (U32 i = 0; i < size; i ++) {
 			T obj;
 			//Make sure the read succeeds
-			if (read(stream, version, obj, "obj"))
+			if (read(stream, version, obj, name + " obj"))
 				value.push_back(obj);
 			else
 				return false;
@@ -384,7 +384,7 @@ public:
 	template <typename T, bool=true>
 	struct write_impl {
 		static inline bool write(std::ostream &stream, Version version, const T &value, const std::string &name) {
-			debug_print(stream, value, name);
+			debug_print_value(stream, value, name);
 			stream.write(reinterpret_cast<const char *>(&value), sizeof(value));
 			return stream.good();
 		}
@@ -422,11 +422,11 @@ public:
 	template <typename T>
 	static inline bool write(std::ostream &stream, Version version, const std::vector<T> &value, const std::string &name) {
 		//Write the vector's size first, must be a U32 because torque
-		if (!write(stream, version, static_cast<U32>(value.size()), "size"))
+		if (!write(stream, version, static_cast<U32>(value.size()), name + " size"))
 			return false;
 		//Write all of the objects in the vector
 		for (size_t i = 0; i < value.size(); i ++) {
-			if (!write(stream, version, value[i], "value"))
+			if (!write(stream, version, value[i], name + " value"))
 				return false;
 		}
 		return true;
@@ -441,11 +441,11 @@ public:
 	 */
 	static inline bool write(std::ostream &stream, Version version, const std::string &value, const std::string &name) {
 		//How long is the string
-		if (!write(stream, version, static_cast<U8>(value.length()), "length"))
+		if (!write(stream, version, static_cast<U8>(value.length()), name + " length"))
 			return false;
 		//Write each byte of the string
 		for (U32 i = 0; i < value.length(); i ++) {
-			if (!write(stream, version, value[i], "char"))
+			if (!write(stream, version, value[i], name + " char"))
 				return false;
 		}
 
@@ -461,13 +461,13 @@ public:
 	 */
 	static inline bool write(std::ostream &stream, Version version, const Dictionary &value, const std::string &name) {
 		//How long is the map
-		if (!write(stream, version, static_cast<U32>(value.size()), "length"))
+		if (!write(stream, version, static_cast<U32>(value.size()), name + " length"))
 			return false;
 		
 		//Write each string in the map
 		for (auto pair : value) {
-			if (!write(stream, version, pair.first, "name") ||
-			    !write(stream, version, pair.second, "value"))
+			if (!write(stream, version, pair.first, name + " name") ||
+			    !write(stream, version, pair.second, name + " value"))
 				return false;
 		}
 
@@ -487,7 +487,7 @@ public:
 	template <typename T>
 	static inline bool write_extra(std::ostream &stream, Version version, const std::vector<T> &value, std::function<bool(std::ostream &, Version)> extra_method, const std::string &name) {
 		//Write the vector's size first, must be a U32 because torque
-		if (!write(stream, version, static_cast<U32>(value.size()), "size"))
+		if (!write(stream, version, static_cast<U32>(value.size()), name + " size"))
 			return false;
 		//Use the extra method... which happens to come before the value
 		if (!extra_method(stream, version))
@@ -495,7 +495,7 @@ public:
 
 		//Write all of the objects in the vector
 		for (size_t i = 0; i < value.size(); i ++) {
-			if (!write(stream, version, value[i], "value"))
+			if (!write(stream, version, value[i], name + " value"))
 				return false;
 		}
 		return true;
