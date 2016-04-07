@@ -58,6 +58,8 @@ bool DIF::read(std::istream &stream, Version &version) {
 	}
 	READ(U32); //dummy
 
+	version.dif.type = (version.interior.type == Version::InteriorVersion::Type::MBG ? Version::DIFVersion::Type::MBG : Version::DIFVersion::Type::TGE);
+
 	return true;
 }
 

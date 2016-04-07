@@ -83,7 +83,7 @@ bool Interior::read(std::istream &stream, Version &version) {
 	if (!IO::read_with<Surface>(stream, version, surface, [&](Surface &surface, std::istream &stream, Version &version)->bool{
 		return surface.read(stream, version, static_cast<U32>(index.size()), static_cast<U32>(plane.size()), static_cast<U32>(materialName.size()), static_cast<U32>(texGenEq.size()));
 	}, "surface")) { //surface
-		version.interior.type = DIF::Version::InteriorVersion::Type::TGE;
+		version.interior.type = DIF::Version::InteriorVersion::Type::MBG;
 
 		if (version.interior.version != 0) {
 			//Oh fuck oh fuck, TGE interiors only have version 0
@@ -143,6 +143,8 @@ bool Interior::read(std::istream &stream, Version &version) {
 	READCHECK(nullSurface, std::vector<NullSurface>); //nullSurface
 	if (version.interior.version != 4) { //Also found in 0, 2, 3, 14
 		READCHECK(lightMap, std::vector<LightMap>); //lightMap
+		if (lightMap.size() > 0 && version.interior.type == DIF::Version::InteriorVersion::Type::MBG)
+			version.interior.type = DIF::Version::InteriorVersion::Type::TGE;
 	}
 	if (!IO::read_as<U32, U16>(stream, version, solidLeafSurface, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "solidLeafSurface")) return false; //solidLeafSurface
 	READCHECK(animatedLight, std::vector<AnimatedLight>); //animatedLight

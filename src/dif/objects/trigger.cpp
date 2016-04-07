@@ -35,7 +35,8 @@ DIF_NAMESPACE
 bool Trigger::read(std::istream &stream, Version &version) {
 	READCHECK(name, std::string); //name
 	READCHECK(datablock, std::string); //datablock
-	READCHECK(properties, Dictionary); //properties
+	if (version.dif.type == DIF::Version::DIFVersion::Type::MBG)
+		READCHECK(properties, Dictionary); //properties
 	READCHECK(polyhedron, PolyHedron); //polyhedron
 	READCHECK(offset, Point3F); //offset
 
@@ -45,7 +46,8 @@ bool Trigger::read(std::istream &stream, Version &version) {
 bool Trigger::write(std::ostream &stream, Version version) const {
 	WRITECHECK(name, std::string); //name
 	WRITECHECK(datablock, std::string); //datablock
-	WRITECHECK(properties, Dictionary); //properties
+	if (version.dif.type == DIF::Version::DIFVersion::Type::MBG)
+		WRITECHECK(properties, Dictionary); //properties
 	WRITECHECK(polyhedron, PolyHedron); //polyhedron
 	WRITECHECK(offset, Point3F); //offset
 
