@@ -31,7 +31,7 @@
 DIF_NAMESPACE
 
 bool VehicleCollision::read(std::istream &stream, Version &version) {
-	READCHECK(vehicleCollisionFileVersion, U32); //vehicleCollisionFileVersion
+	READCHECK(version.vehicleCollision.version, U32); //vehicleCollisionFileVersion
 	READCHECK(vehicleConvexHull, std::vector<ConvexHull>); //vehicleConvexHull
 	READCHECK(vehicleConvexHullEmitStringCharacter, std::vector<U8>); //vehicleConvexHullEmitStringCharacter
 	READCHECK(vehicleHullIndex, std::vector<U32>); //vehicleHullIndex
@@ -51,7 +51,7 @@ bool VehicleCollision::read(std::istream &stream, Version &version) {
 }
 
 bool VehicleCollision::write(std::ostream &stream, Version version) const {
-	WRITECHECK(vehicleCollisionFileVersion, U32); //vehicleCollisionFileVersion
+	WRITECHECK(version.vehicleCollision.version, U32); //vehicleCollisionFileVersion
 	WRITECHECK(vehicleConvexHull, std::vector<ConvexHull>); //vehicleConvexHull
 	WRITECHECK(vehicleConvexHullEmitStringCharacter, std::vector<U8>); //vehicleConvexHullEmitStringCharacter
 	WRITECHECK(vehicleHullIndex, std::vector<U32>); //vehicleHullIndex

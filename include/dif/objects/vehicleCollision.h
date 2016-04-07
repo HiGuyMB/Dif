@@ -80,8 +80,6 @@ public:
 		virtual bool write(std::ostream &stream, Version version) const;
 	};
 
-	U32 vehicleCollisionFileVersion;
-
 	std::vector<ConvexHull> vehicleConvexHull;
 	std::vector<U8> vehicleConvexHullEmitStringCharacter;
 	std::vector<U32> vehicleHullIndex;
@@ -97,7 +95,7 @@ public:
 	std::vector<U32> vehicleWindings;
 	std::vector<WindingIndex> vehicleWindingIndices;
 
-	VehicleCollision() : vehicleCollisionFileVersion(0) {};
+	VehicleCollision() {};
 
 	/**
 	 * Reads a VehicleCollision from a stream

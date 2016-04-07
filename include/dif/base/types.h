@@ -55,25 +55,42 @@ typedef double F64;
 struct Version {
 	struct DIFVersion {
 		enum Type {
+			Unknown,
 			MBG,
 			TGE
 		} type;
 		U32 version;
 
-		DIFVersion(Type type = MBG, U32 version = 44) : type(type), version(version) {
+		DIFVersion(U32 version = 44, Type type = Unknown) : type(type), version(version) {
 
+		}
+		std::string to_string() {
+			switch (type) {
+				case Unknown: return std::to_string(version) + " (Unknown)";
+				case MBG:     return std::to_string(version) + " (MBG)";
+				case TGE:     return std::to_string(version) + " (TGE)";
+			}
 		}
 	} dif;
 	struct InteriorVersion {
 		enum Type {
+			Unknown,
 			MBG,
 			TGE,
 			TGEA
 		} type;
 		U32 version;
 
-		InteriorVersion(Type type = MBG, U32 version = 0) : type(type), version(version) {
+		InteriorVersion(U32 version = 0, Type type = Unknown) : type(type), version(version) {
 
+		}
+		std::string to_string() {
+			switch (type) {
+				case Unknown: return std::to_string(version) + " (Unknown)";
+				case MBG:     return std::to_string(version) + " (MBG)";
+				case TGE:     return std::to_string(version) + " (TGE)";
+				case TGEA:    return std::to_string(version) + " (TGEA)";
+			}
 		}
 		bool isTGE() {
 			return type == TGE || type == MBG;
@@ -84,12 +101,25 @@ struct Version {
 		MaterialListVersion(U32 version = 0) : version(version) {
 
 		}
+		std::string to_string() {
+			return std::to_string(version);
+		}
 	} material;
+	struct VehicleCollisionFileVersion {
+		U32 version;
+		VehicleCollisionFileVersion(U32 version = 0) : version(version) {
 
-	Version(DIFVersion difVersion = DIFVersion(), InteriorVersion interiorVersion = InteriorVersion(), MaterialListVersion materialVersion = MaterialListVersion()) :
+		}
+		std::string to_string() {
+			return std::to_string(version);
+		}
+	} vehicleCollision;
+
+	Version(DIFVersion difVersion = DIFVersion(), InteriorVersion interiorVersion = InteriorVersion(), MaterialListVersion materialVersion = MaterialListVersion(), VehicleCollisionFileVersion vehicleCollisionVersion = VehicleCollisionFileVersion()) :
 		dif(difVersion),
 		interior(interiorVersion),
-		material(materialVersion) {
+		material(materialVersion),
+		vehicleCollision(vehicleCollisionVersion) {
 
 	}
 };
