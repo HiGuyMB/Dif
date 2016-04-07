@@ -133,8 +133,8 @@ bool Interior::read(std::istream &stream, Version &version) {
 		READCHECK(normalLMapIndex, std::vector<U8>); //normalLMapIndex
 	} else if (version.interior.version >= 13) {
 		//These are 32-bit values in v13 and up
-		READCHECK(normalLMapIndex, std::vector<U32>); //normalLMapIndex
-		READCHECK(alarmLMapIndex, std::vector<U32>); //alarmLMapIndex
+		if (!IO::read_as<U8, U32>(stream, version, normalLMapIndex, [](bool, U32)->bool{return true;}, "normalLMapIndex")) return false; //normalLMapIndex
+		if (!IO::read_as<U8, U32>(stream, version, alarmLMapIndex, [](bool, U32)->bool{return true;}, "alarmLMapIndex")) return false; //alarmLMapIndex
 	} else {
 		//Normally they're just 8
 		READCHECK(normalLMapIndex, std::vector<U8>); //normalLMapIndex
