@@ -520,9 +520,9 @@ bool Interior::Surface::read(std::istream &stream, Version &version, U32 indexSi
 		READCHECK(mapSizeY, U8); //mapSizeY
 	}
 
-	if (version.interior.type != DIF::Version::InteriorVersion::Type::TGE) {
+	if (!version.interior.isTGE()) {
 		READ(U8); //unused
-		if (version.interior.version > 0 && version.interior.version <= 5) {
+		if (version.interior.version >= 2 && version.interior.version <= 5) {
 			READCHECK(brushId, U32); //brushId
 		}
 	}
@@ -555,7 +555,7 @@ bool Interior::Edge2::read(std::istream &stream, Version &version) {
 	READCHECK(vertex1, U32);
 	READCHECK(normal0, U32);
 	READCHECK(normal1, U32);
-	if (version.interior.version > 2) {
+	if (version.interior.version >= 3) {
 		READCHECK(face0, U32);
 		READCHECK(face1, U32);
 	}
@@ -567,7 +567,7 @@ bool Interior::Edge2::write(std::ostream &stream, Version version) const {
 	WRITECHECK(vertex1, U32);
 	WRITECHECK(normal0, U32);
 	WRITECHECK(normal1, U32);
-	if (version.interior.version > 2) {
+	if (version.interior.version >= 3) {
 		WRITECHECK(face0, U32);
 		WRITECHECK(face1, U32);
 	}
@@ -596,7 +596,7 @@ bool Interior::NullSurface::write(std::ostream &stream, Version version) const {
 
 bool Interior::LightMap::read(std::istream &stream, Version &version) {
 	READCHECK(lightMap, PNG); //lightMap
-	if (version.interior.type != DIF::Version::InteriorVersion::Type::TGE) {
+	if (!version.interior.isTGE()) {
 		//These aren't even used in the real game!
 		READCHECK(lightDirMap, PNG); //lightDirMap
 	}

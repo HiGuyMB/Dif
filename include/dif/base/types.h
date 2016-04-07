@@ -75,6 +75,9 @@ struct Version {
 		InteriorVersion(Type type = MBG, U32 version = 0) : type(type), version(version) {
 
 		}
+		bool isTGE() {
+			return type == TGE || type == MBG;
+		}
 	} interior;
 	struct MaterialListVersion {
 		U32 version;
