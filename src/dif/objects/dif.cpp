@@ -56,7 +56,10 @@ bool DIF::read(std::istream &stream, Version &version) {
 	if (READ(U32) == 2) { //readGameEntities
 		READCHECK(gameEntity, std::vector<GameEntity>); //gameEntity
 	}
-	READ(U32); //dummy
+
+	//Makes no difference if we read this, and ignoring it stops the io from
+	// exploding when it magically disappears from some DIF files
+//	READ(U32); //dummy
 
 	version.dif.type = (version.interior.type == Version::InteriorVersion::Type::MBG ? Version::DIFVersion::Type::MBG : Version::DIFVersion::Type::TGE);
 
