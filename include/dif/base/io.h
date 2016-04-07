@@ -553,42 +553,52 @@ bool Color<T>::write(std::ostream &stream, Version version) const {
 
 //Hack to get the read() macro to return a value from a function that uses a ref
 template <typename T>
-inline T __read(std::istream &stream, Version &version, T *thing) {
+inline T __read(std::istream &stream, Version &version) {
 	T __garbage;
 #ifdef PRINT_DEBUG_INFO
-	IO::read(stream, version, __garbage, "garbage");
+	if (!IO::read(stream, version, __garbage, "garbage")) {
+		throw std::runtime_error("__read failed");
+	}
 #else
-	IO::read(stream, version, __garbage, "");
+	if (!IO::read(stream, version, __garbage, "")) {
+		throw std::runtime_error("__read failed");
+	}
 #endif
 	return __garbage;
 }
-//I'm so sorry about reinterpret_cast<type *>(NULL), but that's the only way to get C++ to interpret
-// the type and let the template work
-#define READ(type) __read(stream, version, reinterpret_cast<type *>(NULL))
 
-//Magical casts so we can read and write the types which we want.
+//Inline read that returns the value. Throws an exception if read fails
+#define READ(type) __read<type>(stream, version)
+
+//Slightly hacky read function so we don't get weird memory errors when trying to
+// read a U32 into a U8. Also no reinterpret_cast because those are screwy
 template <typename T, typename F>
-inline T& __magic_cast(F &thing) {
-	//This is so gross but apparently better than C-style casts. At least so says
-	// Jeff. We can't do this inline because temporary variables. So maybe this will
-	// work as a method instead?
-	return reinterpret_cast<T&>(thing);
+inline bool __cast_read(std::istream &stream, Version &version, F &thing, const std::string &name) {
+	//Temp of the type we want
+	T temp{};
+	//Make sure the read actually works
+	if (!IO::read(stream, version, temp, name))
+		return false;
+	//And then just copy into our variable
+	thing = temp;
+	return true;
 }
 
-//Same thing as above but with 100% more const
+//Write function in the same idea as the read function, just backwards
 template <typename T, typename F>
-inline const T& __magic_const_cast(const F &thing) {
-	//Don't even need a const_cast... That's cool.
-	return reinterpret_cast<const T&>(thing);
+inline bool __cast_write(std::ostream &stream, Version &version, const F &thing, const std::string &name) {
+	//Literally just cast and write
+	T temp(thing);
+	return IO::write(stream, version, temp, name);
 }
 
 //Macros to speed up file reading/writing
 #ifdef PRINT_DEBUG_INFO
-	#define READCHECK(name, type)  { if (!IO::read (stream, version, __magic_cast<type>(name),       #name " as " #type)) return false; }
-	#define WRITECHECK(name, type) { if (!IO::write(stream, version, __magic_const_cast<type>(name), #name " as " #type)) return false; }
+	#define READCHECK(name, type)  { if (!__cast_read<type, decltype(name)> (stream, version, name, #name " as " #type)) return false; }
+	#define WRITECHECK(name, type) { if (!__cast_write<type, decltype(name)>(stream, version, name, #name " as " #type)) return false; }
 #else
-	#define READCHECK(name, type)  { if (!IO::read (stream, version, __magic_cast<type>(name),       "")) return false; }
-	#define WRITECHECK(name, type) { if (!IO::write(stream, version, __magic_const_cast<type>(name), "")) return false; }
+	#define READCHECK(name, type)  { if (!__cast_read<type, decltype(name)> (stream, version, name, "")) return false; }
+	#define WRITECHECK(name, type) { if (!__cast_write<type, decltype(name)>(stream, version, name, "")) return false; }
 #endif
 
 DIF_NAMESPACE_END
