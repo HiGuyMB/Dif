@@ -265,7 +265,11 @@ bool Interior::write(std::ostream &stream, Version version) const {
 	WRITECHECK(normalLMapIndex, std::vector<U8>); //normalLMapIndex
 	WRITECHECK(alarmLMapIndex, std::vector<U8>); //alarmLMapIndex
 	WRITECHECK(nullSurface, std::vector<NullSurface>); //nullSurface
-	WRITECHECK(lightMap, std::vector<LightMap>); //lightMap
+	if (version.interior.type == DIF::Version::InteriorVersion::Type::MBG) {
+		WRITECHECK(0, U32); //lightMap
+	} else {
+		WRITECHECK(lightMap, std::vector<LightMap>); //lightMap
+	}
 	WRITECHECK(solidLeafSurface, std::vector<U32>); //solidLeafSurface
 	WRITECHECK(animatedLight, std::vector<AnimatedLight>); //animatedLight
 	WRITECHECK(lightState, std::vector<LightState>); //lightState
@@ -295,9 +299,15 @@ bool Interior::write(std::ostream &stream, Version version) const {
 	/*
 	 Static meshes (not included)
 	 */
-	WRITECHECK(texNormal, std::vector<Point3F>); //texNormal
-	WRITECHECK(texMatrix, std::vector<TexMatrix>); //texMatrix
-	WRITECHECK(texMatIndex, std::vector<U32>); //texMatIndex
+	if (version.interior.type == DIF::Version::InteriorVersion::Type::MBG) {
+		WRITECHECK(0, U32); //texNormal
+		WRITECHECK(0, U32); //texMatrix
+		WRITECHECK(0, U32); //texMatIndex
+	} else {
+		WRITECHECK(texNormal, std::vector<Point3F>); //texNormal
+		WRITECHECK(texMatrix, std::vector<TexMatrix>); //texMatrix
+		WRITECHECK(texMatIndex, std::vector<U32>); //texMatIndex
+	}
 	WRITECHECK(0, U32); //extendedLightMapData
 //	WRITECHECK(extendedLightMapData, U32); //extendedLightMapData
 
