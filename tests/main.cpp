@@ -508,13 +508,6 @@ int main(int argc, const char * argv[]) {
 			}
 
 			printTriggers(dif);
-
-			DIF::Version outVersion(DIF::Version::DIFVersion(44), DIF::Version::InteriorVersion(0, DIF::Version::InteriorVersion::Type::MBG), DIF::Version::MaterialListVersion(1), DIF::Version::VehicleCollisionFileVersion(0));
-
-			std::ofstream outstr(std::string(argv[i]) + ".export.dif");
-			if (!dif.write(outstr, outVersion)) {
-				return EXIT_FAILURE;
-			}
 		}
 	}
 	return EXIT_SUCCESS;
