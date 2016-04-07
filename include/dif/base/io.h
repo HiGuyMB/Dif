@@ -152,7 +152,7 @@ public:
 	 * @return If the operation was successful
 	 */
 	template <typename T>
-	static inline bool read(std::istream &stream, Version version, T &value, const std::string &name) {
+	static inline bool read(std::istream &stream, Version &version, T &value, const std::string &name) {
 		//This will select one of the two read_impls above based on whether or not
 		// T is a struct or a primitive type.
 		return read_impl<T, std::is_fundamental<T>::value>::read(stream, version, value, name);
@@ -166,7 +166,7 @@ public:
 	 * @return If the operation was successful
 	 */
 	template <typename T>
-	static inline bool read(std::istream &stream, Version version, std::vector<T> &value, const std::string &name) {
+	static inline bool read(std::istream &stream, Version &version, std::vector<T> &value, const std::string &name) {
 		//Read the size of the vector
 		U32 size;
 		if (!read(stream, version, size, "size"))
@@ -194,7 +194,7 @@ public:
 	 * @param name A string containing the name of the variable (for debugging)
 	 * @return If the operation was successful
 	 */
-	static inline bool read(std::istream &stream, Version version, std::string &value, const std::string &name) {
+	static inline bool read(std::istream &stream, Version &version, std::string &value, const std::string &name) {
 		//How long is the string
 		U8 length;
 		if (!read(stream, version, length, "length"))
@@ -221,7 +221,7 @@ public:
 	 * @param name A string containing the name of the variable (for debugging)
 	 * @return If the operation was successful
 	 */
-	static inline bool read(std::istream &stream, Version version, Dictionary &value, const std::string &name) {
+	static inline bool read(std::istream &stream, Version &version, Dictionary &value, const std::string &name) {
 		//How long is the map
 		U32 length;
 		if (!read(stream, version, length, "length"))
@@ -258,7 +258,7 @@ public:
 	 * @return If the operation was successful
 	 */
 	template <typename type1, typename type2>
-	static inline bool read_as(std::istream &stream, Version version, std::vector<type1> &value, std::function<bool(bool,U32)> condition, const std::string &name) {
+	static inline bool read_as(std::istream &stream, Version &version, std::vector<type1> &value, std::function<bool(bool,U32)> condition, const std::string &name) {
 		//Read the size of the vector
 		U32 size;
 		if (!read(stream, version, size, "size"))
@@ -322,7 +322,7 @@ public:
 	 * @return If the operation was successful
 	 */
 	template <typename T>
-	static inline bool read_with(std::istream &stream, Version version, std::vector<T> &value, std::function<bool(T&, std::istream &, Version &)> passed_method, const std::string &name) {
+	static inline bool read_with(std::istream &stream, Version &version, std::vector<T> &value, std::function<bool(T&, std::istream &, Version &)> passed_method, const std::string &name) {
 		//Read the size of the vector
 		U32 size;
 		if (!read(stream, version, size, "size"))
@@ -354,7 +354,7 @@ public:
 	 * @return If the operation was successful
 	 */
 	template <typename T>
-	static inline bool read_extra(std::istream &stream, Version version, std::vector<T> &value, std::function<bool(std::istream &, Version &)> extra_method, const std::string &name) {
+	static inline bool read_extra(std::istream &stream, Version &version, std::vector<T> &value, std::function<bool(std::istream &, Version &)> extra_method, const std::string &name) {
 		//Read the size of the vector
 		U32 size;
 		if (!read(stream, version, size, "size"))
@@ -553,9 +553,9 @@ bool Color<T>::write(std::ostream &stream, Version version) const {
 
 //Hack to get the read() macro to return a value from a function that uses a ref
 template <typename T>
-inline T __read(std::istream &stream, Version version, T *thing) {
+inline T __read(std::istream &stream, Version &version, T *thing) {
 	T __garbage;
-#ifdef DEBUG
+#ifdef PRINT_DEBUG_INFO
 	IO::read(stream, version, __garbage, "garbage");
 #else
 	IO::read(stream, version, __garbage, "");
@@ -583,7 +583,7 @@ inline const T& __magic_const_cast(const F &thing) {
 }
 
 //Macros to speed up file reading/writing
-#ifdef DEBUG
+#ifdef PRINT_DEBUG_INFO
 	#define READCHECK(name, type)  { if (!IO::read (stream, version, __magic_cast<type>(name),       #name " as " #type)) return false; }
 	#define WRITECHECK(name, type) { if (!IO::write(stream, version, __magic_const_cast<type>(name), #name " as " #type)) return false; }
 #else
