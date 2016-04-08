@@ -32,6 +32,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <string>
 
 #define DIF_NAMESPACE namespace DIF {
 #define DIF_NAMESPACE_END }

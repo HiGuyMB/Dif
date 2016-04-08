@@ -154,7 +154,8 @@ bool Dif::read(const std::string &file) {
 		return false;
 
 	DIF::DIF dif;
-	dif.read(stream);
+	DIF::Version version;
+	dif.read(stream, version);
 	stream.close();
 
 	// parse the dif
