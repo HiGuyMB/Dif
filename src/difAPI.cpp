@@ -125,6 +125,9 @@ static void parseDif(Dif *thisptr, DIF::DIF &dif) {
 			thisptr->mTangents.push_back(tangent.z);
 			thisptr->mTangents.push_back(tangent.y);
 
+			// push material index
+			thisptr->mMaterialTriangeIndices.push_back(static_cast<int>(surface.textureIndex));
+
 			// index buffer
 			for (int j = 0; j < 3; j++)
 				thisptr->mIndices[surface.textureIndex].push_back(vertIndex + j);
@@ -207,6 +210,12 @@ extern "C" {
 		int size = int(static_cast<Dif*>(dif)->mTangents.size());
 		for (int i = 0; i < size; i++)
 			tangentArray[i] = static_cast<Dif*>(dif)->mTangents[i];
+	}
+
+	void dif_get_materials(void *dif, int *materialArray) {
+		int size = int(static_cast<Dif*>(dif)->mMaterialTriangeIndices.size());
+		for (int i = 0; i < size; i++)
+			materialArray[i] = static_cast<Dif*>(dif)->mMaterialTriangeIndices[i];
 	}
 
 	int dif_get_triangle_count_by_material(void *dif, int materialId) {

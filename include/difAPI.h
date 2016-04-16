@@ -50,6 +50,7 @@ public:
 	std::vector<float> mUVs;
 	std::vector<float> mNormals;
 	std::vector<float> mTangents;
+	std::vector<int> mMaterialTriangeIndices;
 	std::unordered_map<int, std::vector<int>> mIndices;
 	std::vector<std::string> mMaterials;
 	int mTotalTriangleCount;
@@ -90,6 +91,11 @@ extern "C" {
 	 *
 	 */
 	PLUGIN_API void dif_get_tangents(void *dif, float *tangentArray);
+
+	/**
+	 *
+	 */
+	PLUGIN_API void dif_get_materials(void *dif, int *materialArray);
 
 	/**
 	 *
