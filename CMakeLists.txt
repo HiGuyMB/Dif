@@ -24,6 +24,21 @@ if (MSVC)
 	#---END COPY FROM BULLET CMAKE---
 endif()
 
+# http://stackoverflow.com/a/7750816
+# Basically just force the output dir to where we give
+macro(target_output_directory targetname directory)
+	set_target_properties( ${targetname} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${directory} )
+	set_target_properties( ${targetname} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${directory} )
+	set_target_properties( ${targetname} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${directory} )
+	# Second, for multi-config builds (e.g. msvc)
+	foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
+		string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG )
+		set_target_properties( ${targetname} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${directory} )
+		set_target_properties( ${targetname} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${directory} )
+		set_target_properties( ${targetname} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${directory} )
+	endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
+endmacro()
+
 set (DIF_SRC
 	############################################################################
 	# Sources
@@ -77,9 +92,29 @@ set (C_API_SRC
 )
 add_library(DifPlugin SHARED ${C_API_SRC})
 target_link_libraries(DifPlugin Dif)
+
+# Stop OSX from putting "lib" in front of the name
+set_target_properties(DifPlugin PROPERTIES PREFIX "")
+
+# Plugin suffix should be .bundle on OSX, .dll on Windows
+if (APPLE)
+	set_target_properties(DifPlugin PROPERTIES SUFFIX ".bundle")
+elseif (MSVC)
+	set_target_properties(DifPlugin PROPERTIES SUFFIX ".dll")
+endif()
+
+
 ###############################################################################
 # Tests
 ###############################################################################
 
 add_executable(DifTests tests/main.cpp)
 target_link_libraries(DifTests ${CMAKE_BINARY_DIR}/Debug/libDif.a)
+
+# Make it go to where we want. Default is the plugins directory but you can change
+# this if you're not building as a submodule.
+option (OUTPUT_DIRECTORY_CUSTOM "Use a custom output directory." OFF)
+set (OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../../Assets/Plugins/" CACHE PATH "Path where the built plugin will go")
+if (OUTPUT_DIRECTORY_CUSTOM)
+	target_output_directory(DifPlugin "${OUTPUT_DIRECTORY}")
+endif ()
