@@ -1,3 +1,30 @@
+//------------------------------------------------------------------------------
+// Copyright (c) 2015 HiGuy Smith
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//  * Redistributions of source code must retain the above copyright
+//    notice, this list of conditions and the following disclaimer.
+//  * Redistributions in binary form must reproduce the above copyright
+//    notice, this list of conditions and the following disclaimer in the
+//    documentation and/or other materials provided with the distribution.
+//  * Neither the name of the project nor the
+//    names of its contributors may be used to endorse or promote products
+//    derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+// DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//------------------------------------------------------------------------------
+
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -36,11 +63,11 @@ void nullSurfaces(DIF::DIF &dif) {
 	for (DIF::Interior &interior : dif.interior) {
 		for (DIF::Interior::Surface &surface : interior.surface) {
 			//Get average position
-			DIF::Point3F position;
+			glm::vec3 position;
 
 			for (DIF::U32 i = 0; i < surface.windingCount; i ++) {
 				DIF::U32 index = i + surface.windingStart;
-				DIF::Point3F point = interior.point[interior.index[index]];
+				glm::vec3 point = interior.point[interior.index[index]];
 				position += point;
 			}
 
@@ -61,16 +88,16 @@ void exportObj(const DIF::Interior &dif, const char *outFile) {
 		DIF::U32 normalIndex;
 	};
 
-	std::vector<DIF::Point3F> vertices;
-	std::vector<DIF::Point2F> texCoords;
-	std::vector<DIF::Point3F> normals;
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec2> texCoords;
+	std::vector<glm::vec3> normals;
 	std::vector<Face> faces;
 
 	vertices.insert(vertices.end(), dif.point.begin(), dif.point.end());
 	normals.insert(normals.end(), dif.normal.begin(), dif.normal.end());
 
 	for (const DIF::Interior::Surface &surface : dif.surface) {
-		DIF::Point3F normal = dif.normal[dif.plane[surface.planeIndex].normalIndex];
+		glm::vec3 normal = dif.normal[dif.plane[surface.planeIndex].normalIndex];
 		if (surface.planeFlipped) {
 			normal *= -1;
 		}
@@ -93,15 +120,15 @@ void exportObj(const DIF::Interior &dif, const char *outFile) {
 
 			DIF::Interior::TexGenEq texGen = dif.texGenEq[surface.texGenIndex];
 
-			const DIF::Point3F &pt0 = dif.point[f.vertIndex[0]];
-			const DIF::Point3F &pt1 = dif.point[f.vertIndex[0]];
-			const DIF::Point3F &pt2 = dif.point[f.vertIndex[0]];
+			const glm::vec3 &pt0 = dif.point[f.vertIndex[0]];
+			const glm::vec3 &pt1 = dif.point[f.vertIndex[0]];
+			const glm::vec3 &pt2 = dif.point[f.vertIndex[0]];
 
-			DIF::Point2F coord0(pt0.x * texGen.planeX.x + pt0.y * texGen.planeX.y + pt0.z * texGen.planeX.z + texGen.planeX.d,
+			glm::vec2 coord0(pt0.x * texGen.planeX.x + pt0.y * texGen.planeX.y + pt0.z * texGen.planeX.z + texGen.planeX.d,
 								pt0.x * texGen.planeY.x + pt0.y * texGen.planeY.y + pt0.z * texGen.planeY.z + texGen.planeY.d);
-			DIF::Point2F coord1(pt1.x * texGen.planeX.x + pt1.y * texGen.planeX.y + pt1.z * texGen.planeX.z + texGen.planeX.d,
+			glm::vec2 coord1(pt1.x * texGen.planeX.x + pt1.y * texGen.planeX.y + pt1.z * texGen.planeX.z + texGen.planeX.d,
 								pt1.x * texGen.planeY.x + pt1.y * texGen.planeY.y + pt1.z * texGen.planeY.z + texGen.planeY.d);
-			DIF::Point2F coord2(pt2.x * texGen.planeX.x + pt2.y * texGen.planeX.y + pt2.z * texGen.planeX.z + texGen.planeX.d,
+			glm::vec2 coord2(pt2.x * texGen.planeX.x + pt2.y * texGen.planeX.y + pt2.z * texGen.planeX.z + texGen.planeX.d,
 								pt2.x * texGen.planeY.x + pt2.y * texGen.planeY.y + pt2.z * texGen.planeY.z + texGen.planeY.d);
 
 			f.texCoordIndex[0] = texCoords.size();
@@ -119,17 +146,17 @@ void exportObj(const DIF::Interior &dif, const char *outFile) {
 	std::ofstream out(outFile);
 
 	//Vertex list
-	for (const DIF::Point3F &point : vertices) {
+	for (const glm::vec3 &point : vertices) {
 		out << "v " << -point.x << " " << point.z << " " << point.y << "\n";
 	}
 
 	//Texture coords
-	for (const DIF::Point2F &texCoord : texCoords) {
+	for (const glm::vec2 &texCoord : texCoords) {
 		out << "vf " << -texCoord.x << " " << texCoord.y << "\n";
 	}
 
 	//Normals
-	for (const DIF::Point3F &normal : normals) {
+	for (const glm::vec3 &normal : normals) {
 		out << "vn " << -normal.x << " " << normal.z << " " << normal.y << "\n";
 	}
 
@@ -158,11 +185,11 @@ void exportJSON(const DIF::Interior &dif, const char *outFile) {
 		std::vector<Face> faces;
 	};
 
-	std::vector<DIF::Point3F> vertices;
-	std::vector<DIF::Point2F> texCoords;
-	std::vector<DIF::Point3F> normals;
-	std::vector<DIF::Point3F> tangents;
-	std::vector<DIF::Point3F> bitangents;
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec2> texCoords;
+	std::vector<glm::vec3> normals;
+	std::vector<glm::vec3> tangents;
+	std::vector<glm::vec3> bitangents;
 
 	std::map<DIF::U16, TextureGroup> texGroups;
 
@@ -170,7 +197,7 @@ void exportJSON(const DIF::Interior &dif, const char *outFile) {
 	normals.insert(normals.end(), dif.normal.begin(), dif.normal.end());
 
 	for (const DIF::Interior::Surface &surface : dif.surface) {
-		DIF::Point3F normal = dif.normal[dif.plane[surface.planeIndex].normalIndex];
+		glm::vec3 normal = dif.normal[dif.plane[surface.planeIndex].normalIndex];
 		if (surface.planeFlipped) {
 			normal *= -1;
 		}
@@ -198,15 +225,15 @@ void exportJSON(const DIF::Interior &dif, const char *outFile) {
 
 			DIF::Interior::TexGenEq texGen = dif.texGenEq[surface.texGenIndex];
 
-			const DIF::Point3F &pt0 = dif.point[f.vertIndex[0]];
-			const DIF::Point3F &pt1 = dif.point[f.vertIndex[1]];
-			const DIF::Point3F &pt2 = dif.point[f.vertIndex[2]];
+			const glm::vec3 &pt0 = dif.point[f.vertIndex[0]];
+			const glm::vec3 &pt1 = dif.point[f.vertIndex[1]];
+			const glm::vec3 &pt2 = dif.point[f.vertIndex[2]];
 
-			DIF::Point2F coord0(pt0.x * texGen.planeX.x + pt0.y * texGen.planeX.y + pt0.z * texGen.planeX.z + texGen.planeX.d,
+			glm::vec2 coord0(pt0.x * texGen.planeX.x + pt0.y * texGen.planeX.y + pt0.z * texGen.planeX.z + texGen.planeX.d,
 								pt0.x * texGen.planeY.x + pt0.y * texGen.planeY.y + pt0.z * texGen.planeY.z + texGen.planeY.d);
-			DIF::Point2F coord1(pt1.x * texGen.planeX.x + pt1.y * texGen.planeX.y + pt1.z * texGen.planeX.z + texGen.planeX.d,
+			glm::vec2 coord1(pt1.x * texGen.planeX.x + pt1.y * texGen.planeX.y + pt1.z * texGen.planeX.z + texGen.planeX.d,
 								pt1.x * texGen.planeY.x + pt1.y * texGen.planeY.y + pt1.z * texGen.planeY.z + texGen.planeY.d);
-			DIF::Point2F coord2(pt2.x * texGen.planeX.x + pt2.y * texGen.planeX.y + pt2.z * texGen.planeX.z + texGen.planeX.d,
+			glm::vec2 coord2(pt2.x * texGen.planeX.x + pt2.y * texGen.planeX.y + pt2.z * texGen.planeX.z + texGen.planeX.d,
 								pt2.x * texGen.planeY.x + pt2.y * texGen.planeY.y + pt2.z * texGen.planeY.z + texGen.planeY.d);
 
 			f.texCoordIndex[0] = texCoords.size();
@@ -216,23 +243,23 @@ void exportJSON(const DIF::Interior &dif, const char *outFile) {
 			f.texCoordIndex[2] = texCoords.size();
 			texCoords.push_back(coord2);
 
-			DIF::Point3F deltaPos1 = pt1 - pt0;
-			DIF::Point3F deltaPos2 = pt2 - pt0;
-			DIF::Point2F deltaUV1 = coord1 - coord0;
-			DIF::Point2F deltaUV2 = coord2 - coord0;
+			glm::vec3 deltaPos1 = pt1 - pt0;
+			glm::vec3 deltaPos2 = pt2 - pt0;
+			glm::vec2 deltaUV1 = coord1 - coord0;
+			glm::vec2 deltaUV2 = coord2 - coord0;
 
 			DIF::F32 r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
 
-			DIF::Point3F tangent   = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y) * r;
-			DIF::Point3F bitangent = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x) * r;
+			glm::vec3 tangent   = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y) * r;
+			glm::vec3 bitangent = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x) * r;
 
-			tangent = (tangent - (normal * normal.dot(tangent))).normalize();
-			if (normal.cross(tangent).dot(bitangent) < 0.0f) {
+			tangent = glm::normalize(tangent - (normal * glm::dot(normal, tangent)));
+			if (glm::dot(glm::cross(normal, tangent), bitangent) < 0.0f) {
 				tangent *= -1.0f;
 			}
 
-			tangent = tangent.normalize();
-			bitangent = bitangent.normalize();
+			tangent = glm::normalize(tangent);
+			bitangent = glm::normalize(bitangent);
 
 			f.tangentIndex = tangents.size();
 			tangents.push_back(tangent);
@@ -280,15 +307,15 @@ void exportJSON(const DIF::Interior &dif, const char *outFile) {
 		for (DIF::U32 j = 0; j < group.faces.size(); j ++) {
 			const Face &face = group.faces[j];
 
-			const DIF::Point3F &point0    = vertices[face.vertIndex[0]];
-			const DIF::Point3F &point1    = vertices[face.vertIndex[1]];
-			const DIF::Point3F &point2    = vertices[face.vertIndex[2]];
-			const DIF::Point2F &texCoord0 = texCoords[face.texCoordIndex[0]];
-			const DIF::Point2F &texCoord1 = texCoords[face.texCoordIndex[1]];
-			const DIF::Point2F &texCoord2 = texCoords[face.texCoordIndex[2]];
-			const DIF::Point3F &normal    = normals[face.normalIndex];
-			const DIF::Point3F &tangent   = tangents[face.tangentIndex];
-			const DIF::Point3F &bitangent = bitangents[face.bitangentIndex];
+			const glm::vec3 &point0    = vertices[face.vertIndex[0]];
+			const glm::vec3 &point1    = vertices[face.vertIndex[1]];
+			const glm::vec3 &point2    = vertices[face.vertIndex[2]];
+			const glm::vec2 &texCoord0 = texCoords[face.texCoordIndex[0]];
+			const glm::vec2 &texCoord1 = texCoords[face.texCoordIndex[1]];
+			const glm::vec2 &texCoord2 = texCoords[face.texCoordIndex[2]];
+			const glm::vec3 &normal    = normals[face.normalIndex];
+			const glm::vec3 &tangent   = tangents[face.tangentIndex];
+			const glm::vec3 &bitangent = bitangents[face.bitangentIndex];
 
 			if (j > 0)
 				out << "," NEWLINE;
@@ -379,7 +406,7 @@ bool convertDif(const char *file) {
 	return false;
 }
 
-bool scaleTexture(DIF::DIF &dif, const std::string &textureName, const DIF::Point2F &scale) {
+bool scaleTexture(DIF::DIF &dif, const std::string &textureName, const glm::vec2 &scale) {
 	for (DIF::Interior &interior : dif.interior) {
 		std::vector<DIF::U32> texGensToChange;
 
@@ -454,7 +481,7 @@ int main(int argc, const char * argv[]) {
 	}
 	if (argc > 5 && strcmp(argv[1], "--scale") == 0) {
 		std::string textureName = argv[2];
-		DIF::Point2F scale(atof(argv[3]), atof(argv[4]));
+		glm::vec2 scale(atof(argv[3]), atof(argv[4]));
 		DIF::DIF dif;
 		DIF::Version inVersion;
 		DIF::Version outVersion(DIF::Version::DIFVersion(44), DIF::Version::InteriorVersion(0, DIF::Version::InteriorVersion::Type::MBG), DIF::Version::MaterialListVersion(1), DIF::Version::VehicleCollisionFileVersion(0));
