@@ -58,7 +58,7 @@ bool InteriorPathFollower::write(std::ostream &stream, Version version) const {
 
 bool InteriorPathFollower::WayPoint::read(std::istream &stream, Version &version) {
 	READCHECK(position, glm::vec3); //position
-	READCHECK(rotation, QuatF); //rotation
+	READCHECK(rotation, glm::quat); //rotation
 	READCHECK(msToNext, U32); //msToNext
 	READCHECK(smoothingType, U32); //smoothingType
 
@@ -67,7 +67,7 @@ bool InteriorPathFollower::WayPoint::read(std::istream &stream, Version &version
 
 bool InteriorPathFollower::WayPoint::write(std::ostream &stream, Version version) const {
 	WRITECHECK(position, glm::vec3); //position
-	WRITECHECK(rotation, QuatF); //rotation
+	WRITECHECK(rotation, glm::quat); //rotation
 	WRITECHECK(msToNext, U32); //msToNext
 	WRITECHECK(smoothingType, U32); //smoothingType
 

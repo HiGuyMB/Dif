@@ -93,7 +93,7 @@ public:
 	std::vector<Surface> surface;
 	std::vector<U32> solidLeafSurface;
 
-	ColorI color;
+	glm::cvec4 color;
 
 	ForceField() : forceFieldFileVersion(0), name("") {}
 

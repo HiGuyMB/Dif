@@ -205,13 +205,13 @@ bool Interior::read(std::istream &stream, Version &version) {
 	if (!IO::read_as<U16, U16>(stream, version, coordBinIndex, [](bool useAlternate, U32 param)->bool{return true;}, "coordBinIndex")) return false; //coordBinIndex
 	READCHECK(coordBinMode, U32); //coordBinMode
 	if (version.interior.version == 4) { //All of this is missing in v4 as well. Saves no space.
-		baseAmbientColor = ColorI(0, 0, 0, 255);
-		alarmAmbientColor = ColorI(0, 0, 0, 255);
+		baseAmbientColor = glm::cvec4(0, 0, 0, 255);
+		alarmAmbientColor = glm::cvec4(0, 0, 0, 255);
 		extendedLightMapData = 0;
 		lightMapBorderSize = 0;
 	} else {
-		READCHECK(baseAmbientColor, ColorI); //baseAmbientColor
-		READCHECK(alarmAmbientColor, ColorI); //alarmAmbientColor
+		READCHECK(baseAmbientColor, glm::cvec4); //baseAmbientColor
+		READCHECK(alarmAmbientColor, glm::cvec4); //alarmAmbientColor
 
 		if (version.interior.version >= 10) {
 			READCHECK(staticMesh, std::vector<StaticMesh>); //staticMesh
@@ -294,8 +294,8 @@ bool Interior::write(std::ostream &stream, Version version) const {
 	}
 	WRITECHECK(coordBinIndex, std::vector<U16>); //coordBinIndex
 	WRITECHECK(coordBinMode, U32); //coordBinMode
-	WRITECHECK(baseAmbientColor, ColorI); //baseAmbientColor
-	WRITECHECK(alarmAmbientColor, ColorI); //alarmAmbientColor
+	WRITECHECK(baseAmbientColor, glm::cvec4); //baseAmbientColor
+	WRITECHECK(alarmAmbientColor, glm::cvec4); //alarmAmbientColor
 	/*
 	 Static meshes (not included)
 	 */

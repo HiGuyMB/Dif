@@ -43,7 +43,7 @@ bool ForceField::read(std::istream &stream, Version &version) {
 	READCHECK(index, std::vector<U32>); //index
 	READCHECK(surface, std::vector<Surface>); //surface
 	READCHECK(solidLeafSurface, std::vector<U32>); //solidLeafSurface
-	READCHECK(color, ColorI); //color
+	READCHECK(color, glm::cvec4); //color
 
 	return true;
 }
@@ -61,7 +61,7 @@ bool ForceField::write(std::ostream &stream, Version version) const {
 	WRITECHECK(index, std::vector<U32>); //index
 	WRITECHECK(surface, std::vector<Surface>); //surface
 	WRITECHECK(solidLeafSurface, std::vector<U32>); //solidLeafSurface
-	WRITECHECK(color, ColorI); //color
+	WRITECHECK(color, glm::cvec4); //color
 
 	return true;
 }

@@ -37,7 +37,7 @@ public:
 	class WayPoint : public Readable, public Writable {
 	public:
 		glm::vec3 position;
-		QuatF rotation;
+		glm::quat rotation;
 		U32 msToNext;
 		U32 smoothingType;
 

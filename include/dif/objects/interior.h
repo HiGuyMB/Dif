@@ -367,8 +367,8 @@ public:
 	std::vector<U16> coordBinIndex;
 
 	U32 coordBinMode;
-	ColorI baseAmbientColor;
-	ColorI alarmAmbientColor;
+	glm::cvec4 baseAmbientColor;
+	glm::cvec4 alarmAmbientColor;
 
 	std::vector<StaticMesh> staticMesh;
 	std::vector<glm::vec3> texNormal;

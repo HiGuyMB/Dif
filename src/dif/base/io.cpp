@@ -37,14 +37,6 @@ bool PlaneF::read(std::istream &stream, Version &version) {
 		IO::read(stream, version, d, "x");
 }
 
-bool QuatF::read(std::istream &stream, Version &version) {
-	return
-		IO::read(stream, version, w, "w") &&
-		IO::read(stream, version, x, "x") &&
-		IO::read(stream, version, y, "y") &&
-		IO::read(stream, version, z, "z");
-}
-
 bool BoxF::read(std::istream &stream, Version &version) {
 	return
 		IO::read(stream, version, minX, "minX") &&
@@ -106,14 +98,6 @@ bool PlaneF::write(std::ostream &stream, Version version) const {
 		IO::write(stream, version, y, "y") &&
 		IO::write(stream, version, z, "z") &&
 		IO::write(stream, version, d, "d");
-}
-
-bool QuatF::write(std::ostream &stream, Version version) const {
-	return
-		IO::write(stream, version, w, "w") &&
-		IO::write(stream, version, x, "x") &&
-		IO::write(stream, version, y, "y") &&
-		IO::write(stream, version, z, "z");
 }
 
 bool BoxF::write(std::ostream &stream, Version version) const {

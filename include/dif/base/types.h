@@ -35,6 +35,11 @@
 #include <string>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+
+namespace glm {
+	typedef tvec4<unsigned char, lowp> cvec4;
+};
 
 #define DIF_NAMESPACE namespace DIF {
 #define DIF_NAMESPACE_END }
@@ -137,30 +142,9 @@ public:
 	virtual bool write(std::ostream &stream, Version version) const = 0;
 };
 
-DIF_NAMESPACE_END
-
-#include "color.h"
-
-DIF_NAMESPACE
-
-typedef Color<U8>  ColorI;
-
 typedef std::vector<std::pair<std::string, std::string>> Dictionary;
 
 //More names stolen from TGE
-
-class QuatF : public Readable, public Writable {
-public:
-	F32 w;
-	F32 x;
-	F32 y;
-	F32 z;
-
-	QuatF() : w(0.0f), x(0.0f), y(0.0f), z(0.0f) {}
-
-	virtual bool read(std::istream &stream, Version &version);
-	virtual bool write(std::ostream &stream, Version version) const;
-};
 
 class PlaneF : public Readable, public Writable {
 public:

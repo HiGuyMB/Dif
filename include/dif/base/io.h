@@ -524,13 +524,22 @@ inline bool IO::read<glm::vec3>(std::istream &stream, Version &version, glm::vec
 		IO::read(stream, version, value.z, name + " z");
 }
 
-template <typename T>
-bool Color<T>::read(std::istream &stream, Version &version) {
+template <>
+inline bool IO::read<glm::cvec4>(std::istream &stream, Version &version, glm::cvec4 &value, const std::string &name) {
 	return
-		IO::read(stream, version, red, "red") &&
-		IO::read(stream, version, green, "green") &&
-		IO::read(stream, version, blue, "blue") &&
-		IO::read(stream, version, alpha, "alpha");
+		IO::read(stream, version, value.r, name + " red") &&
+		IO::read(stream, version, value.g, name + " green") &&
+		IO::read(stream, version, value.b, name + " blue") &&
+		IO::read(stream, version, value.a, name + " alpha");
+}
+
+template <>
+inline bool IO::read<glm::quat>(std::istream &stream, Version &version, glm::quat &value, const std::string &name) {
+	return
+		IO::read(stream, version, value.w, "w") &&
+		IO::read(stream, version, value.x, "x") &&
+		IO::read(stream, version, value.y, "y") &&
+		IO::read(stream, version, value.z, "z");
 }
 
 template <>
@@ -555,13 +564,22 @@ inline bool IO::write<glm::vec3>(std::ostream &stream, Version version, const gl
 		IO::write(stream, version, value.z, name + " z");
 }
 
-template <typename T>
-bool Color<T>::write(std::ostream &stream, Version version) const {
+template <>
+inline bool IO::write<glm::cvec4>(std::ostream &stream, Version version, const glm::cvec4 &value, const std::string &name) {
 	return
-		IO::write(stream, version, red, "red") &&
-		IO::write(stream, version, green, "green") &&
-		IO::write(stream, version, blue, "blue") &&
-		IO::write(stream, version, alpha, "alpha");
+		IO::write(stream, version, value.r, name + " red") &&
+		IO::write(stream, version, value.g, name + " green") &&
+		IO::write(stream, version, value.b, name + " blue") &&
+		IO::write(stream, version, value.a, name + " alpha");
+}
+
+template <>
+inline bool IO::write<glm::quat>(std::ostream &stream, Version version, const glm::quat &value, const std::string &name) {
+	return
+		IO::write(stream, version, value.w, "w") &&
+		IO::write(stream, version, value.x, "x") &&
+		IO::write(stream, version, value.y, "y") &&
+		IO::write(stream, version, value.z, "z");
 }
 
 
