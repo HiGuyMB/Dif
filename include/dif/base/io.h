@@ -612,7 +612,7 @@ inline bool __cast_read(std::istream &stream, Version &version, F &thing, const 
 	if (!IO::read(stream, version, temp, name))
 		return false;
 	//And then just copy into our variable
-	thing = temp;
+	thing = F(temp);
 	return true;
 }
 
