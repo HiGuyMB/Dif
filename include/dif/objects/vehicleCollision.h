@@ -90,7 +90,7 @@ public:
 	std::vector<U32> vehiclePolyListPointIndex;
 	std::vector<U8> vehiclePolyListStringCharacter;
 	std::vector<NullSurface> vehicleNullSurface;
-	std::vector<Point3F> vehiclePoints;
+	std::vector<glm::vec3> vehiclePoints;
 	std::vector<PlaneF> vehiclePlanes;
 	std::vector<U32> vehicleWindings;
 	std::vector<WindingIndex> vehicleWindingIndices;

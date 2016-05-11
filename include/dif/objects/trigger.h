@@ -43,7 +43,7 @@ public:
 	};
 
 	struct PolyHedron : public Readable, public Writable {
-		std::vector<Point3F> pointList;
+		std::vector<glm::vec3> pointList;
 		std::vector<PlaneF> planeList;
 		std::vector<PolyHedronEdge> edgeList;
 
@@ -56,7 +56,7 @@ public:
 	Dictionary properties;
 
 	PolyHedron polyhedron;
-	Point3F offset;
+	glm::vec3 offset;
 
 	Trigger() : name(""), datablock("") {};
 

@@ -85,7 +85,7 @@ public:
 	BoxF boundingBox;
 	SphereF boundingSphere;
 
-	std::vector<Point3F> normal;
+	std::vector<glm::vec3> normal;
 	std::vector<Plane> plane;
 	std::vector<BSPNode> bspNode;
 	std::vector<BSPSolidLeaf> bspSolidLeaf;

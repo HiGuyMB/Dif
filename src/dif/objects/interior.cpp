@@ -44,9 +44,9 @@ bool Interior::read(std::istream &stream, Version &version) {
 	READCHECK(boundingSphere, SphereF); //boundingSphere
 	READCHECK(hasAlarmState, U8); //hasAlarmState
 	READCHECK(numLightStateEntries, U32); //numLightStateEntries
-	READCHECK(normal, std::vector<Point3F>); //normal
+	READCHECK(normal, std::vector<glm::vec3>); //normal
 	READCHECK(plane, std::vector<Plane>); //plane
-	READCHECK(point, std::vector<Point3F>); //point
+	READCHECK(point, std::vector<glm::vec3>); //point
 	if (version.interior.version == 4) { //They exist in 0, 2, 3 but not 4
 		//Probably defaulted to FF but uncertain
 	} else {
@@ -118,7 +118,7 @@ bool Interior::read(std::istream &stream, Version &version) {
 		// but I have no idea
 		if (version.interior.version >= 4 && version.interior.version <= 5) {
 			//Extra normals used in reading the edges?
-			READCHECK(normal2, std::vector<Point3F>); //normal2
+			READCHECK(normal2, std::vector<glm::vec3>); //normal2
 
 			//Looks like indcies of some sort, can't seem to make them out though
 			
@@ -217,7 +217,7 @@ bool Interior::read(std::istream &stream, Version &version) {
 			READCHECK(staticMesh, std::vector<StaticMesh>); //staticMesh
 		}
 		if (version.interior.version >= 11) {
-			READCHECK(texNormal, std::vector<Point3F>); //texNormal
+			READCHECK(texNormal, std::vector<glm::vec3>); //texNormal
 			READCHECK(texMatrix, std::vector<TexMatrix>); //texMatrix
 			READCHECK(texMatIndex, std::vector<U32>); //texMatIndex
 		} else {
@@ -246,9 +246,9 @@ bool Interior::write(std::ostream &stream, Version version) const {
 	WRITECHECK(boundingSphere, SphereF); //boundingSphere
 	WRITECHECK(hasAlarmState, U8); //hasAlarmState
 	WRITECHECK(numLightStateEntries, U32); //numLightStateEntries
-	WRITECHECK(normal, std::vector<Point3F>); //normal
+	WRITECHECK(normal, std::vector<glm::vec3>); //normal
 	WRITECHECK(plane, std::vector<Plane>); //numPlanes
-	WRITECHECK(point, std::vector<Point3F>); //point
+	WRITECHECK(point, std::vector<glm::vec3>); //point
 	WRITECHECK(pointVisibility, std::vector<U8>); //pointVisibility
 	WRITECHECK(texGenEq, std::vector<TexGenEq>); //texGenEq
 	WRITECHECK(bspNode, std::vector<BSPNode>); //BSPNode
@@ -304,7 +304,7 @@ bool Interior::write(std::ostream &stream, Version version) const {
 		WRITECHECK(0, U32); //texMatrix
 		WRITECHECK(0, U32); //texMatIndex
 	} else {
-		WRITECHECK(texNormal, std::vector<Point3F>); //texNormal
+		WRITECHECK(texNormal, std::vector<glm::vec3>); //texNormal
 		WRITECHECK(texMatrix, std::vector<TexMatrix>); //texMatrix
 		WRITECHECK(texMatIndex, std::vector<U32>); //texMatIndex
 	}

@@ -42,7 +42,7 @@ bool VehicleCollision::read(std::istream &stream, Version &version) {
 	READCHECK(vehiclePolyListPointIndex, std::vector<U32>); //vehiclePolyListPointIndex
 	READCHECK(vehiclePolyListStringCharacter, std::vector<U8>); //vehiclePolyListStringCharacter
 	READCHECK(vehicleNullSurface, std::vector<NullSurface>); //vehicleNullSurface
-	READCHECK(vehiclePoints, std::vector<Point3F>); //vehiclePoints
+	READCHECK(vehiclePoints, std::vector<glm::vec3>); //vehiclePoints
 	READCHECK(vehiclePlanes, std::vector<PlaneF>); //vehiclePlanes
 	READCHECK(vehicleWindings, std::vector<U32>); //vehicleWindings
 	READCHECK(vehicleWindingIndices, std::vector<WindingIndex>); //vehicleWindingIndices
@@ -62,7 +62,7 @@ bool VehicleCollision::write(std::ostream &stream, Version version) const {
 	WRITECHECK(vehiclePolyListPointIndex, std::vector<U32>); //vehiclePolyListPointIndex
 	WRITECHECK(vehiclePolyListStringCharacter, std::vector<U8>); //vehiclePolyListStringCharacter
 	WRITECHECK(vehicleNullSurface, std::vector<NullSurface>); //vehicleNullSurface
-	WRITECHECK(vehiclePoints, std::vector<Point3F>); //vehiclePoints
+	WRITECHECK(vehiclePoints, std::vector<glm::vec3>); //vehiclePoints
 	WRITECHECK(vehiclePlanes, std::vector<PlaneF>); //vehiclePlanes
 	WRITECHECK(vehicleWindings, std::vector<U32>); //vehicleWindings
 	WRITECHECK(vehicleWindingIndices, std::vector<WindingIndex>); //vehicleWindingIndices

@@ -34,6 +34,8 @@
 #include <map>
 #include <string>
 
+#include <glm/glm.hpp>
+
 #define DIF_NAMESPACE namespace DIF {
 #define DIF_NAMESPACE_END }
 
@@ -99,7 +101,7 @@ struct Version {
 	} interior;
 	struct MaterialListVersion {
 		U32 version;
-		MaterialListVersion(U32 version = 0) : version(version) {
+		MaterialListVersion(U32 version = 1) : version(version) {
 
 		}
 		std::string to_string() {
@@ -137,20 +139,11 @@ public:
 
 DIF_NAMESPACE_END
 
-#include <dif/base/point2.h>
-#include <dif/base/point3.h>
-#include <dif/base/color.h>
+#include "color.h"
 
 DIF_NAMESPACE
 
-typedef Point2<S16> Point2I;
-typedef Point2<F32> Point2F;
-typedef Point3<S32> Point3I;
-typedef Point3<F32> Point3F;
-typedef Point3<F64> Point3D;
-
 typedef Color<U8>  ColorI;
-typedef Color<F32> ColorF;
 
 typedef std::vector<std::pair<std::string, std::string>> Dictionary;
 
@@ -176,6 +169,7 @@ public:
 	F32 z;
 	F32 d;
 
+	PlaneF(F32 x, F32 y, F32 z, F32 d) : x(x), y(y), z(z), d(d) {}
 	PlaneF() : x(0.0f), y(0.0f), z(0.0f), d(0.0f) {}
 
 	virtual bool read(std::istream &stream, Version &version);
@@ -192,15 +186,49 @@ public:
 	F32 maxZ;
 
 	BoxF() : minX(0.0f), minY(0.0f), minZ(0.0f), maxX(0.0f), maxY(0.0f), maxZ(0.0f) {}
+	BoxF(F32 minX, F32 minY, F32 minZ, F32 maxX, F32 maxY, F32 maxZ) : minX(minX), minY(minY), minZ(minZ), maxX(maxX), maxY(maxY), maxZ(maxZ) {}
 
-	inline Point3F getMin() const {
-		return Point3F(minX, minY, minZ);
+	inline glm::vec3 getMin() const {
+		return glm::vec3(minX, minY, minZ);
 	}
-	inline Point3F getMax() const {
-		return Point3F(maxX, maxY, maxZ);
+	inline glm::vec3 getMax() const {
+		return glm::vec3(maxX, maxY, maxZ);
 	}
-	inline Point3F getCenter() const {
-		return (getMax() + getMin()) / 2;
+	inline glm::vec3 getCenter() const {
+		return (getMax() + getMin()) / 2.0f;
+	}
+	inline void unionPoint(const glm::vec3 &point) {
+		if (point.x < minX) minX = point.x;
+		if (point.y < minY) minY = point.y;
+		if (point.z < minZ) minZ = point.z;
+		if (point.x > maxX) maxX = point.x;
+		if (point.y > maxY) maxY = point.y;
+		if (point.z > maxZ) maxZ = point.z;
+	}
+	inline BoxF operator*(const F32 &scale) {
+		BoxF newBox;
+		glm::vec3 center = getCenter();
+		newBox.minX = center.x - ((center.x - minX) / 2);
+		newBox.minY = center.y - ((center.y - minY) / 2);
+		newBox.minZ = center.z - ((center.z - minZ) / 2);
+
+		newBox.maxX = center.x + ((maxX - center.x) / 2);
+		newBox.maxY = center.y + ((maxY - center.y) / 2);
+		newBox.maxZ = center.z + ((maxZ - center.z) / 2);
+
+		return newBox;
+	}
+	inline BoxF operator*=(const F32 &scale) {
+		glm::vec3 center = getCenter();
+		minX = center.x - ((center.x - minX) / 2);
+		minY = center.y - ((center.y - minY) / 2);
+		minZ = center.z - ((center.z - minZ) / 2);
+
+		maxX = center.x + ((maxX - center.x) / 2);
+		maxY = center.y + ((maxY - center.y) / 2);
+		maxZ = center.z + ((maxZ - center.z) / 2);
+
+		return *this;
 	}
 
 	virtual bool read(std::istream &stream, Version &version);

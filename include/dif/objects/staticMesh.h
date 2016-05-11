@@ -45,8 +45,8 @@ public:
 		U32 count;
 		PlaneF lightMapEquationX;
 		PlaneF lightMapEquationY;
-		Point2I lightMapOffset;
-		Point2I lightMapSize;
+		glm::ivec2 lightMapOffset;
+		glm::ivec2 lightMapSize;
 
 		Primitive() : alpha(0), texS(0), texT(0), diffuseIndex(0), lightMapIndex(0), start(0), count(0) {};
 
@@ -73,10 +73,10 @@ public:
 
 	std::vector<Primitive> primitive;
 	std::vector<U16> index;
-	std::vector<Point3F> vertex;
-	std::vector<Point3F> normal;
-	std::vector<Point2F> diffuseUV;
-	std::vector<Point2F> lightmapUV;
+	std::vector<glm::vec3> vertex;
+	std::vector<glm::vec3> normal;
+	std::vector<glm::vec2> diffuseUV;
+	std::vector<glm::vec2> lightmapUV;
 
 	U8 hasMaterialList;
 	MaterialList baseMaterialList;
@@ -87,7 +87,7 @@ public:
 	U8 hasTranslucency;
 	BoxF bounds;
 	MatrixF transform;
-	Point3F scale;
+	glm::vec3 scale;
 
 	StaticMesh() : hasMaterialList(0), numDiffuseBitmaps(0), hasSolid(0), hasTranslucency(0) {};
 

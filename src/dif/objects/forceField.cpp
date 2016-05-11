@@ -36,7 +36,7 @@ bool ForceField::read(std::istream &stream, Version &version) {
 	READCHECK(trigger, std::vector<std::string>); //trigger
 	READCHECK(boundingBox, BoxF); //boundingBox
 	READCHECK(boundingSphere, SphereF); //boundingSphere
-	READCHECK(normal, std::vector<Point3F>); //normal
+	READCHECK(normal, std::vector<glm::vec3>); //normal
 	READCHECK(plane, std::vector<Plane>); //plane
 	READCHECK(bspNode, std::vector<BSPNode>); //BSPNode
 	READCHECK(bspSolidLeaf, std::vector<BSPSolidLeaf>); //BSPSolidLeaf
@@ -54,7 +54,7 @@ bool ForceField::write(std::ostream &stream, Version version) const {
 	WRITECHECK(trigger, std::vector<std::string>); //trigger
 	WRITECHECK(boundingBox, BoxF); //boundingBox
 	WRITECHECK(boundingSphere, SphereF); //boundingSphere
-	WRITECHECK(normal, std::vector<Point3F>); //normal
+	WRITECHECK(normal, std::vector<glm::vec3>); //normal
 	WRITECHECK(plane, std::vector<Plane>); //plane
 	WRITECHECK(bspNode, std::vector<BSPNode>); //BSPNode
 	WRITECHECK(bspSolidLeaf, std::vector<BSPSolidLeaf>); //BSPSolidLeaf

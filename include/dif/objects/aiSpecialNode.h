@@ -35,9 +35,9 @@ DIF_NAMESPACE
 class AISpecialNode : public Readable, public Writable {
 public:
 	std::string name;
-	Point3F position;
+	glm::vec3 position;
 
-	AISpecialNode() : name(""), position(Point3F(0.0f, 0.0f, 0.0f)) {}
+	AISpecialNode() : name(""), position(glm::vec3(0.0f, 0.0f, 0.0f)) {}
 
 	/**
 	 * Reads an AISpecialNode from a stream

@@ -34,7 +34,7 @@ bool InteriorPathFollower::read(std::istream &stream, Version &version) {
 	READCHECK(name, std::string); //name
 	READCHECK(datablock, std::string); //datablock
 	READCHECK(interiorResIndex, U32); //interiorResIndex
-	READCHECK(offset, Point3F); //offset
+	READCHECK(offset, glm::vec3); //offset
 	READCHECK(properties, Dictionary); //properties
 	READCHECK(triggerId, std::vector<U32>); //triggerId
 	READCHECK(wayPoint, std::vector<WayPoint>); //wayPoint
@@ -47,7 +47,7 @@ bool InteriorPathFollower::write(std::ostream &stream, Version version) const {
 	WRITECHECK(name, std::string); //name
 	WRITECHECK(datablock, std::string); //datablock
 	WRITECHECK(interiorResIndex, U32); //interiorResIndex
-	WRITECHECK(offset, Point3F); //offset
+	WRITECHECK(offset, glm::vec3); //offset
 	WRITECHECK(properties, Dictionary); //properties
 	WRITECHECK(triggerId, std::vector<U32>); //triggerId
 	WRITECHECK(wayPoint, std::vector<WayPoint>); //wayPoint
@@ -57,7 +57,7 @@ bool InteriorPathFollower::write(std::ostream &stream, Version version) const {
 }
 
 bool InteriorPathFollower::WayPoint::read(std::istream &stream, Version &version) {
-	READCHECK(position, Point3F); //position
+	READCHECK(position, glm::vec3); //position
 	READCHECK(rotation, QuatF); //rotation
 	READCHECK(msToNext, U32); //msToNext
 	READCHECK(smoothingType, U32); //smoothingType
@@ -66,7 +66,7 @@ bool InteriorPathFollower::WayPoint::read(std::istream &stream, Version &version
 }
 
 bool InteriorPathFollower::WayPoint::write(std::ostream &stream, Version version) const {
-	WRITECHECK(position, Point3F); //position
+	WRITECHECK(position, glm::vec3); //position
 	WRITECHECK(rotation, QuatF); //rotation
 	WRITECHECK(msToNext, U32); //msToNext
 	WRITECHECK(smoothingType, U32); //smoothingType

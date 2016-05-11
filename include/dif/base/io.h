@@ -502,19 +502,26 @@ public:
 	}
 };
 
-template <typename T>
-bool Point2<T>::read(std::istream &stream, Version &version) {
+template <>
+inline bool IO::read<glm::ivec2>(std::istream &stream, Version &version, glm::ivec2 &value, const std::string &name) {
 	return
-		IO::read(stream, version, x, "x") &&
-		IO::read(stream, version, y, "y");
+		IO::read(stream, version, value.x, name + " x") &&
+		IO::read(stream, version, value.y, name + " y");
 }
 
-template <typename T>
-bool Point3<T>::read(std::istream &stream, Version &version) {
+template <>
+inline bool IO::read<glm::vec2>(std::istream &stream, Version &version, glm::vec2 &value, const std::string &name) {
 	return
-		IO::read(stream, version, x, "x") &&
-		IO::read(stream, version, y, "y") &&
-		IO::read(stream, version, z, "z");
+		IO::read(stream, version, value.x, name + " x") &&
+		IO::read(stream, version, value.y, name + " y");
+}
+
+template <>
+inline bool IO::read<glm::vec3>(std::istream &stream, Version &version, glm::vec3 &value, const std::string &name) {
+	return
+		IO::read(stream, version, value.x, name + " x") &&
+		IO::read(stream, version, value.y, name + " y") &&
+		IO::read(stream, version, value.z, name + " z");
 }
 
 template <typename T>
@@ -526,19 +533,26 @@ bool Color<T>::read(std::istream &stream, Version &version) {
 		IO::read(stream, version, alpha, "alpha");
 }
 
-template <typename T>
-bool Point2<T>::write(std::ostream &stream, Version version) const {
+template <>
+inline bool IO::write<glm::ivec2>(std::ostream &stream, Version version, const glm::ivec2 &value, const std::string &name) {
 	return
-	IO::write(stream, version, x, "x") &&
-	IO::write(stream, version, y, "y");
+		IO::write(stream, version, value.x, name + " x") &&
+		IO::write(stream, version, value.y, name + " y");
 }
 
-template <typename T>
-bool Point3<T>::write(std::ostream &stream, Version version) const {
+template <>
+inline bool IO::write<glm::vec2>(std::ostream &stream, Version version, const glm::vec2 &value, const std::string &name) {
 	return
-		IO::write(stream, version, x, "x") &&
-		IO::write(stream, version, y, "y") &&
-		IO::write(stream, version, z, "z");
+		IO::write(stream, version, value.x, name + " x") &&
+		IO::write(stream, version, value.y, name + " y");
+}
+
+template <>
+inline bool IO::write<glm::vec3>(std::ostream &stream, Version version, const glm::vec3 &value, const std::string &name) {
+	return
+		IO::write(stream, version, value.x, name + " x") &&
+		IO::write(stream, version, value.y, name + " y") &&
+		IO::write(stream, version, value.z, name + " z");
 }
 
 template <typename T>

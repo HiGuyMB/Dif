@@ -33,7 +33,7 @@ DIF_NAMESPACE
 bool GameEntity::read(std::istream &stream, Version &version) {
 	READCHECK(datablock, std::string); //datablock
 	READCHECK(gameClass, std::string); //gameClass
-	READCHECK(position, Point3F); //position
+	READCHECK(position, glm::vec3); //position
 	READCHECK(properties, Dictionary); //properties
 
 	return true;
@@ -42,7 +42,7 @@ bool GameEntity::read(std::istream &stream, Version &version) {
 bool GameEntity::write(std::ostream &stream, Version version) const {
 	WRITECHECK(datablock, std::string); //datablock
 	WRITECHECK(gameClass, std::string); //gameClass
-	WRITECHECK(position, Point3F); //position
+	WRITECHECK(position, glm::vec3); //position
 	WRITECHECK(properties, Dictionary); //properties
 
 	return true;

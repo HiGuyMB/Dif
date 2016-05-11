@@ -33,10 +33,10 @@ DIF_NAMESPACE
 bool StaticMesh::read(std::istream &stream, Version &version) {
 	READCHECK(primitive, std::vector<Primitive>); //primitive
 	READCHECK(index, std::vector<U16>); //index
-	READCHECK(vertex, std::vector<Point3F>); //vertex
-	READCHECK(normal, std::vector<Point3F>); //normal
-	READCHECK(diffuseUV, std::vector<Point2F>); //diffuseUV
-	READCHECK(lightmapUV, std::vector<Point2F>); //lightmapUV
+	READCHECK(vertex, std::vector<glm::vec3>); //vertex
+	READCHECK(normal, std::vector<glm::vec3>); //normal
+	READCHECK(diffuseUV, std::vector<glm::vec2>); //diffuseUV
+	READCHECK(lightmapUV, std::vector<glm::vec2>); //lightmapUV
 
 	READCHECK(hasMaterialList, U8); //hasMaterialList
 	if (hasMaterialList) {
@@ -47,7 +47,7 @@ bool StaticMesh::read(std::istream &stream, Version &version) {
 	READCHECK(hasTranslucency, U8); //hasTranslucency
 	READCHECK(bounds, BoxF); //bounds
 	READCHECK(transform, MatrixF); //transform
-	READCHECK(scale, Point3F); //scale
+	READCHECK(scale, glm::vec3); //scale
 
 	return true;
 }
@@ -55,10 +55,10 @@ bool StaticMesh::read(std::istream &stream, Version &version) {
 bool StaticMesh::write(std::ostream &stream, Version version) const {
 	WRITECHECK(primitive, std::vector<Primitive>); //primitive
 	WRITECHECK(index, std::vector<U16>); //index
-	WRITECHECK(vertex, std::vector<Point3F>); //vertex
-	WRITECHECK(normal, std::vector<Point3F>); //normal
-	WRITECHECK(diffuseUV, std::vector<Point2F>); //diffuseUV
-	WRITECHECK(lightmapUV, std::vector<Point2F>); //lightmapUV
+	WRITECHECK(vertex, std::vector<glm::vec3>); //vertex
+	WRITECHECK(normal, std::vector<glm::vec3>); //normal
+	WRITECHECK(diffuseUV, std::vector<glm::vec2>); //diffuseUV
+	WRITECHECK(lightmapUV, std::vector<glm::vec2>); //lightmapUV
 
 	WRITECHECK(hasMaterialList, U8); //hasMaterialList
 	if (hasMaterialList) {
@@ -69,7 +69,7 @@ bool StaticMesh::write(std::ostream &stream, Version version) const {
 	WRITECHECK(hasTranslucency, U8); //hasTranslucency
 	WRITECHECK(bounds, BoxF); //bounds
 	WRITECHECK(transform, MatrixF); //transform
-	WRITECHECK(scale, Point3F); //scale
+	WRITECHECK(scale, glm::vec3); //scale
 
 	return true;
 }
@@ -84,8 +84,8 @@ bool StaticMesh::Primitive::read(std::istream &stream, Version &version) {
 	READCHECK(count, U32); //count
 	READCHECK(lightMapEquationX, PlaneF); //lightMapEquationX
 	READCHECK(lightMapEquationY, PlaneF); //lightMapEquationY
-	READCHECK(lightMapOffset, Point2I); //lightMapOffset
-	READCHECK(lightMapSize, Point2I); //lightMapSize
+	READCHECK(lightMapOffset, glm::ivec2); //lightMapOffset
+	READCHECK(lightMapSize, glm::ivec2); //lightMapSize
 
 	return true;
 }
@@ -100,8 +100,8 @@ bool StaticMesh::Primitive::write(std::ostream &stream, Version version) const {
 	WRITECHECK(count, U32); //count
 	WRITECHECK(lightMapEquationX, PlaneF); //lightMapEquationX
 	WRITECHECK(lightMapEquationY, PlaneF); //lightMapEquationY
-	WRITECHECK(lightMapOffset, Point2I); //lightMapOffset
-	WRITECHECK(lightMapSize, Point2I); //lightMapSize
+	WRITECHECK(lightMapOffset, glm::ivec2); //lightMapOffset
+	WRITECHECK(lightMapSize, glm::ivec2); //lightMapSize
 
 	return true;
 }

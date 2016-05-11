@@ -36,10 +36,10 @@ class GameEntity : public Readable, public Writable {
 public:
 	std::string datablock;
 	std::string gameClass;
-	Point3F position;
+	glm::vec3 position;
 	Dictionary properties;
 
-	GameEntity() : datablock(""), gameClass(""), position(Point3F(0.0f, 0.0f, 0.0f)) {}
+	GameEntity() : datablock(""), gameClass(""), position(glm::vec3(0.0f, 0.0f, 0.0f)) {}
 
 	/**
 	 * Reads a GameEntity from a stream

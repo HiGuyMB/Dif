@@ -36,7 +36,7 @@ class InteriorPathFollower : public Readable, public Writable {
 public:
 	class WayPoint : public Readable, public Writable {
 	public:
-		Point3F position;
+		glm::vec3 position;
 		QuatF rotation;
 		U32 msToNext;
 		U32 smoothingType;
@@ -50,7 +50,7 @@ public:
 	std::string name;
 	std::string datablock;
 	U32 interiorResIndex;
-	Point3F offset;
+	glm::vec3 offset;
 	Dictionary properties;
 
 	std::vector<U32> triggerId;

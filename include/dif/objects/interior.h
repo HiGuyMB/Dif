@@ -316,9 +316,9 @@ public:
 	U8 hasAlarmState;
 	U32 numLightStateEntries;
 
-	std::vector<Point3F> normal;
+	std::vector<glm::vec3> normal;
 	std::vector<Plane> plane;
-	std::vector<Point3F> point;
+	std::vector<glm::vec3> point;
 	std::vector<U8> pointVisibility;
 	std::vector<TexGenEq> texGenEq;
 	std::vector<BSPNode> bspNode;
@@ -335,7 +335,7 @@ public:
 	std::vector<Portal> portal;
 	std::vector<Surface> surface;
 	std::vector<Edge2> edge2;
-	std::vector<Point3F> normal2;
+	std::vector<glm::vec3> normal2;
 	std::vector<U16> normalIndex;
 	std::vector<U8> normalLMapIndex;
 	std::vector<U8> alarmLMapIndex;
@@ -371,7 +371,7 @@ public:
 	ColorI alarmAmbientColor;
 
 	std::vector<StaticMesh> staticMesh;
-	std::vector<Point3F> texNormal;
+	std::vector<glm::vec3> texNormal;
 	std::vector<TexMatrix> texMatrix;
 	std::vector<U32> texMatIndex;
 

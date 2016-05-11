@@ -38,7 +38,7 @@ bool Trigger::read(std::istream &stream, Version &version) {
 	if (version.dif.type == DIF::Version::DIFVersion::Type::MBG)
 		READCHECK(properties, Dictionary); //properties
 	READCHECK(polyhedron, PolyHedron); //polyhedron
-	READCHECK(offset, Point3F); //offset
+	READCHECK(offset, glm::vec3); //offset
 
 	return true;
 }
@@ -49,13 +49,13 @@ bool Trigger::write(std::ostream &stream, Version version) const {
 	if (version.dif.type == DIF::Version::DIFVersion::Type::MBG)
 		WRITECHECK(properties, Dictionary); //properties
 	WRITECHECK(polyhedron, PolyHedron); //polyhedron
-	WRITECHECK(offset, Point3F); //offset
+	WRITECHECK(offset, glm::vec3); //offset
 
 	return true;
 }
 
 bool Trigger::PolyHedron::read(std::istream &stream, Version &version) {
-	READCHECK(pointList, std::vector<Point3F>); //point
+	READCHECK(pointList, std::vector<glm::vec3>); //point
 	READCHECK(planeList, std::vector<PlaneF>); //plane
 	READCHECK(edgeList, std::vector<PolyHedronEdge>); //polyHedronEdge
 
@@ -63,7 +63,7 @@ bool Trigger::PolyHedron::read(std::istream &stream, Version &version) {
 }
 
 bool Trigger::PolyHedron::write(std::ostream &stream, Version version) const {
-	WRITECHECK(pointList, std::vector<Point3F>); //polyHedronPoint
+	WRITECHECK(pointList, std::vector<glm::vec3>); //polyHedronPoint
 	WRITECHECK(planeList, std::vector<PlaneF>); //polyHedronPlane
 	WRITECHECK(edgeList, std::vector<PolyHedronEdge>); //numPolyHedronEdges
 
@@ -90,9 +90,9 @@ bool Trigger::PolyHedronEdge::write(std::ostream &stream, Version version) const
 
 std::string Trigger::getPolyhedron() const {
 	// First point is corner, need to find the three vectors...
-	Point3F origin = polyhedron.pointList[0];
+	glm::vec3 origin = polyhedron.pointList[0];
 	U32 currVec = 0;
-	Point3F vecs[3];
+	glm::vec3 vecs[3];
 	for (U32 i = 0; i < polyhedron.edgeList.size(); i++) {
 		const U32 *vertex = polyhedron.edgeList[i].vertex;
 		if (vertex[0] == 0)

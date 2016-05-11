@@ -65,8 +65,6 @@ set (DIF_SRC
 	# Base
 	include/dif/base/color.h
 	include/dif/base/io.h
-	include/dif/base/point2.h
-	include/dif/base/point3.h
 	include/dif/base/types.h
 
 	# Objects
@@ -84,6 +82,7 @@ set (DIF_SRC
 # Create the library
 add_library(Dif STATIC ${DIF_SRC})
 include_directories(include)
+include_directories(3rdparty/glm)
 
 # create CAPI DLL
 set (C_API_SRC
