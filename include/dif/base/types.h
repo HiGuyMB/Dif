@@ -242,16 +242,6 @@ public:
 	virtual bool write(std::ostream &stream, Version version) const;
 };
 
-class MatrixF : public Readable, public Writable {
-public:
-	F32 m[16];
-
-	MatrixF() {}
-
-	virtual bool read(std::istream &stream, Version &version);
-	virtual bool write(std::ostream &stream, Version version) const;
-};
-
 DIF_NAMESPACE_END
 
 #endif

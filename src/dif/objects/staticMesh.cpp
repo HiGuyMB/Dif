@@ -46,7 +46,7 @@ bool StaticMesh::read(std::istream &stream, Version &version) {
 	READCHECK(hasSolid, U8); //hasSolid
 	READCHECK(hasTranslucency, U8); //hasTranslucency
 	READCHECK(bounds, BoxF); //bounds
-	READCHECK(transform, MatrixF); //transform
+	READCHECK(transform, glm::mat4); //transform
 	READCHECK(scale, glm::vec3); //scale
 
 	return true;
@@ -68,7 +68,7 @@ bool StaticMesh::write(std::ostream &stream, Version version) const {
 	WRITECHECK(hasSolid, U8); //hasSolid
 	WRITECHECK(hasTranslucency, U8); //hasTranslucency
 	WRITECHECK(bounds, BoxF); //bounds
-	WRITECHECK(transform, MatrixF); //transform
+	WRITECHECK(transform, glm::mat4); //transform
 	WRITECHECK(scale, glm::vec3); //scale
 
 	return true;

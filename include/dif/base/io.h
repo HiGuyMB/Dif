@@ -542,6 +542,27 @@ inline bool IO::read<glm::quat>(std::istream &stream, Version &version, glm::qua
 		IO::read(stream, version, value.z, "z");
 }
 
+template<>
+inline bool IO::read<glm::mat4>(std::istream &stream, Version &version, glm::mat4 &value, const std::string &name) {
+	return
+		IO::read(stream, version, value[0][0], name + "[0][0]") &&
+		IO::read(stream, version, value[1][0], name + "[1][0]") &&
+		IO::read(stream, version, value[2][0], name + "[2][0]") &&
+		IO::read(stream, version, value[3][0], name + "[3][0]") &&
+		IO::read(stream, version, value[0][1], name + "[0][1]") &&
+		IO::read(stream, version, value[1][1], name + "[1][1]") &&
+		IO::read(stream, version, value[2][1], name + "[2][1]") &&
+		IO::read(stream, version, value[3][1], name + "[3][1]") &&
+		IO::read(stream, version, value[0][2], name + "[0][2]") &&
+		IO::read(stream, version, value[1][2], name + "[1][2]") &&
+		IO::read(stream, version, value[2][2], name + "[2][2]") &&
+		IO::read(stream, version, value[3][2], name + "[3][2]") &&
+		IO::read(stream, version, value[0][3], name + "[0][3]") &&
+		IO::read(stream, version, value[1][3], name + "[1][3]") &&
+		IO::read(stream, version, value[2][3], name + "[2][3]") &&
+		IO::read(stream, version, value[3][3], name + "[3][3]");
+}
+
 template <>
 inline bool IO::write<glm::ivec2>(std::ostream &stream, Version version, const glm::ivec2 &value, const std::string &name) {
 	return
@@ -580,6 +601,27 @@ inline bool IO::write<glm::quat>(std::ostream &stream, Version version, const gl
 		IO::write(stream, version, value.x, "x") &&
 		IO::write(stream, version, value.y, "y") &&
 		IO::write(stream, version, value.z, "z");
+}
+
+template<>
+inline bool IO::write<glm::mat4>(std::ostream &stream, Version version, const glm::mat4 &value, const std::string &name) {
+	return
+		IO::write(stream, version, value[0][0], name + "[0][0]") &&
+		IO::write(stream, version, value[1][0], name + "[1][0]") &&
+		IO::write(stream, version, value[2][0], name + "[2][0]") &&
+		IO::write(stream, version, value[3][0], name + "[3][0]") &&
+		IO::write(stream, version, value[0][1], name + "[0][1]") &&
+		IO::write(stream, version, value[1][1], name + "[1][1]") &&
+		IO::write(stream, version, value[2][1], name + "[2][1]") &&
+		IO::write(stream, version, value[3][1], name + "[3][1]") &&
+		IO::write(stream, version, value[0][2], name + "[0][2]") &&
+		IO::write(stream, version, value[1][2], name + "[1][2]") &&
+		IO::write(stream, version, value[2][2], name + "[2][2]") &&
+		IO::write(stream, version, value[3][2], name + "[3][2]") &&
+		IO::write(stream, version, value[0][3], name + "[0][3]") &&
+		IO::write(stream, version, value[1][3], name + "[1][3]") &&
+		IO::write(stream, version, value[2][3], name + "[2][3]") &&
+		IO::write(stream, version, value[3][3], name + "[3][3]");
 }
 
 

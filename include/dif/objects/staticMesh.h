@@ -86,7 +86,7 @@ public:
 	U8 hasSolid;
 	U8 hasTranslucency;
 	BoxF bounds;
-	MatrixF transform;
+	glm::mat4 transform;
 	glm::vec3 scale;
 
 	StaticMesh() : hasMaterialList(0), numDiffuseBitmaps(0), hasSolid(0), hasTranslucency(0) {};
