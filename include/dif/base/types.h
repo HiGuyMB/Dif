@@ -234,17 +234,12 @@ public:
 
 class PNG : public Readable, public Writable {
 public:
-	U32 size;
-	U8 *data;
+	std::vector<U8> data;
 
-	PNG() : size(0), data(nullptr) {}
+	PNG() {}
 
 	virtual bool read(std::istream &stream, Version &version);
 	virtual bool write(std::ostream &stream, Version version) const;
-
-	~PNG() {
-//		delete [] data;
-	}
 };
 
 class MatrixF : public Readable, public Writable {

@@ -77,15 +77,16 @@ bool MatrixF::read(std::istream &stream, Version &version) {
 
 bool PNG::read(std::istream &stream, Version &version) {
 	U8 PNGFooter[8] = {0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82};
-	data = new U8[LIGHT_MAP_SIZE];
 
 	//I can't parse these, so I just read em all
-	for (size = 0; ;size ++) {
-		IO::read(stream, version, (data[size]), "data");
+	for (U32 size = 0; ;size ++) {
+		U8 dat;
+		IO::read(stream, version, dat, "data");
+		data.push_back(dat);
+
 		if (size > 8 && memcmp(&data[size - 7], PNGFooter, 8) == 0)
 			break;
 	}
-	size ++;
 
 	return true;
 }
@@ -140,12 +141,7 @@ bool MatrixF::write(std::ostream &stream, Version version) const {
 
 bool PNG::write(std::ostream &stream, Version version) const {
 	//Basically dump out everything. Yeah.
-
-	for (U32 i = 0; i < size; i ++) {
-		if (!IO::write(stream, version, data[i], "data"))
-			return false;
-	}
-	return true;
+	return IO::write(stream, version, data, "data");
 }
 
 DIF_NAMESPACE_END
