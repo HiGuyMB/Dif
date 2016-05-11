@@ -109,7 +109,7 @@ endif()
 ###############################################################################
 
 add_executable(DifTests tests/main.cpp)
-target_link_libraries(DifTests ${CMAKE_BINARY_DIR}/Debug/libDif.a)
+target_link_libraries(DifTests Dif)
 
 # Make it go to where we want. Default is the plugins directory but you can change
 # this if you're not building as a submodule.
