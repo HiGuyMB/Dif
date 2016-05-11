@@ -28,15 +28,13 @@
 
 #include <fstream>
 #include <dif/objects/dif.h>
-#include <dif/base/point3.h>
-#include <dif/base/point2.h>
 #include "difAPI.h"
 
 //-----------------------------------------------------------------------------
 // DIF parser
 //-----------------------------------------------------------------------------
 
-float planeF_distance_to_point(const DIF::PlaneF &plane, const DIF::Point3F &point) {
+float planeF_distance_to_point(const DIF::PlaneF &plane, const glm::vec3 &point) {
 	return (plane.x * point.x + plane.y * point.y + plane.z * point.z) + plane.d;
 }
 
@@ -51,13 +49,13 @@ static void parseDif(Dif *thisptr, DIF::DIF &dif) {
 	// Create an instance in the map for each material
 	for (size_t i = 0; i < interior.surface.size(); i++) {
 		const DIF::Interior::Surface &surface = interior.surface[i];
-		DIF::Point3F normal = interior.normal[interior.plane[surface.planeIndex].normalIndex];
+		glm::vec3 normal = interior.normal[interior.plane[surface.planeIndex].normalIndex];
 		if (surface.planeFlipped)
 			normal *= -1.0f;
 
 		//New and improved rendering with actual Triangle Strips this time
 		for (size_t j = surface.windingStart + 2; j < surface.windingStart + surface.windingCount; j++) {
-			DIF::Point3F v0, v1, v2;
+			glm::vec3 v0, v1, v2;
 
 			if ((j - (surface.windingStart + 2)) % 2 == 0) {
 				v0 = interior.point[interior.index[j - 2]];
@@ -72,22 +70,22 @@ static void parseDif(Dif *thisptr, DIF::DIF &dif) {
 
 			DIF::Interior::TexGenEq texGenEq = interior.texGenEq[surface.texGenIndex];
 
-			DIF::Point2F uv0 = DIF::Point2F(planeF_distance_to_point(texGenEq.planeX, v0), planeF_distance_to_point(texGenEq.planeY, v0));
-			DIF::Point2F uv1 = DIF::Point2F(planeF_distance_to_point(texGenEq.planeX, v1), planeF_distance_to_point(texGenEq.planeY, v1));
-			DIF::Point2F uv2 = DIF::Point2F(planeF_distance_to_point(texGenEq.planeX, v2), planeF_distance_to_point(texGenEq.planeY, v2));
+			glm::vec2 uv0 = glm::vec2(planeF_distance_to_point(texGenEq.planeX, v0), planeF_distance_to_point(texGenEq.planeY, v0));
+			glm::vec2 uv1 = glm::vec2(planeF_distance_to_point(texGenEq.planeX, v1), planeF_distance_to_point(texGenEq.planeY, v1));
+			glm::vec2 uv2 = glm::vec2(planeF_distance_to_point(texGenEq.planeX, v2), planeF_distance_to_point(texGenEq.planeY, v2));
 
-			DIF::Point3F deltaPos1 = v1 - v0;
-			DIF::Point3F deltaPos2 = v2 - v0;
-			DIF::Point2F deltaUV1 = uv1 - uv0;
-			DIF::Point2F deltaUV2 = uv2 - uv0;
+			glm::vec3 deltaPos1 = v1 - v0;
+			glm::vec3 deltaPos2 = v2 - v0;
+			glm::vec2 deltaUV1 = uv1 - uv0;
+			glm::vec2 deltaUV2 = uv2 - uv0;
 
 			float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
 
-			DIF::Point3F tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y) * r;
+			glm::vec3 tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y) * r;
 			//glm::vec3 bitangent = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x) * r;
 
-			tangent = tangent - (normal * normal.dot(tangent));
-			tangent = tangent.normalize();
+			tangent = tangent - (normal * glm::dot(normal, tangent));
+			tangent = glm::normalize(tangent);
 			//if (glm::dot(glm::cross(normal, tangent), bitangent) < 0.0f) {
 				//tangent *= -1.0f;
 			//}
