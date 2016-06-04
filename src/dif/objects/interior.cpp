@@ -35,7 +35,9 @@ DIF_NAMESPACE
 
 bool Interior::read(std::istream &stream, Version &version) {
 	//Assume TGEA
-	version.interior.type = DIF::Version::InteriorVersion::Type::TGEA;
+	if (version.interior.type == Version::InteriorVersion::Type::Unknown) {
+		version.interior.type = Version::InteriorVersion::Type::TGEA;
+	}
 
 	READCHECK(version.interior.version, U32); //interiorFileVersion
 	READCHECK(detailLevel, U32); //detailLevel
@@ -80,10 +82,21 @@ bool Interior::read(std::istream &stream, Version &version) {
 	//Save the file position as we'll need to rewind if any reads fail
 	std::istream::pos_type pos = stream.tellg();
 
-	if (!IO::read_with<Surface>(stream, version, surface, [&](Surface &surface, std::istream &stream, Version &version)->bool{
+	if (IO::read_with<Surface>(stream, version, surface, [&](Surface &surface, std::istream &stream, Version &version)->bool{
 		return surface.read(stream, version, static_cast<U32>(index.size()), static_cast<U32>(plane.size()), static_cast<U32>(materialName.size()), static_cast<U32>(texGenEq.size()));
 	}, "surface")) { //surface
-		version.interior.type = DIF::Version::InteriorVersion::Type::MBG;
+		//Read sucessfully as a T3D/TGEA dif
+		if (version.dif.type == Version::DIFVersion::Type::Unknown) {
+			version.dif.type = Version::DIFVersion::Type::TGE;
+		}
+	} else {
+		//Not a TGE/TGEA dif, probably MBG. Not really sure if we can detect the
+		// difference here, needs more error checking.
+		if (version.dif.type == Version::DIFVersion::Type::Unknown) {
+			//TODO: Assume TGE until we can determine that it must be MBG
+			version.dif.type = Version::DIFVersion::Type::MBG;
+			version.interior.type = Version::InteriorVersion::Type::MBG;
+		}
 
 		if (version.interior.version != 0) {
 			//Oh fuck oh fuck, TGE interiors only have version 0
@@ -143,8 +156,8 @@ bool Interior::read(std::istream &stream, Version &version) {
 	READCHECK(nullSurface, std::vector<NullSurface>); //nullSurface
 	if (version.interior.version != 4) { //Also found in 0, 2, 3, 14
 		READCHECK(lightMap, std::vector<LightMap>); //lightMap
-		if (lightMap.size() > 0 && version.interior.type == DIF::Version::InteriorVersion::Type::MBG)
-			version.interior.type = DIF::Version::InteriorVersion::Type::TGE;
+		if (lightMap.size() > 0 && version.interior.type == Version::InteriorVersion::Type::MBG)
+			version.interior.type = Version::InteriorVersion::Type::TGE;
 	}
 	if (!IO::read_as<U32, U16>(stream, version, solidLeafSurface, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "solidLeafSurface")) return false; //solidLeafSurface
 	READCHECK(animatedLight, std::vector<AnimatedLight>); //animatedLight
@@ -265,7 +278,7 @@ bool Interior::write(std::ostream &stream, Version version) const {
 	WRITECHECK(normalLMapIndex, std::vector<U8>); //normalLMapIndex
 	WRITECHECK(alarmLMapIndex, std::vector<U8>); //alarmLMapIndex
 	WRITECHECK(nullSurface, std::vector<NullSurface>); //nullSurface
-	if (version.interior.type == DIF::Version::InteriorVersion::Type::MBG) {
+	if (version.interior.type == Version::InteriorVersion::Type::MBG) {
 		WRITECHECK(0, U32); //lightMap
 	} else {
 		WRITECHECK(lightMap, std::vector<LightMap>); //lightMap
@@ -299,7 +312,7 @@ bool Interior::write(std::ostream &stream, Version version) const {
 	/*
 	 Static meshes (not included)
 	 */
-	if (version.interior.type == DIF::Version::InteriorVersion::Type::MBG) {
+	if (version.interior.type == Version::InteriorVersion::Type::MBG) {
 		WRITECHECK(0, U32); //texNormal
 		WRITECHECK(0, U32); //texMatrix
 		WRITECHECK(0, U32); //texMatIndex

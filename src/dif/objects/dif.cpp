@@ -61,7 +61,9 @@ bool DIF::read(std::istream &stream, Version &version) {
 	// exploding when it magically disappears from some DIF files
 //	READ(U32); //dummy
 
-	version.dif.type = (version.interior.type == Version::InteriorVersion::Type::MBG ? Version::DIFVersion::Type::MBG : Version::DIFVersion::Type::TGE);
+	if (version.dif.type == Version::DIFVersion::Type::Unknown) {
+		version.dif.type = (version.interior.type == Version::InteriorVersion::Type::MBG ? Version::DIFVersion::Type::MBG : Version::DIFVersion::Type::TGE);
+	}
 
 	return true;
 }
