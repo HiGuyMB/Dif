@@ -536,10 +536,10 @@ inline bool IO::read<glm::cvec4>(std::istream &stream, Version &version, glm::cv
 template <>
 inline bool IO::read<glm::quat>(std::istream &stream, Version &version, glm::quat &value, const std::string &name) {
 	return
-		IO::read(stream, version, value.w, "w") &&
-		IO::read(stream, version, value.x, "x") &&
-		IO::read(stream, version, value.y, "y") &&
-		IO::read(stream, version, value.z, "z");
+		IO::read(stream, version, value.w, name + "w") &&
+		IO::read(stream, version, value.x, name + "x") &&
+		IO::read(stream, version, value.y, name + "y") &&
+		IO::read(stream, version, value.z, name + "z");
 }
 
 template<>

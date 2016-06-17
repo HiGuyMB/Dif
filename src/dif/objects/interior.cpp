@@ -60,17 +60,17 @@ bool Interior::read(std::istream &stream, Version &version) {
 	//MaterialList
 	READCHECK(version.material.version, U8); //version
 	READCHECK(materialName, std::vector<std::string>); //materialName
-	if (!IO::read_as<U32, U16>(stream, version, index, [](bool useAlternate, U32 param)->bool{return param ? true : false;}, "index")) return false; //index
+	if (!IO::read_as<U32, U16>(stream, version, index, [](bool, U32 param)->bool{return param ? true : false;}, "index")) return false; //index
 	READCHECK(windingIndex, std::vector<WindingIndex>); //windingIndex
 	if (version.interior.version >= 12) {
 		READCHECK(edge, std::vector<Edge>); //edge
 	}
 	READCHECK(zone, std::vector<Zone>);//zone
-	if (!IO::read_as<U16, U16>(stream, version, zoneSurface, [](bool useAlternate, U32 param)->bool{return false;}, "zoneSurface")) return false; //zoneSurface
+	if (!IO::read_as<U16, U16>(stream, version, zoneSurface, [](bool, U32)->bool{return false;}, "zoneSurface")) return false; //zoneSurface
 	if (version.interior.version >= 12) {
 		READCHECK(zoneStaticMesh, std::vector<U32>); //zoneStaticMesh
 	}
-	if (!IO::read_as<U16, U16>(stream, version, zonePortalList, [](bool useAlternate, U32 param)->bool{return false;}, "zonePortalList")) return false; //zonePortalList
+	if (!IO::read_as<U16, U16>(stream, version, zonePortalList, [](bool, U32)->bool{return false;}, "zonePortalList")) return false; //zonePortalList
 	READCHECK(portal, std::vector<Portal>); //portal
 
 	//Ok so Torque needs to fuck themselves in the ass, multiple times.
@@ -159,7 +159,7 @@ bool Interior::read(std::istream &stream, Version &version) {
 		if (lightMap.size() > 0 && version.interior.type == Version::InteriorVersion::Type::MBG)
 			version.interior.type = Version::InteriorVersion::Type::TGE;
 	}
-	if (!IO::read_as<U32, U16>(stream, version, solidLeafSurface, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "solidLeafSurface")) return false; //solidLeafSurface
+	if (!IO::read_as<U32, U16>(stream, version, solidLeafSurface, [](bool useAlternate, U32)->bool{return useAlternate;}, "solidLeafSurface")) return false; //solidLeafSurface
 	READCHECK(animatedLight, std::vector<AnimatedLight>); //animatedLight
 	READCHECK(lightState, std::vector<LightState>); //lightState
 	if (version.interior.version == 4) { //Yet more things found in 0, 2, 3, 14
@@ -196,12 +196,12 @@ bool Interior::read(std::istream &stream, Version &version) {
 	// fuck, GarageGames?
 	//-------------------------------------------------------------------------
 
-	if (!IO::read_as<U32, U16>(stream, version, hullIndex, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "hullIndex")) return false; //hullIndex
-	if (!IO::read_as<U16, U16>(stream, version, hullPlaneIndex, [](bool useAlternate, U32 param)->bool{return true;}, "hullPlaneIndex")) return false; //hullPlaneIndex
-	if (!IO::read_as<U32, U16>(stream, version, hullEmitStringIndex, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "hullEmitStringIndex")) return false; //hullEmitStringIndex
-	if (!IO::read_as<U32, U16>(stream, version, hullSurfaceIndex, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "hullSurfaceIndex")) return false; //hullSurfaceIndex
-	if (!IO::read_as<U16, U16>(stream, version, polyListPlaneIndex, [](bool useAlternate, U32 param)->bool{return true;}, "polyListPlaneIndex")) return false; //polyListPlaneIndex
-	if (!IO::read_as<U32, U16>(stream, version, polyListPointIndex, [](bool useAlternate, U32 param)->bool{return useAlternate;}, "polyListPointIndex")) return false; //polyListPointIndex
+	if (!IO::read_as<U32, U16>(stream, version, hullIndex, [](bool useAlternate, U32)->bool{return useAlternate;}, "hullIndex")) return false; //hullIndex
+	if (!IO::read_as<U16, U16>(stream, version, hullPlaneIndex, [](bool, U32)->bool{return true;}, "hullPlaneIndex")) return false; //hullPlaneIndex
+	if (!IO::read_as<U32, U16>(stream, version, hullEmitStringIndex, [](bool useAlternate, U32)->bool{return useAlternate;}, "hullEmitStringIndex")) return false; //hullEmitStringIndex
+	if (!IO::read_as<U32, U16>(stream, version, hullSurfaceIndex, [](bool useAlternate, U32)->bool{return useAlternate;}, "hullSurfaceIndex")) return false; //hullSurfaceIndex
+	if (!IO::read_as<U16, U16>(stream, version, polyListPlaneIndex, [](bool, U32)->bool{return true;}, "polyListPlaneIndex")) return false; //polyListPlaneIndex
+	if (!IO::read_as<U32, U16>(stream, version, polyListPointIndex, [](bool useAlternate, U32)->bool{return useAlternate;}, "polyListPointIndex")) return false; //polyListPointIndex
 	//Not sure if this should be a read_as, but I haven't seen any evidence
 	// of needing that for U8 lists.
 	READCHECK(polyListStringCharacter, std::vector<U8>); //polyListStringCharacter
@@ -215,7 +215,7 @@ bool Interior::read(std::istream &stream, Version &version) {
 			return false;
 	}
 
-	if (!IO::read_as<U16, U16>(stream, version, coordBinIndex, [](bool useAlternate, U32 param)->bool{return true;}, "coordBinIndex")) return false; //coordBinIndex
+	if (!IO::read_as<U16, U16>(stream, version, coordBinIndex, [](bool, U32)->bool{return true;}, "coordBinIndex")) return false; //coordBinIndex
 	READCHECK(coordBinMode, U32); //coordBinMode
 	if (version.interior.version == 4) { //All of this is missing in v4 as well. Saves no space.
 		baseAmbientColor = glm::cvec4(0, 0, 0, 255);

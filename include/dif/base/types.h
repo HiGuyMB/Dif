@@ -192,25 +192,25 @@ public:
 	inline BoxF operator*(const F32 &scale) {
 		BoxF newBox;
 		glm::vec3 center = getCenter();
-		newBox.minX = center.x - ((center.x - minX) / 2);
-		newBox.minY = center.y - ((center.y - minY) / 2);
-		newBox.minZ = center.z - ((center.z - minZ) / 2);
+		newBox.minX = center.x - ((center.x - minX) / scale);
+		newBox.minY = center.y - ((center.y - minY) / scale);
+		newBox.minZ = center.z - ((center.z - minZ) / scale);
 
-		newBox.maxX = center.x + ((maxX - center.x) / 2);
-		newBox.maxY = center.y + ((maxY - center.y) / 2);
-		newBox.maxZ = center.z + ((maxZ - center.z) / 2);
+		newBox.maxX = center.x + ((maxX - center.x) / scale);
+		newBox.maxY = center.y + ((maxY - center.y) / scale);
+		newBox.maxZ = center.z + ((maxZ - center.z) / scale);
 
 		return newBox;
 	}
 	inline BoxF operator*=(const F32 &scale) {
 		glm::vec3 center = getCenter();
-		minX = center.x - ((center.x - minX) / 2);
-		minY = center.y - ((center.y - minY) / 2);
-		minZ = center.z - ((center.z - minZ) / 2);
+		minX = center.x - ((center.x - minX) / scale);
+		minY = center.y - ((center.y - minY) / scale);
+		minZ = center.z - ((center.z - minZ) / scale);
 
-		maxX = center.x + ((maxX - center.x) / 2);
-		maxY = center.y + ((maxY - center.y) / 2);
-		maxZ = center.z + ((maxZ - center.z) / 2);
+		maxX = center.x + ((maxX - center.x) / scale);
+		maxY = center.y + ((maxY - center.y) / scale);
+		maxZ = center.z + ((maxZ - center.z) / scale);
 
 		return *this;
 	}

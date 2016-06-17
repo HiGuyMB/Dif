@@ -493,7 +493,7 @@ int main(int argc, const char * argv[]) {
 		return EXIT_FAILURE;
 	}
 	if (argc > 2 && strcmp(argv[1], "--textures") == 0) {
-		for (DIF::U32 i = 2; i < argc; i ++) {
+		for (int i = 2; i < argc; i ++) {
 			DIF::DIF dif;
 			DIF::Version inVersion;
 			if (readDif(argv[i], dif, inVersion)) {
@@ -503,7 +503,7 @@ int main(int argc, const char * argv[]) {
 		return EXIT_SUCCESS;
 	}
 
-	for (DIF::U32 i = 1; i < argc; i ++) {
+	for (int i = 1; i < argc; i ++) {
 		//Read it into the dif
 		DIF::DIF dif;
 		DIF::Version inVersion;
