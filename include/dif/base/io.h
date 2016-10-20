@@ -60,13 +60,13 @@ public:
 	static inline void debug_print(std::istream &stream, T &value, const std::string &name) {
 		std::istream::pos_type pos = stream.tellg();
 		//Basic information about the data's name / offset
-		printf("Read %s at offset %lu (0x%lX)\n", name.c_str(), size_t(pos) - sizeof(T), size_t(pos) - sizeof(T));
+		printf("Read %s at offset %lu (0x%lX)\n", name.c_str(), size_t(pos), size_t(pos));
 	}
 	template <typename T>
 	static inline void debug_print(std::ostream &stream, const T &value, const std::string &name) {
 		std::istream::pos_type pos = stream.tellp();
 		//Basic information about the data's name / offset
-		printf("Write %s at offset %lu (0x%lX)\n", name.c_str(), size_t(pos) - sizeof(T), size_t(pos) - sizeof(T));
+		printf("Write %s at offset %lu (0x%lX)\n", name.c_str(), size_t(pos), size_t(pos));
 	}
 	template <typename T>
 	static inline void debug_print_value(std::istream &stream, T &value, const std::string &name) {
@@ -78,7 +78,7 @@ public:
 	static inline void debug_print_value(std::ostream &stream, const T &value, const std::string &name) {
 		std::istream::pos_type pos = stream.tellp();
 		//Basic information about the data's name / offset
-		printf("Write %s at offset %lu (0x%lX): 0x%X / %u\n", name.c_str(), size_t(pos) - sizeof(T), size_t(pos) - sizeof(T), value, value);
+		printf("Write %s at offset %lu (0x%lX): 0x%X / %u\n", name.c_str(), size_t(pos), size_t(pos), value, value);
 	}
 	static inline void debug_print_value(std::istream &stream, F32 &value, const std::string &name) {
 		std::istream::pos_type pos = stream.tellg();
@@ -88,7 +88,7 @@ public:
 	static inline void debug_print_value(std::ostream &stream, const F32 &value, const std::string &name) {
 		std::istream::pos_type pos = stream.tellp();
 		//Basic information about the data's name / offset
-		printf("Write %s at offset %lu (0x%lX): 0x%08X / %f\n", name.c_str(), size_t(pos) - sizeof(F32), size_t(pos) - sizeof(F32), value, value);
+		printf("Write %s at offset %lu (0x%lX): 0x%08X / %f\n", name.c_str(), size_t(pos), size_t(pos), value, value);
 	}
 
 	//Print out information about the data being read / written to streams.
