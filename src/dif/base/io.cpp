@@ -61,7 +61,7 @@ bool PNG::read(std::istream &stream, Version &version) {
 	//I can't parse these, so I just read em all
 	for (U32 size = 0; ;size ++) {
 		U8 dat;
-		IO::read(stream, version, dat, "data");
+		READCHECK(dat, U8);
 		data.push_back(dat);
 
 		if (size > 8 && memcmp(&data[size - 7], PNGFooter, 8) == 0)

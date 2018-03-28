@@ -59,6 +59,10 @@ bool Trigger::PolyHedron::read(std::istream &stream, Version &version) {
 	READCHECK(planeList, std::vector<PlaneF>); //plane
 	READCHECK(edgeList, std::vector<PolyHedronEdge>); //polyHedronEdge
 
+	if (edgeList.size() != 3) {
+		return false;
+	}
+
 	return true;
 }
 

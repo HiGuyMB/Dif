@@ -40,6 +40,11 @@ bool Interior::read(std::istream &stream, Version &version) {
 	}
 
 	READCHECK(version.interior.version, U32); //interiorFileVersion
+	if (version.interior.version > 14) {
+		//Cannot support these
+		return false;
+	}
+
 	READCHECK(detailLevel, U32); //detailLevel
 	READCHECK(minPixels, U32); //minPixels
 	READCHECK(boundingBox, BoxF); //boundingBox
@@ -177,7 +182,9 @@ bool Interior::read(std::istream &stream, Version &version) {
 		READCHECK(nameBufferCharacter, std::vector<U8>); //nameBufferCharacter
 
 		READCHECK(numSubObjects, U32); //numSubObjects
-		assert(numSubObjects == 0); //Can't support these currently
+		if (numSubObjects != 0) { //Can't support these currently
+			return false;
+		}
 //		READLOOP(numSubObjects) {
 //			//NFC
 //		}
@@ -234,14 +241,19 @@ bool Interior::read(std::istream &stream, Version &version) {
 			READCHECK(texMatrix, std::vector<TexMatrix>); //texMatrix
 			READCHECK(texMatIndex, std::vector<U32>); //texMatIndex
 		} else {
-			READ(U32); //numTexNormals
-			READ(U32); //numTexMatrices
-			READ(U32); //numTexMatIndices
+			U32 numTexNormals;
+			U32 numTexMatrices;
+			U32 numTexMatIndices;
+
+			READCHECK(numTexNormals, U32); //numTexNormals
+			READCHECK(numTexMatrices, U32); //numTexMatrices
+			READCHECK(numTexMatIndices, U32); //numTexMatIndices
 		}
 		READCHECK(extendedLightMapData, U32); //extendedLightMapData
 		if (extendedLightMapData) {
 			READCHECK(lightMapBorderSize, U32); //lightMapBorderSize
-			READ(U32); //dummy
+			U32 dummy;
+			READCHECK(dummy, U32); //dummy
 		} else {
 			lightMapBorderSize = 0;
 		}
@@ -534,7 +546,8 @@ bool Interior::Surface::read(std::istream &stream, Version &version, U32 indexSi
 	}
 
 	if (!version.interior.isTGE()) {
-		READ(U8); //unused
+		U8 unused;
+		READCHECK(unused, U8); //unused
 		if (version.interior.version >= 2 && version.interior.version <= 5) {
 			READCHECK(brushId, U32); //brushId
 		}

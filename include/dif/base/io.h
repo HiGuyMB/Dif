@@ -627,26 +627,6 @@ inline bool IO::write<glm::mat4>(std::ostream &stream, Version version, const gl
 		IO::write(stream, version, value[3][3], name + "[3][3]");
 }
 
-
-//Hack to get the read() macro to return a value from a function that uses a ref
-template <typename T>
-inline T __read(std::istream &stream, Version &version) {
-	T __garbage;
-#ifdef PRINT_DEBUG_INFO
-	if (!IO::read(stream, version, __garbage, "garbage")) {
-		throw std::runtime_error("__read failed");
-	}
-#else
-	if (!IO::read(stream, version, __garbage, "")) {
-		throw std::runtime_error("__read failed");
-	}
-#endif
-	return __garbage;
-}
-
-//Inline read that returns the value. Throws an exception if read fails
-#define READ(type) __read<type>(stream, version)
-
 //Slightly hacky read function so we don't get weird memory errors when trying to
 // read a U32 into a U8. Also no reinterpret_cast because those are screwy
 template <typename T, typename F>

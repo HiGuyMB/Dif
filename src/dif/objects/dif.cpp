@@ -35,13 +35,19 @@ bool DIF::read(std::istream &stream, Version &version) {
 	// Someone give that guy all the cookies.
 
 	//Must always be 44
-	if ((version.dif.version = READ(U32)) != 44) { //interiorResourceFileVersion
+	U32 difVersion;
+	READCHECK(difVersion, U32); //version
+	if (difVersion != 44) { //interiorResourceFileVersion
 		return false;
 	}
+	version.dif.version = difVersion;
 
 	//We don't export these (as we export MBG spec)
-	if (READ(U8)) { //previewIncluded
-		READ(PNG); //previewBitmap
+	U8 previewIncluded;
+	READCHECK(previewIncluded, U8); //previewIncluded
+	if (previewIncluded) {
+		PNG previewBitmap;
+		READCHECK(previewBitmap, PNG); //previewBitmap
 	}
 
 	READCHECK(interior, std::vector<Interior>); //interior
@@ -50,16 +56,23 @@ bool DIF::read(std::istream &stream, Version &version) {
 	READCHECK(interiorPathFollower, std::vector<InteriorPathFollower>); //interiorPathFollower
 	READCHECK(forceField, std::vector<ForceField>); //forceField
 	READCHECK(aiSpecialNode, std::vector<AISpecialNode>); //aiSpecialNode
-	if (READ(U32) == 1) { //readVehicleCollision
+
+	U32 readVehicleCollision;
+	READCHECK(readVehicleCollision, U32); //readVehicleCollision
+	if (readVehicleCollision) {
 		vehicleCollision.read(stream, version); //vehicleCollision
 	}
-	if (READ(U32) == 2) { //readGameEntities
+
+	U32 readGameEntities;
+	READCHECK(readGameEntities, U32); //readGameEntities
+	if (readGameEntities == 2) {
 		READCHECK(gameEntity, std::vector<GameEntity>); //gameEntity
 	}
 
 	//Makes no difference if we read this, and ignoring it stops the io from
 	// exploding when it magically disappears from some DIF files
-//	READ(U32); //dummy
+//	U32 dummy;
+//	READCHECK(U32, dummy); //dummy
 
 	if (version.dif.type == Version::DIFVersion::Type::Unknown) {
 		version.dif.type = (version.interior.type == Version::InteriorVersion::Type::MBG ? Version::DIFVersion::Type::MBG : Version::DIFVersion::Type::TGE);

@@ -40,7 +40,9 @@ bool StaticMesh::read(std::istream &stream, Version &version) {
 
 	READCHECK(hasMaterialList, U8); //hasMaterialList
 	if (hasMaterialList) {
-		baseMaterialList.read(stream, version); //baseMaterialList
+		if (!baseMaterialList.read(stream, version)) { //baseMaterialList
+			return false;
+		}
 	}
 
 	READCHECK(hasSolid, U8); //hasSolid
@@ -110,14 +112,14 @@ bool StaticMesh::MaterialList::read(std::istream &stream, Version &version) {
 	//It's a disaster
 	assert(0);
 
-	return true;
+	return false;
 }
 
 bool StaticMesh::MaterialList::write(std::ostream &stream, Version version) const {
 	//Not going to bother
 	assert(0);
 
-	return true;
+	return false;
 }
 
 DIF_NAMESPACE_END
