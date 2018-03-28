@@ -134,6 +134,8 @@ struct Version {
 
 struct Readable {
 public:
+	int fileOffset;
+	int fileSize;
 	virtual bool read(std::istream &stream, Version &version) = 0;
 };
 

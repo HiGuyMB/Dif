@@ -30,6 +30,29 @@
 #include <fstream>
 #include <dif/objects/dif.h>
 
+std::string getPolyhedron(const DIF::Trigger &trigger) {
+	// First point is corner, need to find the three vectors...
+	glm::vec3 origin = trigger.polyhedron.pointList[0];
+	DIF::U32 currVec = 0;
+	glm::vec3 vecs[3];
+	for (DIF::U32 i = 0; i < trigger.polyhedron.edgeList.size(); i++) {
+		const DIF::U32 *vertex = trigger.polyhedron.edgeList[i].vertex;
+		if (vertex[0] == 0)
+			vecs[currVec++] = trigger.polyhedron.pointList[vertex[1]] - origin;
+		else
+			if (vertex[1] == 0)
+				vecs[currVec++] = trigger.polyhedron.pointList[vertex[0]] - origin;
+	}
+
+	// Build output string.
+	std::stringstream ss;
+	ss << origin.x << ' ' << origin.y << ' ' << origin.z << ' ' <<
+	vecs[0].x << ' ' << vecs[0].y << ' ' << vecs[0].z << ' ' <<
+	vecs[1].x << ' ' << vecs[1].y << ' ' << vecs[1].z << ' ' <<
+	vecs[2].x << ' ' << vecs[2].y << ' ' << vecs[2].z;
+	return ss.str();
+}
+
 void printTriggers(const DIF::DIF &dif) {
 	for (const DIF::Trigger &trigger : dif.trigger) {
 		std::cout << "new Trigger(" << trigger.name << ") {" << std::endl;
@@ -37,7 +60,7 @@ void printTriggers(const DIF::DIF &dif) {
 		std::cout << "   rotation = \"1 0 0 0\";" << std::endl;
 		std::cout << "   scale = \"1 1 1 \";" << std::endl;
 		std::cout << "   datablock = \"" << trigger.datablock <<  "\";" << std::endl;
-		std::cout << "   polyhedron = \"" << trigger.getPolyhedron() << "\";" << std::endl;
+		std::cout << "   polyhedron = \"" << getPolyhedron(trigger) << "\";" << std::endl;
 		for (const auto &it : trigger.properties) {
 			std::cout << "      " << it.first << " = \"" << it.second << "\";" << std::endl;
 		}
@@ -91,7 +114,7 @@ void exportObj(const DIF::Interior &dif, const char *outFile) {
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> texCoords;
 	std::vector<glm::vec3> normals;
-	std::vector<Face> faces;
+	std::map<DIF::U32, std::vector<Face>> faces;
 
 	vertices.insert(vertices.end(), dif.point.begin(), dif.point.end());
 	normals.insert(normals.end(), dif.normal.begin(), dif.normal.end());
@@ -138,7 +161,7 @@ void exportObj(const DIF::Interior &dif, const char *outFile) {
 			f.texCoordIndex[2] = texCoords.size();
 			texCoords.push_back(coord2);
 
-			faces.push_back(f);
+			faces[surface.textureIndex].push_back(f);
 		}
 	}
 
@@ -161,12 +184,16 @@ void exportObj(const DIF::Interior &dif, const char *outFile) {
 	}
 
 	//Faces
-	for (const Face &face : faces) {
-		out << "f";
-		out << " " << (face.vertIndex[0] + 1) << "/" << (face.texCoordIndex[0] + 1) << "/" << (face.normalIndex + 1);
-		out << " " << (face.vertIndex[1] + 1) << "/" << (face.texCoordIndex[1] + 1) << "/" << (face.normalIndex + 1);
-		out << " " << (face.vertIndex[2] + 1) << "/" << (face.texCoordIndex[2] + 1) << "/" << (face.normalIndex + 1);
-		out << "\n";
+	for (const auto &pair : faces) {
+		out << "g ";
+		out << dif.materialName[pair.first] << "\n";
+		for (const Face &face : pair.second) {
+			out << "f";
+			out << " " << (face.vertIndex[0] + 1) << "/" << (face.texCoordIndex[0] + 1) << "/" << (face.normalIndex + 1);
+			out << " " << (face.vertIndex[1] + 1) << "/" << (face.texCoordIndex[1] + 1) << "/" << (face.normalIndex + 1);
+			out << " " << (face.vertIndex[2] + 1) << "/" << (face.texCoordIndex[2] + 1) << "/" << (face.normalIndex + 1);
+			out << "\n";
+		}
 	}
 
 	out.close();
@@ -345,12 +372,122 @@ void exportJSON(const DIF::Interior &dif, const char *outFile) {
 	out.close();
 }
 
+DIF::PlaneF getPlane(glm::vec3 Point1, glm::vec3 Point2, glm::vec3 Point3) {
+	glm::vec3 normal;
+	DIF::F64 dist;
+
+	normal.x = Point1.y * Point2.z - Point1.y * Point3.z +
+	Point3.y * Point1.z - Point2.y * Point1.z +
+	Point2.y * Point3.z - Point3.y * Point2.z;
+	normal.y = Point1.x * Point2.z - Point1.x * Point3.z +
+	Point3.x * Point1.z - Point2.x * Point1.z +
+	Point2.x * Point3.z - Point3.x * Point2.z;
+	normal.z = Point1.x * Point2.y - Point1.x * Point3.y +
+	Point3.x * Point1.y - Point2.x * Point1.y +
+	Point2.x * Point3.y - Point3.x * Point2.y;
+	dist     = Point1.x * Point2.y * Point3.z - Point1.x * Point2.z * Point3.y +
+	Point1.y * Point2.z * Point3.x - Point1.y * Point2.x * Point3.z +
+	Point1.z * Point2.x * Point3.y - Point1.z * Point2.y * Point3.x;
+
+	normal.x = -normal.x;
+	normal.z = -normal.z;
+
+	return DIF::PlaneF(normal.x, normal.y, normal.z, dist);
+}
+
+void findPolys(DIF::DIF &dif) {
+	DIF::F32 scale = 32.0f;
+	for (DIF::Interior &interior : dif.interior) {
+		std::cout << "//" << std::endl;
+		std::cout << "//" << std::endl;
+		std::cout << "" << std::endl;
+		std::cout << "{" << std::endl;
+		std::cout << "   \"classname\" \"worldspawn\"" << std::endl;
+		std::cout << "   \"detail_number\" \"0\"" << std::endl;
+		std::cout << "   \"min_pixels\" \"250\"" << std::endl;
+		std::cout << "   \"geometry_scale\" \"" << scale << "\"" << std::endl;
+		std::cout << "   \"light_geometry_scale\" \"" << (scale / 4) << "\"" << std::endl;
+		std::cout << "   \"ambient_color\" \"0 0 0\"" << std::endl;
+		std::cout << "   \"emergency_ambient_color\" \"0 0 0\"" << std::endl;
+		std::cout << "   \"mapversion\" \"220\"" << std::endl;
+
+		for (DIF::U32 hullNum = 0; hullNum < interior.convexHull.size(); hullNum ++) {
+			const DIF::Interior::ConvexHull &hull = interior.convexHull[hullNum];
+			std::cout << "" << std::endl;
+			std::cout << "   // Brush " << hullNum << std::endl;
+			std::cout << "   {" << std::endl;
+			//Get hull planes
+
+			//DIF::U32 numVerts = interior.convexHullEmitStringCharacter[hull.polyListStringStart];
+			//DIF::U32 numEdges = interior.convexHullEmitStringCharacter[hull.polyListStringStart + numVerts];
+			//DIF::U32 numFaces = interior.convexHullEmitStringCharacter[hull.polyListStringStart + numVerts + (numEdges * 2)];
+
+			for (DIF::U32 i = hull.surfaceStart; i < hull.surfaceStart + hull.surfaceCount; i ++) {
+				DIF::Interior::Surface surf = interior.surface[interior.hullSurfaceIndex[i]];
+				DIF::Interior::Plane plane = interior.plane[surf.planeIndex];
+				glm::vec3 planeNormal = interior.normal[plane.normalIndex];
+				if (surf.planeFlipped) {
+					planeNormal *= -1.0f;
+					plane.planeDistance *= -1;
+				}
+				std::string texture = interior.materialName[surf.textureIndex];
+				DIF::Interior::TexGenEq texGen = interior.texGenEq[surf.texGenIndex];
+
+				glm::vec3 planeX = glm::vec3(texGen.planeX.x, texGen.planeX.y, texGen.planeX.z);
+				texGen.planeX.d *= scale / glm::length(planeX);
+				planeX = glm::normalize(planeX);
+
+				glm::vec3 planeY = glm::vec3(texGen.planeY.x, texGen.planeY.y, texGen.planeY.z);
+				texGen.planeY.d *= scale / glm::length(planeY);
+				planeY = glm::normalize(planeY);
+
+				//Find 3 verts in the hull that match up to this plane
+				std::vector<glm::vec3> points;
+				for (DIF::U32 j = hull.hullStart; j < hull.hullStart + hull.hullCount; j ++) {
+					glm::vec3 point = interior.point[interior.hullIndex[j]];
+
+					if (glm::dot(point, planeNormal) + plane.planeDistance == 0) {
+						points.push_back(point * scale);
+						if (points.size() == 3)
+							break;
+					}
+				}
+
+				assert(points.size() == 3);
+
+				std::cout << "      ";
+				glm::vec3 nplane = glm::normalize(glm::cross(points[2] - points[1], points[2] - points[0]));
+				if (nplane == -planeNormal) {
+					for (DIF::S32 j = 2; j >= 0; j --) {
+						std::cout << "( " << points[j].x << " " << points[j].y << " " << points[j].z << " ) ";
+					}
+				} else {
+					for (DIF::U32 j = 0; j < 3; j ++) {
+						std::cout << "( " << points[j].x << " " << points[j].y << " " << points[j].z << " ) ";
+					}
+				}
+
+
+				//Then the texture name
+				std::cout << texture << " ";
+
+				//Then the texgen
+				std::cout << "[ " << planeX.x << " " << planeX.y << " " << planeX.z << " " << texGen.planeX.d << " ] "
+				          << "[ " << planeY.x << " " << planeY.y << " " << planeY.z << " " << texGen.planeY.d << " ] ";
+				std::cout << "0 1 1" << std::endl;
+			}
+			std::cout << "   }" << std::endl;
+		}
+		std::cout << "}" << std::endl;
+	}
+}
+
 bool readDif(const char *file, DIF::DIF &dif, DIF::Version &version) {
 	std::ifstream stream(file);
 	if (stream.good()) {
-		dif.read(stream, version);
+		bool success = dif.read(stream, version);
 		stream.close();
-		return true;
+		return success;
 	}
 	return false;
 }
@@ -502,6 +639,16 @@ int main(int argc, const char * argv[]) {
 		}
 		return EXIT_SUCCESS;
 	}
+	if (argc > 2 && strcmp(argv[1], "--polys") == 0) {
+		for (int i = 2; i < argc; i ++) {
+			DIF::DIF dif;
+			DIF::Version inVersion;
+			if (readDif(argv[i], dif, inVersion)) {
+				findPolys(dif);
+			}
+		}
+		return EXIT_SUCCESS;
+	}
 
 	for (int i = 1; i < argc; i ++) {
 		//Read it into the dif
@@ -519,6 +666,8 @@ int main(int argc, const char * argv[]) {
 			for (DIF::U32 i = 0; i < dif.interior.size(); i ++) {
 				const DIF::Interior &interior = dif.interior[i];
 				std::cout << "      Interior " << std::to_string(i) << std::endl;
+				std::cout << "      At offset 0x" << std::hex << std::uppercase << interior.fileOffset << std::dec << std::endl;
+				std::cout << "      Byte size 0x" << std::hex << std::uppercase << interior.fileSize << std::dec << std::endl;
 				std::cout << "      Vertex Count " << std::to_string(interior.point.size()) << std::endl;
 				std::cout << "      Plane Count " << std::to_string(interior.plane.size()) << std::endl;
 				std::cout << "      Surface Count " << std::to_string(interior.surface.size()) << std::endl;
@@ -529,12 +678,48 @@ int main(int argc, const char * argv[]) {
 			for (DIF::U32 i = 0; i < dif.subObject.size(); i ++) {
 				const DIF::Interior &interior = dif.subObject[i];
 				std::cout << "      Interior " << std::to_string(i) << std::endl;
+				std::cout << "      At offset 0x" << std::hex << std::uppercase << interior.fileOffset << std::dec << std::endl;
+				std::cout << "      Byte size 0x" << std::hex << std::uppercase << interior.fileSize << std::dec << std::endl;
 				std::cout << "      Vertex Count " << std::to_string(interior.point.size()) << std::endl;
 				std::cout << "      Plane Count " << std::to_string(interior.plane.size()) << std::endl;
 				std::cout << "      Surface Count " << std::to_string(interior.surface.size()) << std::endl;
 			}
 
-			printTriggers(dif);
+			std::cout << "   Entity Count: " << std::to_string(dif.gameEntity.size()) << std::endl;
+
+			for (DIF::U32 i = 0; i < dif.gameEntity.size(); i ++) {
+				const DIF::GameEntity &entity = dif.gameEntity[i];
+				std::cout << "      Entity " << std::to_string(i) << std::endl;
+				std::cout << "      At offset 0x" << std::hex << std::uppercase << entity.fileOffset << std::dec << std::endl;
+				std::cout << "      Byte size 0x" << std::hex << std::uppercase << entity.fileSize << std::dec << std::endl;
+				std::cout << "      Datablock " << entity.datablock << std::endl;
+				std::cout << "      Class " << entity.gameClass << std::endl;
+				std::cout << "      Position " << entity.position.x << " " << entity.position.y << " " << entity.position.z << std::endl;
+
+				std::cout << "      Property Count: " << std::to_string(entity.properties.size()) << std::endl;
+				for (DIF::U32 j = 0; j < entity.properties.size(); j ++) {
+					std::cout << "         " << entity.properties[j].first << ": " << entity.properties[j].second << std::endl;
+				}
+			}
+
+			std::cout << "   Trigger Count: " << std::to_string(dif.trigger.size()) << std::endl;
+
+			for (DIF::U32 i = 0; i < dif.trigger.size(); i ++) {
+				const DIF::Trigger &trigger = dif.trigger[i];
+				std::cout << "      Trigger " << std::to_string(i) << " / " << trigger.name << std::endl;
+				std::cout << "      At offset 0x" << std::hex << std::uppercase << trigger.fileOffset << std::dec << std::endl;
+				std::cout << "      Byte size 0x" << std::hex << std::uppercase << trigger.fileSize << std::dec << std::endl;
+				std::cout << "      Position " << trigger.offset.x << " " << trigger.offset.y << " " << trigger.offset.z << std::endl;
+				std::cout << "      Datablock " << trigger.datablock << std::endl;
+				std::cout << "      Polyhedron " << getPolyhedron(trigger) << std::endl;
+
+				std::cout << "      Property Count: " << std::to_string(trigger.properties.size()) << std::endl;
+				for (DIF::U32 j = 0; j < trigger.properties.size(); j ++) {
+					std::cout << "         " << trigger.properties[j].first << ": " << trigger.properties[j].second << std::endl;
+				}
+			}
+		} else {
+			return EXIT_FAILURE;
 		}
 	}
 	return EXIT_SUCCESS;

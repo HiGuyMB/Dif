@@ -88,27 +88,4 @@ bool Trigger::PolyHedronEdge::write(std::ostream &stream, Version version) const
 	return true;
 }
 
-std::string Trigger::getPolyhedron() const {
-	// First point is corner, need to find the three vectors...
-	glm::vec3 origin = polyhedron.pointList[0];
-	U32 currVec = 0;
-	glm::vec3 vecs[3];
-	for (U32 i = 0; i < polyhedron.edgeList.size(); i++) {
-		const U32 *vertex = polyhedron.edgeList[i].vertex;
-		if (vertex[0] == 0)
-			vecs[currVec++] = polyhedron.pointList[vertex[1]] - origin;
-		else
-			if (vertex[1] == 0)
-				vecs[currVec++] = polyhedron.pointList[vertex[0]] - origin;
-	}
-
-	// Build output string.
-	std::stringstream ss;
-	ss << origin.x << ' ' << origin.y << ' ' << origin.z << ' ' <<
-	      vecs[0].x << ' ' << vecs[0].y << ' ' << vecs[0].z << ' ' <<
-	      vecs[1].x << ' ' << vecs[1].y << ' ' << vecs[1].z << ' ' <<
-	      vecs[2].x << ' ' << vecs[2].y << ' ' << vecs[2].z;
-	return ss.str();
-}
-
 DIF_NAMESPACE_END

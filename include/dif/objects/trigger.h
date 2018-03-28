@@ -72,8 +72,6 @@ public:
 	 * @return If the operation was successful
 	 */
 	virtual bool write(std::ostream &stream, Version version) const;
-
-	std::string getPolyhedron() const;
 };
 
 DIF_NAMESPACE_END

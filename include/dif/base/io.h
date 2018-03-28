@@ -136,9 +136,12 @@ public:
 	struct read_impl<T, false> {
 		static inline bool read(std::istream &stream, Version &version, T &value, const std::string &name) {
 			debug_print(stream, value, name);
+			value.fileOffset = stream.tellg();
 			bool success = (value.read(stream, version) && stream.good());
 			if (!success) {
 				debug_error(stream, value, name);
+			} else {
+				value.fileSize = int(stream.tellg()) - value.fileOffset;
 			}
 			return success;
 		}
