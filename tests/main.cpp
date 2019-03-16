@@ -175,7 +175,7 @@ void exportObj(const DIF::Interior &dif, const char *outFile) {
 
 	//Texture coords
 	for (const glm::vec2 &texCoord : texCoords) {
-		out << "vf " << -texCoord.x << " " << texCoord.y << "\n";
+		out << "vt " << -texCoord.x << " " << texCoord.y << "\n";
 	}
 
 	//Normals
@@ -635,6 +635,8 @@ int main(int argc, const char * argv[]) {
 			DIF::Version inVersion;
 			if (readDif(argv[i], dif, inVersion)) {
 				printTextures(dif);
+			} else {
+				return EXIT_FAILURE;
 			}
 		}
 		return EXIT_SUCCESS;
