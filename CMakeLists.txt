@@ -5,7 +5,7 @@ project (Dif C CXX)
 # Allow C++11 features
 if (UNIX)
 list (APPEND CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
-else()
+elseif(MSVC)
 list (APPEND CMAKE_CXX_FLAGS "/MP ${CMAKE_CXX_FLAGS}")
 endif()
 
