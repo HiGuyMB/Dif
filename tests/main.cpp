@@ -144,8 +144,8 @@ void exportObj(const DIF::Interior &dif, const char *outFile) {
 			DIF::Interior::TexGenEq texGen = dif.texGenEq[surface.texGenIndex];
 
 			const glm::vec3 &pt0 = dif.point[f.vertIndex[0]];
-			const glm::vec3 &pt1 = dif.point[f.vertIndex[0]];
-			const glm::vec3 &pt2 = dif.point[f.vertIndex[0]];
+			const glm::vec3 &pt1 = dif.point[f.vertIndex[1]];
+			const glm::vec3 &pt2 = dif.point[f.vertIndex[2]];
 
 			glm::vec2 coord0(pt0.x * texGen.planeX.x + pt0.y * texGen.planeX.y + pt0.z * texGen.planeX.z + texGen.planeX.d,
 								pt0.x * texGen.planeY.x + pt0.y * texGen.planeY.y + pt0.z * texGen.planeY.z + texGen.planeY.d);
