@@ -120,11 +120,6 @@ void exportObj(const DIF::Interior &dif, const char *outFile) {
 	normals.insert(normals.end(), dif.normal.begin(), dif.normal.end());
 
 	for (const DIF::Interior::Surface &surface : dif.surface) {
-		glm::vec3 normal = dif.normal[dif.plane[surface.planeIndex].normalIndex];
-		if (surface.planeFlipped) {
-			normal *= -1;
-		}
-
 		//New and improved rendering with actual Triangle Strips this time
 		for (DIF::U32 j = surface.windingStart + 2; j < surface.windingStart + surface.windingCount; j ++) {
 			Face f;
@@ -140,6 +135,9 @@ void exportObj(const DIF::Interior &dif, const char *outFile) {
 			}
 
 			f.normalIndex = dif.plane[surface.planeIndex].normalIndex;
+			if (surface.planeFlipped) {
+				f.normalIndex += normals.size();
+			}
 
 			DIF::Interior::TexGenEq texGen = dif.texGenEq[surface.texGenIndex];
 
@@ -175,12 +173,16 @@ void exportObj(const DIF::Interior &dif, const char *outFile) {
 
 	//Texture coords
 	for (const glm::vec2 &texCoord : texCoords) {
-		out << "vt " << -texCoord.x << " " << texCoord.y << "\n";
+		out << "vt " << texCoord.x << " " << -texCoord.y << "\n";
 	}
 
 	//Normals
 	for (const glm::vec3 &normal : normals) {
 		out << "vn " << -normal.x << " " << normal.z << " " << normal.y << "\n";
+	}
+	//Because torque likes to flip normals
+	for (const glm::vec3 &normal : normals) {
+		out << "vn " << normal.x << " " << -normal.z << " " << -normal.y << "\n";
 	}
 
 	//Faces
