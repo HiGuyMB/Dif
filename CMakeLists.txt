@@ -110,6 +110,9 @@ endif()
 add_executable(DifTests tests/main.cpp)
 target_link_libraries(DifTests Dif)
 
+add_executable(dif2obj tests/dif2obj.cpp)
+target_link_libraries(dif2obj Dif)
+
 # Make it go to where we want. Default is the plugins directory but you can change
 # this if you're not building as a submodule.
 option (OUTPUT_DIRECTORY_CUSTOM "Use a custom output directory." OFF)

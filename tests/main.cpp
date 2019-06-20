@@ -485,7 +485,7 @@ void findPolys(DIF::DIF &dif) {
 }
 
 bool readDif(const char *file, DIF::DIF &dif, DIF::Version &version) {
-	std::ifstream stream(file);
+	std::ifstream stream(file, std::ios::binary);
 	if (stream.good()) {
 		bool success = dif.read(stream, version);
 		stream.close();
@@ -539,7 +539,7 @@ bool convertDif(const char *file) {
 	DIF::Version outVersion(DIF::Version::DIFVersion(44), DIF::Version::InteriorVersion(0, DIF::Version::InteriorVersion::Type::MBG), DIF::Version::MaterialListVersion(1), DIF::Version::VehicleCollisionFileVersion(0));
 	if (readDif(file, dif, inVersion)) {
 		//Save it again
-		std::ofstream out(file);
+		std::ofstream out(file, std::ios::binary);
 		return dif.write(out, outVersion);
 	}
 	return false;
@@ -594,7 +594,7 @@ int main(int argc, const char * argv[]) {
 		DIF::Version outVersion(DIF::Version::DIFVersion(44), DIF::Version::InteriorVersion(0, DIF::Version::InteriorVersion::Type::MBG), DIF::Version::MaterialListVersion(1), DIF::Version::VehicleCollisionFileVersion(0));
 		if (readDif(argv[2], dif, inVersion)) {
 			nullSurfaces(dif);
-			std::ofstream out(argv[3]);
+			std::ofstream out(argv[3], std::ios::binary);
 			return dif.write(out, outVersion) ? EXIT_SUCCESS : EXIT_FAILURE;
 		}
 	}
@@ -626,7 +626,7 @@ int main(int argc, const char * argv[]) {
 		DIF::Version outVersion(DIF::Version::DIFVersion(44), DIF::Version::InteriorVersion(0, DIF::Version::InteriorVersion::Type::MBG), DIF::Version::MaterialListVersion(1), DIF::Version::VehicleCollisionFileVersion(0));
 		if (readDif(argv[5], dif, inVersion)) {
 			scaleTexture(dif, textureName, scale);
-			std::ofstream out(argv[5]);
+			std::ofstream out(argv[5], std::ios::binary);
 			return dif.write(out, outVersion) ? EXIT_SUCCESS : EXIT_FAILURE;
 		}
 		return EXIT_FAILURE;
