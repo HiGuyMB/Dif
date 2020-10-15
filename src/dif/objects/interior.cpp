@@ -528,6 +528,19 @@ bool Interior::Surface::read(std::istream &stream, Version &version, U32 indexSi
 		return false;
 
 	READCHECK(surfaceFlags, U8); //surfaceFlags
+	if ((surfaceFlags & 0x20) != 0) {
+		//Some interiors have extra data for transparent surfaces
+		//http://www.garagegames.com/community/forums/viewthread/41155/1#comment-318187
+
+		fprintf(stderr, "Detected custom interior with transparent surfaces!\n");
+		fprintf(stderr, "Attempting to handle this sanely but be prepared to modify the code if it breaks.\n");
+		fprintf(stderr, "See %s:%d\n", __FILE__, __LINE__);
+
+		U8 unknown[9];
+		for (int i = 0; i < 9; i ++) {
+			READCHECK(unknown[i], U8);
+		}
+	}
 	READCHECK(fanMask, U32); //fanMask
 	READCHECK(lightMap, LightMap); //lightMap
 	READCHECK(lightCount, U16); //lightCount
